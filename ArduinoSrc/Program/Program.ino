@@ -34,13 +34,11 @@ void setup()
 }
 
 // We loop from 100mV to 2000mV for channel A and 4000mV for channel B
-void loop() {
-//    Serial.print(Voltage / 1000.0f);
-//    Serial.print(" ");
-//    Serial.println(Voltage / 1000.0f * 2);
-//    
+void loop() 
+{
     // We set channel A to output 500mV
-    Converter.setVoltageA(Voltage);
+    Converter.setVoltageA(0);
+    Converter.setVoltageB(Voltage);
     // We send the command to the MCP4822
     // This is needed every time we make any change
     Converter.updateDAC();

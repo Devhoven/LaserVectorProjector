@@ -10,41 +10,6 @@
 
 #define StepCount 25
 
-//int Steps[] =
-//{
-//    MaxVolQrt3, MaxVolMid,
-//    MaxVolMid, 0,
-//    MaxVolQrt, MaxVolMid,
-//    0, MaxVol, 
-//    MaxVolMid, MaxVol,
-//    MaxVolQrt, MaxVolMid, 
-//    MaxVolQrt3, MaxVolMid,
-//    MaxVolMid, MaxVol,
-//    MaxVol, MaxVol
-//};
-
-#ifdef Triforce
-int Steps[] =
-{
-    QrtVol, MidVol,
-    Qrt3Vol, MidVol,
-    MidVol, MaxVol,
-    QrtVol, MidVol,
-    MidVol, MinVol,
-    MaxVol, MaxVol,
-    MinVol, MaxVol,
-    QrtVol, MidVol
-};
-#else
-int Steps[] =
-{
-    MinVol, MinVol,
-    MaxVol, MinVol,
-    MaxVol, MaxVol,
-    MinVol, MaxVol
-};
-#endif
-
 // Define the MCP4822 instance, giving it the SS (Slave Select) pin
 // The constructor will also initialize the SPI library
 // We can also define a MCP4812 or MCP4802
@@ -66,10 +31,13 @@ void setup()
 
 void loop()
 {
-    for (int i = 0; i < sizeof(Steps) / 2; )
-    {
-        SetPos(Steps[i++], Steps[i++]);
-    }
+    PosX += 0.0174533 * 15;
+    PosY += 0.0174533 * 15;
+    if (PosX > M_PI * 2)
+        PosX = 0;
+    if (PosY > M_PI * 2)
+        PosY = 0;
+    UpdateDAC(sin(PosX) * MaxVol, cos(PosY) * MaxVol);
 }
 
 void SetPos(float x, float y)
@@ -77,15 +45,14 @@ void SetPos(float x, float y)
     float stepX = (x - PosX) / StepCount;
     float stepY = (y - PosY) / StepCount;
 
-    while (abs(PosX - x) > 0 || abs(PosY - y) > 0)
-        UpdateDAC(PosX + stepX, PosY + stepY);
+    //UpdateDAC(x, y);
 }
 
 void UpdateDAC(float x, float y)
 {
-    PosX = x;
-    PosY = y;
-    Converter.setVoltageA(PosX);
-    Converter.setVoltageB(PosY);
+    x = x / 5 + MidVol;
+    y = y / 5 + MidVol;
+    Converter.setVoltageA(x);
+    Converter.setVoltageB(y);
     Converter.updateDAC();
 }

@@ -1,0 +1,250 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L power:+12V #PWR?
+U 1 1 61B37223
+P 7400 3700
+F 0 "#PWR?" H 7400 3550 50  0001 C CNN
+F 1 "+12V" H 7415 3873 50  0000 C CNN
+F 2 "" H 7400 3700 50  0001 C CNN
+F 3 "" H 7400 3700 50  0001 C CNN
+	1    7400 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L MCU_Module:Arduino_UNO_R3 A?
+U 1 1 61B44EE9
+P 6050 3150
+F 0 "A?" H 6050 4331 50  0000 C CNN
+F 1 "Arduino_UNO_R3" H 6050 4240 50  0000 C CNN
+F 2 "Module:Arduino_UNO_R3" H 6050 3150 50  0001 C CIN
+F 3 "https://www.arduino.cc/en/Main/arduinoBoardUno" H 6050 3150 50  0001 C CNN
+	1    6050 3150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6250 2150 6250 1800
+Wire Wire Line
+	6250 1800 4450 1800
+Wire Wire Line
+	4450 1800 4450 3200
+Wire Wire Line
+	2050 3200 4450 3200
+Wire Wire Line
+	5550 3850 900  3850
+Wire Wire Line
+	900  3850 900  2600
+Wire Wire Line
+	5550 3650 1200 3650
+Wire Wire Line
+	1200 2800 1200 3650
+Wire Wire Line
+	5550 3550 1350 3550
+Wire Wire Line
+	1350 2900 1350 3550
+Wire Wire Line
+	5550 3250 5400 3250
+Wire Wire Line
+	5400 3250 5400 3750
+Wire Wire Line
+	5400 3750 1050 3750
+Wire Wire Line
+	1050 2700 1050 3750
+Wire Wire Line
+	5950 4250 2700 4250
+Wire Wire Line
+	2700 4250 2700 2300
+Wire Wire Line
+	2700 2300 2050 2300
+Wire Wire Line
+	7400 3600 7400 2000
+Wire Wire Line
+	7400 2000 5950 2000
+Wire Wire Line
+	5950 2000 5950 2150
+$Comp
+L pspice:OPAMP U?
+U 1 1 61B667DE
+P 9600 2250
+F 0 "U?" H 9944 2296 50  0000 L CNN
+F 1 "OPAMP" H 9944 2205 50  0000 L CNN
+F 2 "" H 9600 2250 50  0001 C CNN
+F 3 "~" H 9600 2250 50  0001 C CNN
+	1    9600 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L pspice:OPAMP U?
+U 1 1 61B693C6
+P 9600 3250
+F 0 "U?" H 9944 3296 50  0000 L CNN
+F 1 "OPAMP" H 9944 3205 50  0000 L CNN
+F 2 "" H 9600 3250 50  0001 C CNN
+F 3 "~" H 9600 3250 50  0001 C CNN
+	1    9600 3250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7400 3600 8250 3600
+Wire Wire Line
+	8250 3600 8250 2950
+Wire Wire Line
+	8250 2950 9500 2950
+Wire Wire Line
+	8250 2950 8250 1950
+Wire Wire Line
+	8250 1950 9500 1950
+Connection ~ 8250 2950
+Wire Wire Line
+	6150 4250 8850 4250
+Wire Wire Line
+	9500 4250 9500 3550
+Wire Wire Line
+	8850 4250 8850 2550
+Wire Wire Line
+	8850 2550 9500 2550
+Connection ~ 8850 4250
+Wire Wire Line
+	8850 4250 9500 4250
+Wire Wire Line
+	1350 2900 1550 2900
+Wire Wire Line
+	1200 2800 1550 2800
+Wire Wire Line
+	1050 2700 1550 2700
+Wire Wire Line
+	900  2600 1550 2600
+$Comp
+L Analog_DAC:MCP4822 U?
+U 1 1 61B3A33D
+P 2050 2700
+F 0 "U?" H 2050 3281 50  0000 C CNN
+F 1 "MCP4822" H 2050 3190 50  0000 C CNN
+F 2 "" H 2850 2400 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20002249B.pdf" H 2850 2400 50  0001 C CNN
+	1    2050 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2550 2600 3500 2600
+Wire Wire Line
+	3500 2600 3500 1500
+Wire Wire Line
+	3500 1500 9150 1500
+Wire Wire Line
+	9150 2150 9300 2150
+Wire Wire Line
+	9150 1500 9150 2150
+Wire Wire Line
+	2550 2900 3650 2900
+Wire Wire Line
+	3650 2900 3650 1650
+Wire Wire Line
+	3650 1650 9000 1650
+Wire Wire Line
+	9000 1650 9000 3150
+Wire Wire Line
+	9000 3150 9300 3150
+Wire Wire Line
+	6050 4250 6050 5050
+Wire Wire Line
+	6050 5050 6050 5200
+Wire Wire Line
+	6050 5200 8050 5200
+Wire Wire Line
+	8050 5200 8050 5050
+Connection ~ 6050 5050
+Wire Wire Line
+	8050 4750 8050 3350
+Wire Wire Line
+	8050 3350 9300 3350
+Wire Wire Line
+	6050 5050 7600 5050
+Wire Wire Line
+	7600 4750 7600 2350
+Wire Wire Line
+	7600 2350 9300 2350
+$Comp
+L Device:R R
+U 1 1 61B807FE
+P 7600 1100
+F 0 "R" H 7670 1146 50  0000 L CNN
+F 1 "1kOhm" H 7670 1055 50  0000 L CNN
+F 2 "" V 7530 1100 50  0001 C CNN
+F 3 "~" H 7600 1100 50  0001 C CNN
+	1    7600 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R
+U 1 1 61B81580
+P 8050 1100
+F 0 "R" H 8120 1146 50  0000 L CNN
+F 1 "1kOhm" H 8120 1055 50  0000 L CNN
+F 2 "" V 7980 1100 50  0001 C CNN
+F 3 "~" H 8050 1100 50  0001 C CNN
+	1    8050 1100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7600 2350 7600 1250
+Connection ~ 7600 2350
+Wire Wire Line
+	8050 3350 8050 1250
+Connection ~ 8050 3350
+Wire Wire Line
+	7600 950  7600 650 
+Wire Wire Line
+	7600 650  10500 650 
+Wire Wire Line
+	10500 650  10500 2250
+Wire Wire Line
+	10500 2250 9900 2250
+Wire Wire Line
+	8050 950  10250 950 
+Wire Wire Line
+	10250 950  10250 3250
+Wire Wire Line
+	10250 3250 9900 3250
+Wire Wire Line
+	10250 3250 11000 3250
+Connection ~ 10250 3250
+Wire Wire Line
+	10500 2250 11000 2250
+Connection ~ 10500 2250
+$Comp
+L Device:R_Variable R
+U 1 1 61B8F46D
+P 7600 4900
+F 0 "R" H 7728 4946 50  0000 L CNN
+F 1 "1kOhm" H 7728 4855 50  0000 L CNN
+F 2 "" V 7530 4900 50  0001 C CNN
+F 3 "~" H 7600 4900 50  0001 C CNN
+	1    7600 4900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Variable R?
+U 1 1 61B94902
+P 8050 4900
+F 0 "R?" H 8178 4946 50  0000 L CNN
+F 1 "1kOhm" H 8178 4855 50  0000 L CNN
+F 2 "" V 7980 4900 50  0001 C CNN
+F 3 "~" H 8050 4900 50  0001 C CNN
+	1    8050 4900
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

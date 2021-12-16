@@ -6,9 +6,7 @@
 #define MidVol MaxVol / 2
 #define QrtVol MaxVol / 4
 #define Qrt3Vol MaxVol / 4 * 3
-#define MinVol 0 
-
-#define StepCount 25
+#define MinVol 0
 
 // Define the MCP4822 instance, giving it the SS (Slave Select) pin
 // The constructor will also initialize the SPI library
@@ -21,6 +19,7 @@ void setup()
 {
     Serial.begin(2000000);
     Serial.println("Started");
+
     // We call the init() method to initialize the instance
     Converter.init();
 
@@ -31,21 +30,13 @@ void setup()
 
 void loop()
 {
-    PosX += 0.0174533 * 15;
-    PosY += 0.0174533 * 15;
+    PosX += 0.0174533 * 5;
+    PosY += 0.0174533 * 5;
     if (PosX > M_PI * 2)
         PosX = 0;
     if (PosY > M_PI * 2)
         PosY = 0;
     UpdateDAC(sin(PosX) * MaxVol, cos(PosY) * MaxVol);
-}
-
-void SetPos(float x, float y)
-{
-    float stepX = (x - PosX) / StepCount;
-    float stepY = (y - PosY) / StepCount;
-
-    //UpdateDAC(x, y);
 }
 
 void UpdateDAC(float x, float y)

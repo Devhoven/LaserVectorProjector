@@ -1,0 +1,119 @@
+﻿<Window x:Class="ProjectorInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectorInterface"
+        mc:Ignorable="d"
+        Title="Projector Interface" Height="720" Width="1080"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF2D2D30">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF1E1E1E"  Offset="0.0"/>
+                <GradientStop Color="#FF2D2D30" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!--Navigation Bar-->
+        <Border Grid.ColumnSpan="3" Grid.Row="0" Panel.ZIndex="1"
+                Margin="5 5 5 0" CornerRadius="5">
+            <Grid Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Menu Grid.Column="0" FontSize="15" Margin="5 0 0 0" Background="Transparent" Foreground="White" VerticalAlignment="Center">
+                    <MenuItem Header="_File">
+                        <MenuItem Header="_Save current frame" Foreground="Black" InputGestureText="Ctrl+S">
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="_Exit" Foreground="Black" InputGestureText="ESC">
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="_Settings">
+                        <MenuItem Header="Open Settings _Menu"  Foreground="Black" InputGestureText="F1">
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="_Restart Camera" Foreground="Black" InputGestureText="F5">
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="_Save Cam Config" Foreground="Black" InputGestureText="Ctrl+Shift+S">
+                        </MenuItem>
+                        <MenuItem Header="_Load Cam Config" Foreground="Black" InputGestureText="Ctrl+O">
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="_Change Image Gallery Folder" Foreground="Black">
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="_Help">
+                        <MenuItem Header="_Github Page" Foreground="Black"/>
+                        <MenuItem Header="_Keybinds" Foreground="Black">
+                        </MenuItem>
+                    </MenuItem>
+                </Menu>
+
+                <Menu Background="Transparent" Margin="5 2 2 2"
+                      HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Top" Grid.Column="1">
+                    <MenuItem x:Name="LiveFeedBtn" Background="LightSkyBlue">
+                        <MenuItem.ToolTip>Starts the live feed of the camera</MenuItem.ToolTip>
+                    </MenuItem>
+                    <MenuItem x:Name="FreezeCamBtn" Background="Transparent" >
+                        <MenuItem.ToolTip>Freezes the live feed of the camera</MenuItem.ToolTip>
+                    </MenuItem>
+                </Menu>
+
+                <Border x:Name="InfoLabelBorder" CornerRadius="5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="4">
+                    <Label x:Name="InfoLabel" FontSize="15"/>
+                </Border>
+
+                <Menu DockPanel.Dock="Top" Background="Transparent" Margin="2" Grid.Column="3">
+                    <MenuItem x:Name="ConfigConToggleBtn" Background="LightSkyBlue">
+                        <MenuItem.ToolTip>Toggles the visibillity of the left container</MenuItem.ToolTip>
+                    </MenuItem>
+
+                    <MenuItem x:Name="ImgGalleryToggleBtn" Background="LightSkyBlue">
+                        <MenuItem.ToolTip>Toggles the visibillity of the right container</MenuItem.ToolTip>
+                    </MenuItem>
+                </Menu>
+            </Grid>
+        </Border>
+
+        <!--Left Container-->
+        <Border Panel.ZIndex="1" Grid.Column="0" Grid.Row="1" 
+                CornerRadius="5" Margin="5">
+            <Grid x:Name="ToolCon" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+            </Grid>
+        </Border>
+        
+        <!--Drawing Area-->
+        <Border Grid.Column="1" Grid.Row="1">
+            <Canvas Background="White" Name="Canvas" 
+                    MouseDown="Canvas_MouseDown" 
+                    MouseMove="Canvas_MouseMove" 
+                    MouseUp="Canvas_MouseUp" />
+        </Border>
+    </Grid>
+</Window>

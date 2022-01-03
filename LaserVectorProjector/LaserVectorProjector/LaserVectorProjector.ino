@@ -41,8 +41,8 @@ void loop()
 
 void UpdateDAC(float x, float y)
 {
-    x = x / 5 + MidVol;
-    y = y / 5 + MidVol;
+    x = x / 2 + MidVol;
+    y = y / 2 + MidVol;
     Converter.setVoltageA(x);
     Converter.setVoltageB(y);
     Converter.updateDAC();

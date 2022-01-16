@@ -37,7 +37,7 @@
 
                 <Menu Grid.Column="0" FontSize="15" Margin="5 0 0 0" Background="Transparent" Foreground="White" VerticalAlignment="Center">
                     <MenuItem Header="_File">
-                        <MenuItem Header="_Save current frame" Foreground="Black" InputGestureText="Ctrl+S">
+                        <MenuItem Header="_Save" Foreground="Black" InputGestureText="Ctrl+S">
                         </MenuItem>
                         <Separator/>
                         <MenuItem Header="_Exit" Foreground="Black" InputGestureText="ESC">
@@ -47,21 +47,10 @@
                     <MenuItem Header="_Settings">
                         <MenuItem Header="Open Settings _Menu"  Foreground="Black" InputGestureText="F1">
                         </MenuItem>
-                        <Separator/>
-                        <MenuItem Header="_Restart Camera" Foreground="Black" InputGestureText="F5">
-                        </MenuItem>
-                        <Separator/>
-                        <MenuItem Header="_Save Cam Config" Foreground="Black" InputGestureText="Ctrl+Shift+S">
-                        </MenuItem>
-                        <MenuItem Header="_Load Cam Config" Foreground="Black" InputGestureText="Ctrl+O">
-                        </MenuItem>
-                        <Separator/>
-                        <MenuItem Header="_Change Image Gallery Folder" Foreground="Black">
-                        </MenuItem>
                     </MenuItem>
 
                     <MenuItem Header="_Help">
-                        <MenuItem Header="_Github Page" Foreground="Black"/>
+                        <MenuItem Header="_Github Page" Foreground="Black" Click="Github_Click"/>
                         <MenuItem Header="_Keybinds" Foreground="Black">
                         </MenuItem>
                     </MenuItem>

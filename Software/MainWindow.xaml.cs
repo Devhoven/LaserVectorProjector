@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,11 @@ namespace ProjectorInterface
                 Point CurrentMousePos = e.GetPosition(Canvas);
                 RemoveChilds(childCount);
 
-                RenderLine(beginning, CurrentMousePos);                
+                // Renderoptions:
+                // RenderLine(beginning, CurrentMousePos);
+                (double X, double Y, double Width, double Height) = GetRectangle(beginning, CurrentMousePos);
+                //RenderRectangle(X, Y, Width, Height);
+                RenderCircle(beginning, CurrentMousePos);
             }
         }
 
@@ -51,6 +56,54 @@ namespace ProjectorInterface
         {
             childCount++;
         }
+
+        (double, double, double, double) GetRectangle(Point p1, Point p2)
+        {
+            double Width = p2.X - p1.X;
+            double Height = p2.Y - p1.Y;
+            if (Width < 0)
+                p1.X = p2.X;
+            if (Height < 0)
+                p1.Y = p2.Y;
+
+            return (p1.X, p1.Y, Math.Abs(Width), Math.Abs(Height));
+        }
+
+        void RenderCircle(Point p1, Point p2)
+        {
+            double radius = Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+            Ellipse Circ = new Ellipse()
+            {
+                Width = radius,
+                Height = radius,
+                Stroke = new SolidColorBrush(Colors.Red),
+                StrokeThickness = 4
+            };
+
+            RenderOptions.SetEdgeMode(Circ, EdgeMode.Aliased);
+            Canvas.Children.Add(Circ);
+            childCount = 1;
+        }
+
+        void RenderRectangle(double X, double Y, double Width, double Height)
+        {
+            if (Width == 0 && Height == 0)
+                return;
+
+            Rectangle Rect = new Rectangle()
+            {
+                Width = Width,
+                Height = Height,
+                Stroke = new SolidColorBrush(Colors.Red),
+                StrokeThickness = 4
+            };
+
+            RenderOptions.SetEdgeMode(Rect, EdgeMode.Aliased);
+            Canvas.Children.Add(Rect);
+            childCount = 1;
+        }
+
+
 
         private void RenderLine(Point start, Point end)
         {
@@ -71,7 +124,36 @@ namespace ProjectorInterface
         void RemoveChilds(int count)
         {
             Canvas.Children.RemoveRange(childCount-1, count);
-            childCount = childCount - count;
+            childCount -= count;
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Github_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://github.com/Devhoven/LaserVectorProjector",
+                UseShellExecute = true
+            });
+        }
+
+        /*
+        void ToggleItemVisibillity(MenuItem Sender, UIElement Element, string ValName)
+        {
+            if (Element.Visibility == Visibility.Visible)
+            {
+                Element.Visibility = Visibility.Collapsed;
+                Sender.Background = Brushes.Transparent;
+            }
+            else
+            {
+                Element.Visibility = Visibility.Visible;
+                Sender.Background = Brushes.LightSkyBlue;
+            }
+        }*/
     }
 }

@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         Title="Projector Interface" Height="720" Width="1080"
         WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF2D2D30">
+    <Window.Resources>
+        <Image x:Key="lineIMG" Source="/Assets/Line.png" Height="60" Width="60" />
+        <Image x:Key="circleIMG" Source="/Assets/circle.png" Height="60" Width="60" />
+        <Image x:Key="rectangleIMG" Source="/Assets/rectangle.png" Height="60" Width="60" />
+        <Image x:Key="triangleIMG" Source="/Assets/triangle.png" Height="60" Width="60" />
+    </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -39,8 +46,23 @@
                     <MenuItem Header="_File">
                         <MenuItem Header="_Save" Foreground="Black" InputGestureText="Ctrl+S">
                         </MenuItem>
+                        <MenuItem Header="Save as _PNG" Foreground="Black">
+                        </MenuItem>
+                        <MenuItem Header="Save as _SVG" Foreground="Black">
+                        </MenuItem>
+                        
                         <Separator/>
-                        <MenuItem Header="_Exit" Foreground="Black" InputGestureText="ESC">
+                        
+                        <MenuItem Header="_Open" Foreground="Black" InputGestureText="Ctrl+O">
+                        </MenuItem>
+                        <MenuItem Header="_Open PNG" Foreground="Black">
+                        </MenuItem>
+                        <MenuItem Header="_Open SVG" Foreground="Black">
+                        </MenuItem>
+                        
+                        <Separator/>
+                        
+                        <MenuItem Header="_Exit" Foreground="Black" Click="Exit_Click" InputGestureText="ESC">
                         </MenuItem>
                     </MenuItem>
 
@@ -58,12 +80,6 @@
 
                 <Menu Background="Transparent" Margin="5 2 2 2"
                       HorizontalAlignment="Left" VerticalAlignment="Center" DockPanel.Dock="Top" Grid.Column="1">
-                    <MenuItem x:Name="LiveFeedBtn" Background="LightSkyBlue">
-                        <MenuItem.ToolTip>Starts the live feed of the camera</MenuItem.ToolTip>
-                    </MenuItem>
-                    <MenuItem x:Name="FreezeCamBtn" Background="Transparent" >
-                        <MenuItem.ToolTip>Freezes the live feed of the camera</MenuItem.ToolTip>
-                    </MenuItem>
                 </Menu>
 
                 <Border x:Name="InfoLabelBorder" CornerRadius="5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="4">
@@ -85,15 +101,48 @@
         <!--Left Container-->
         <Border Panel.ZIndex="1" Grid.Column="0" Grid.Row="1" 
                 CornerRadius="5" Margin="5">
-            <Grid x:Name="ToolCon" Margin="5">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                </Grid.ColumnDefinitions>
+                <Button Height="40" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0" Click="Toggle_Click">
+                    Toggle
+                </Button>
 
+                <Grid x:Name="LeftCon" Margin="5" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+
+                    
+                    <Button x:Name="LineBtn" Height="60" Width="60" Grid.Row="1" Foreground="White" Background="LightSkyBlue" Click="Line_Click">
+                        Line
+                    </Button>
+                    <Button x:Name="SquareBtn" Height="60" Width="60" Grid.Row="2" Foreground="White" Background="Transparent" Click="Square_Click">
+                        Square
+                    </Button>
+                    <Button x:Name="CircleBtn" Height="60" Width="60" Grid.Row="3" Foreground="White" Background="Transparent" Click="Circle_Click">
+                        Circle
+                    </Button>
+                    <Button x:Name="TriangleBtn" Height="60" Width="60" Grid.Row="4" Foreground="White" Background="Transparent" Click="Triangle_Click">
+                        Triangle
+                    </Button>
+
+                    <Button x:Name="SendBtn" Height="60" Width="60" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        Project!
+                    </Button>
+                </Grid>
             </Grid>
         </Border>
         
@@ -102,7 +151,15 @@
             <Canvas Background="White" Name="Canvas" 
                     MouseDown="Canvas_MouseDown" 
                     MouseMove="Canvas_MouseMove" 
-                    MouseUp="Canvas_MouseUp" />
+                    MouseUp="Canvas_MouseUp"
+                    ClipToBounds="True">
+                <Canvas.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove last Element"/>
+                        <MenuItem Header="Clear all Elements" Click="Clear_Click"/>
+                    </ContextMenu>
+                </Canvas.ContextMenu>
+            </Canvas>
         </Border>
     </Grid>
 </Window>

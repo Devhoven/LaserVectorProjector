@@ -7,4 +7,18 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\circle.png" />
+    <None Remove="Assets\line.png" />
+    <None Remove="Assets\rectangle.png" />
+    <None Remove="Assets\triangle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\circle.png" />
+    <Resource Include="Assets\line.png" />
+    <Resource Include="Assets\rectangle.png" />
+    <Resource Include="Assets\triangle.png" />
+  </ItemGroup>
+
 </Project>

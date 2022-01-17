@@ -8,12 +8,22 @@
 #define Qrt3Vol MaxVol / 4 * 3
 #define MinVol 0
 
+#define StepCount 25
+
 // Define the MCP4822 instance, giving it the SS (Slave Select) pin
 // The constructor will also initialize the SPI library
 // We can also define a MCP4812 or MCP4802
 MCP4822 Converter(PinOut);
 
 float PosX{ 0 }, PosY{ 0 };
+
+static int Steps[] =
+{
+    MinVol, MinVol,
+    MaxVol, MinVol,
+    MaxVol, MaxVol,
+    MinVol, MaxVol
+};
 
 void setup()
 {
@@ -28,21 +38,64 @@ void setup()
     Converter.turnOnChannelB();
 }
 
+#define StartXVel 100
+#define StartYVel 100
+
+#define XBorder MaxVol
+#define YBorder MaxVol / 6
+
+int XVel = StartXVel;
+int YVel = StartYVel;
+
 void loop()
 {
-    PosX += 0.0174533 * 5;
-    PosY += 0.0174533 * 5;
-    if (PosX > M_PI * 2)
-        PosX = 0;
-    if (PosY > M_PI * 2)
-        PosY = 0;
-    UpdateDAC(sin(PosX) * MaxVol, cos(PosY) * MaxVol);
+    //for (int i = 0; i < sizeof(Steps) / 2; )
+    //{
+    //    SetPos(Steps[i++], Steps[i++]);
+
+    //    delayMicroseconds(100);
+    //}
+
+    PosX += XVel;
+
+    if (PosX >= XBorder || PosX <= 0)
+    {
+        PosY += YVel;
+
+        if (XVel > 0)
+            PosX = XBorder;
+        else
+            PosX = 0;
+
+        XVel *= -1;
+
+        if (PosY >= YBorder || PosY <= 0)
+        {
+            if (YVel > 0)
+                PosY = YBorder;
+            else
+                PosY = 0;
+
+            YVel *= -1;
+        }
+    }
+
+    UpdateDAC(PosY, PosX);
+}
+
+void SetPos(float x, float y)
+{
+    float stepX = (x - PosX) / StepCount;
+    float stepY = (y - PosY) / StepCount;
+
+    while (abs(PosX - x) > 0 || abs(PosY - y) > 0)
+    {
+        UpdateDAC(PosX + stepX, PosY + stepY);
+    }
 }
 
 void UpdateDAC(float x, float y)
 {
-    x = x / 2 + MidVol;
-    y = y / 2 + MidVol;
     Converter.setVoltageA(x);
     Converter.setVoltageB(y);
     Converter.updateDAC();

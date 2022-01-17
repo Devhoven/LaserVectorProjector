@@ -2,13 +2,8 @@
 
 #define PinOut 10
 
-#define MaxVol 4100
-#define MidVol MaxVol / 2
-#define QrtVol MaxVol / 4
-#define Qrt3Vol MaxVol / 4 * 3
 #define MinVol 0
-
-#define StepCount 25
+#define MaxVol 4100
 
 // Define the MCP4822 instance, giving it the SS (Slave Select) pin
 // The constructor will also initialize the SPI library
@@ -16,15 +11,7 @@
 MCP4822 Converter(PinOut);
 
 float PosX{ 0 }, PosY{ 0 };
-
-static int Steps[] =
-{
-    MinVol, MinVol,
-    MaxVol, MinVol,
-    MaxVol, MaxVol,
-    MinVol, MaxVol
-};
-
+    
 void setup()
 {
     Serial.begin(2000000);
@@ -38,24 +25,20 @@ void setup()
     Converter.turnOnChannelB();
 }
 
+#define StepCount 12
+
 #define StartXVel 100
 #define StartYVel 100
 
 #define XBorder MaxVol
-#define YBorder MaxVol / 6
 
 int XVel = StartXVel;
 int YVel = StartYVel;
 
+int Steps = 0;
+
 void loop()
 {
-    //for (int i = 0; i < sizeof(Steps) / 2; )
-    //{
-    //    SetPos(Steps[i++], Steps[i++]);
-
-    //    delayMicroseconds(100);
-    //}
-
     PosX += XVel;
 
     if (PosX >= XBorder || PosX <= 0)
@@ -69,29 +52,17 @@ void loop()
 
         XVel *= -1;
 
-        if (PosY >= YBorder || PosY <= 0)
-        {
-            if (YVel > 0)
-                PosY = YBorder;
-            else
-                PosY = 0;
+        Steps++;
 
-            YVel *= -1;
+        if (Steps >= StepCount)
+        {
+            PosY = 0;
+            Steps = 0;
+            XVel = StartXVel;
         }
     }
 
     UpdateDAC(PosY, PosX);
-}
-
-void SetPos(float x, float y)
-{
-    float stepX = (x - PosX) / StepCount;
-    float stepY = (y - PosY) / StepCount;
-
-    while (abs(PosX - x) > 0 || abs(PosY - y) > 0)
-    {
-        UpdateDAC(PosX + stepX, PosY + stepY);
-    }
 }
 
 void UpdateDAC(float x, float y)

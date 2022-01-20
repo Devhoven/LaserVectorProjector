@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,10 @@ namespace ProjectorInterface
         ImageBrush brushcircle;
         ImageBrush brushtriangle;
 
+        List<LineSegment> tmp = new List<LineSegment>();
+        LineSegment seg = new LineSegment();
+        Point currentp = new Point();
+
         Line line = new Line()
         {
             StrokeThickness = 4,
@@ -33,7 +38,7 @@ namespace ProjectorInterface
             Y2 = 0
         };
 
-        Ellipse Circle = new Ellipse()
+        Ellipse circle = new Ellipse()
         {
             Width = 0,
             Height = 0,
@@ -41,7 +46,7 @@ namespace ProjectorInterface
             StrokeThickness = 4
         };
 
-        Rectangle Rectangle = new Rectangle()
+        Rectangle rectangle = new Rectangle()
         {
             Width = 0,
             Height = 0,
@@ -78,25 +83,27 @@ namespace ProjectorInterface
             if (e.ChangedButton == MouseButton.Left)
             {
                 beginning = e.GetPosition(Canvas);
-                
+
                 if (currentShape == shape.Line)
                 {
                     RenderLine(beginning, beginning);
                     Canvas.Children.Add(line);
-                }else if(currentShape == shape.Circle)
-                {
-                    //RenderRectangle(beginning, beginning);
-                    Canvas.Children.Add(Circle);
-                }else if(currentShape == shape.Square)
+                }
+                else if (currentShape == shape.Circle)
                 {
                     RenderCircle(beginning, beginning);
-                    Canvas.Children.Add(Rectangle);
-                }else if(currentShape == shape.Triangle)
+                    Canvas.Children.Add(circle);
+                }
+                else if (currentShape == shape.Square)
+                {
+                    //RenderRectangle(beginning, beginning);
+                    Canvas.Children.Add(rectangle);
+                }
+                else if (currentShape == shape.Triangle)
                 {
                     RenderTriangle(beginning, beginning);
                     Canvas.Children.Add(null);
                 }
-
             }
         }
 
@@ -106,8 +113,6 @@ namespace ProjectorInterface
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 Point CurrentMousePos = e.GetPosition(Canvas);
-
-                
                 // Renderoptions:
                 if (currentShape == shape.Line)
                 {
@@ -126,8 +131,6 @@ namespace ProjectorInterface
                 {
                     RenderTriangle(beginning, CurrentMousePos);
                 }
-
-                childCount++;
             }
         }
 
@@ -135,27 +138,62 @@ namespace ProjectorInterface
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             children++;
-            //Filler shape that is being removed instead of previously drawn shape
-            Canvas.Children.Add(new Line()
+            switch (currentShape)
             {
-                StrokeThickness = 4,
-                Stroke = new SolidColorBrush(Colors.Red),
-                X1 = line.X1,
-                Y1 = line.Y1,
-                X2 = line.X2,
-                Y2 = line.Y2
-            });
-            Canvas.Children.Remove(line);
+                case shape.Line:
+                    Canvas.Children.Remove(line);
+                    Canvas.Children.Add(new Line
+                    {
+                        StrokeThickness = 4,
+                        Stroke = new SolidColorBrush(Colors.Red),
+                        X1 = line.X1,
+                        Y1 = line.Y1,
+                        X2 = line.X2,
+                        Y2 = line.Y2
+                    });
+                    break;
+                case shape.Square:
+                    Canvas.Children.Remove(rectangle);
+                    Canvas.SetTop(rectangle, beginning.Y);
+                    Canvas.SetLeft(rectangle, beginning.X);
+                    Canvas.Children.Add(new Rectangle
+                    {
+                        StrokeThickness = 4,
+                        Stroke = new SolidColorBrush(Colors.Red),
+                        Width = rectangle.Width,
+                        Height = rectangle.Height
+                    });
+                    break;
+                case shape.Circle:
+                    Canvas.Children.Remove(circle);
+                    Canvas.Children.Add(new Ellipse()
+                    {
+                        Width = circle.Width,
+                        Height = circle.Height,
+                        Stroke = new SolidColorBrush(Colors.Red),
+                        StrokeThickness = 4
+                    });
+                    break;
+                case shape.Triangle:
+                    break;
+
+            }
+            childCount++;
+
+            if (childCount > 2)
+            {
+                List<LineSegment> test = getPoints();
+            }
         }
 
         // Draws a circle with middle on startig point
         void RenderCircle(Point p1, Point p2)
         {
             double radius = Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
-            Circle.Width = radius * 2;
+            circle.Width = radius * 2;
 
-            Canvas.SetLeft(Circle, beginning.X - radius / 2);
-            Canvas.SetTop(Circle, beginning.Y - radius / 2);
+            Canvas.SetLeft(circle, beginning.X - radius / 2);
+            Canvas.SetTop(circle, beginning.Y - radius / 2);
         }
 
         // Draws a rectangle
@@ -172,13 +210,12 @@ namespace ProjectorInterface
                     Width = Height;
             }
 
-            Rectangle.Width = Width;
-            Rectangle.Height = Height;
-            
-            Canvas.SetLeft(Rectangle, X);
-            Canvas.SetTop(Rectangle, Y);
-        }
+            rectangle.Width = Width;
+            rectangle.Height = Height;
 
+            Canvas.SetLeft(rectangle, X);
+            Canvas.SetTop(rectangle, Y);
+        }
         // Calculates the endpoints/width/height of the sqaure with two given points
         (double, double, double, double) GetRectangle(Point p1, Point p2)
         {
@@ -212,13 +249,6 @@ namespace ProjectorInterface
             };
 
             Canvas.Children.Add(triangle);
-        }
-
-        // Removes all unnecessary drawn shapes and leaves only the one newly drawn
-        void RemoveChilds(int count)
-        {
-            //Canvas.Children.RemoveRange(children, count);
-            //childCount = children;
         }
 
         private void Github_Click(object sender, RoutedEventArgs e)
@@ -333,6 +363,68 @@ namespace ProjectorInterface
                 TriangleBtn.Background = Brushes.Transparent;
                 TriangleBtn.Content = "Triangle";
             }
+        }
+
+
+
+
+
+
+        private List<LineSegment> getPoints()
+        {
+
+
+            foreach (Shape child in Canvas.Children)
+            {
+                if (child is Line)
+                {
+                    // moving to (X1, Y1) with laser OFF
+                    seg.IsStroked = false;
+                    currentp.X = ((Line)child).X1;
+                    currentp.Y = ((Line)child).Y1;
+                    seg.Point = currentp;
+                    tmp.Add(seg.Clone());
+
+                    // moving to (X2, Y2) with laser ON
+                    seg.IsStroked = true;
+                    currentp.X = ((Line)child).X2;
+                    currentp.Y = ((Line)child).Y2;
+                    seg.Point = currentp;
+                    tmp.Add(seg.Clone());
+                }
+                else if (child is Rectangle)
+                {
+                    Point p = Canvas.TranslatePoint(new Point(0, 0), child);
+                    // moving to "upper left" corner with laser OFF
+                    calcCoord(child, false, p.X, p.Y);
+
+                    // "upper right" corner
+                    calcCoord(child, true, currentp.X + child.Width, currentp.Y);
+
+                    // "lower right" corner
+                    calcCoord(child, true, currentp.X, currentp.Y + child.Height);
+
+                    // "lower left" corner
+                    calcCoord(child, true, currentp.X - child.Width, currentp.Y);
+
+                    // back to "upper left"
+                    calcCoord(child, true, currentp.X, currentp.Y - child.Height);
+                }
+                else if (child is Ellipse)
+                {
+
+                }
+            }
+            return tmp;
+        }
+
+        private void calcCoord(Shape child, bool stroke, double x, double y)
+        {
+            seg.IsStroked = stroke;
+            currentp.X = x;
+            currentp.Y = y;
+            seg.Point = currentp;
+            tmp.Add(seg.Clone());
         }
     }
 }

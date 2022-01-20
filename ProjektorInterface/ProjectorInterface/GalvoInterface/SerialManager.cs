@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO.Ports;
+using System.Threading;
 
-namespace GalvoInteface
+namespace ProjectorInterface.GalvoInterface
 {
     static class SerialManager
     {
@@ -48,11 +49,6 @@ namespace GalvoInteface
         public static void RemoveImg(VectorizedImage img)
             => Images.Remove(img);
 
-        public static float Scale = 1f;
-
-        public static float OffsetX = 0;
-        public static float OffsetY = 0;
-
         static void SendImgLoop()
         {
             while (true)
@@ -66,9 +62,6 @@ namespace GalvoInteface
                     for (int i = 0; i < currentImg.Lines.Length; i++)
                     {
                         currentLine = currentImg.Lines[i];
-
-                        currentLine.X = (short)((currentLine.X * Scale) + OffsetX);
-                        currentLine.Y = (short)((currentLine.Y * Scale) + OffsetY);
 
                         // Writing the x and y coordinates into the buffer 
                         Buffer[0] = (byte)currentLine.X;

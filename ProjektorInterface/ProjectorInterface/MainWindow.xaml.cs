@@ -15,6 +15,8 @@ namespace ProjectorInterface
 
         public MainWindow()
         {
+            ILDParser.Parse();
+
             InitializeComponent();
 
             // Did this, so the canvas would get the focus of the keyboard

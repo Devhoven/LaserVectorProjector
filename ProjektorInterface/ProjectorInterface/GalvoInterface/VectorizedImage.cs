@@ -70,19 +70,22 @@ namespace ProjectorInterface.GalvoInterface
     }
 
     // struct, which holds normalized coordinates between 0 and 1
-    // and if the line which is formed between this point and the one before it should have the laser enabled
+    // and, if the line which is formed between this point and the one after it, should have the laser enabled
     struct PointF
     {
         public float X;
         public float Y;
         public bool On;
 
-        public PointF(float x, float y, bool on = false)
+        public PointF(short x, short y, bool on = false)
         {
-            X = Math.Clamp(x, 0, 1);
-            Y = Math.Clamp(y, 0, 1);
+            // Normalizing the x and y short coordinates between 0 and 1
+            X = (x + short.MaxValue) / (float)(short.MaxValue * 2);
+            y *= -1;
+            Y = (y + short.MaxValue) / (float)(short.MaxValue * 2);
             On = on;
         }
+
         public override string ToString()
         {
             return "(" + X + ", " + Y + ")";

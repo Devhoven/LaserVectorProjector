@@ -76,6 +76,7 @@ namespace ProjectorInterface.GalvoInterface
 
                         // Sending the data
                         Port.Write(Buffer, 0, BUFFER_SIZE);
+
                     }
                 }
                 // Moving on to the next image, or looping to the beginning

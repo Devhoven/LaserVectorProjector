@@ -55,7 +55,8 @@ namespace ProjectorInterface
                 return;
             }
 
-            Children.Add(CurrentTool);
+            if (e.LeftButton == MouseButtonState.Pressed)
+                Children.Add(CurrentTool);
         }
 
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
@@ -68,7 +69,10 @@ namespace ProjectorInterface
         // If the user releases one of the mouse buttons the tool visuals are going to be removed 
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
-            => RemoveToolAndCopy(e.GetPosition(this));
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                RemoveToolAndCopy(e.GetPosition(this));
+        }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {

@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using static ProjectorInterface.Commands.DrawCommand;
-using static ProjectorInterface.Settings;
+using static ProjectorInterface.Commands.CanvasCommand;
+using static ProjectorInterface.Helper.Settings;
 
 namespace ProjectorInterface.Commands
 {

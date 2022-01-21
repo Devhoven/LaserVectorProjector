@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using static ProjectorInterface.Settings;
+using static ProjectorInterface.Helper.Settings;
 
 namespace ProjectorInterface
 {
@@ -17,6 +17,11 @@ namespace ProjectorInterface
     {
         double Top = 0;
         double Left = 0;
+
+        public MoveableImage()
+        {
+            Opacity = 255;
+        }
 
         // The width and height gets altered for the illusion of zooming in and out 
         public void ZoomIn()

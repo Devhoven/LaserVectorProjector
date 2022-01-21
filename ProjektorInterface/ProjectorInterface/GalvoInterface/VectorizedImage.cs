@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static ProjectorInterface.Settings;
+using static ProjectorInterface.Helper.Settings;
 
 namespace ProjectorInterface.GalvoInterface
 {

@@ -1,0 +1,20 @@
+﻿<Window x:Class="ProjectorInterface.Commands.CommandHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectorInterface.Commands"
+        mc:Ignorable="d"
+        Title="History" Height="300" Width="200" 
+        WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="Manual">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Undo" Click="UndoClick"/>
+            <MenuItem Header="Redo" Click="RedoClick"/>
+        </Menu>
+        <local:AutoScrollViewer DockPanel.Dock="Bottom">
+            <StackPanel x:Name="HistoryPanel">
+            </StackPanel>
+        </local:AutoScrollViewer>
+    </DockPanel>
+</Window>

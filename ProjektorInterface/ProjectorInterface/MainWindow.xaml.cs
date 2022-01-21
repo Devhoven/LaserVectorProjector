@@ -1,11 +1,12 @@
-﻿using ProjectorInterface.Commands;
+﻿using Ookii.Dialogs.Wpf;
+using ProjectorInterface.Commands;
 using ProjectorInterface.GalvoInterface;
+using ProjectorInterface.Helper;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Ookii.Dialogs.Wpf;
-using System;
 
 namespace ProjectorInterface
 {
@@ -16,14 +17,30 @@ namespace ProjectorInterface
             DependencyProperty.Register("CanvasResolution", typeof(int), typeof(MainWindow),
                 new PropertyMetadata(Settings.CANVAS_RESOLUTION));
 
+        CommandHistoryWindow HistoryWindow = null!;
+
         public MainWindow()
         {
             InitializeComponent();
 
             SerialManager.Initialize("COM5");
 
+            // You somehow can't override this event
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            // The owner of this window is only be able to set if the main window is open already
+            HistoryWindow = new CommandHistoryWindow(DrawCon.Commands);
+            HistoryWindow.Owner = this;
+            // This way it starts in the top right corner of the window
+            HistoryWindow.Left = this.Left + this.Width - HistoryWindow.Width;
+            HistoryWindow.Top = this.Top + 80;
+            HistoryWindow.Show();
+
             // Did this, so the canvas would get the focus of the keyboard
-            Loaded += (sender, e) => Keyboard.Focus(DrawCon);
+            Keyboard.Focus(DrawCon);
         }
 
         // Stopping the thread if it still runs

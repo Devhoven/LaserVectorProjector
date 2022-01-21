@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectorInterface
+namespace ProjectorInterface.Helper
 {
     static class ILDParser
     {
@@ -27,7 +27,7 @@ namespace ProjectorInterface
         // Loads the frames from the selected file into the given images list
         public static void LoadFromPath(string path, ref List<VectorizedImage> images)
         {
-            BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open));
+            using BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open));
 
             CurrentHeader = ReadHeader(reader);
 

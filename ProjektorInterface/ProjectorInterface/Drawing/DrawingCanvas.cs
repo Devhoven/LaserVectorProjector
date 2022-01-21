@@ -20,7 +20,7 @@ namespace ProjectorInterface
         Point StartMousePos;
 
         // Holds all of the actions the user did, like drawing or deleting something
-        CommandHistory Commands;
+        public CommandHistory Commands;
 
         // Holds the current tool one is drawing with
         DrawingTool CurrentTool;
@@ -37,7 +37,7 @@ namespace ProjectorInterface
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
 
-            DrawCommand.Parent = this;
+            CanvasCommand.Parent = this;
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -51,7 +51,7 @@ namespace ProjectorInterface
             // If the user middleclicked on one of the shapes, it is going to be deleted
             if (e.MiddleButton == MouseButtonState.Pressed && e.OriginalSource is Shape)
             {
-                Commands.Execute(new RemoveShapeCommand((Shape)e.OriginalSource));
+                Commands.Execute(new EraseShapeCommand((Shape)e.OriginalSource));
                 return;
             }
 

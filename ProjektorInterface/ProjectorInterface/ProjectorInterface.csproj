@@ -8,6 +8,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\CommandImages\Ellipse.png" />
+    <None Remove="Assets\CommandImages\EllipseErase.png" />
+    <None Remove="Assets\CommandImages\Line.png" />
+    <None Remove="Assets\CommandImages\LineErase.png" />
+    <None Remove="Assets\CommandImages\Path.png" />
+    <None Remove="Assets\CommandImages\PathErase.png" />
+    <None Remove="Assets\CommandImages\Rectangle.png" />
+    <None Remove="Assets\CommandImages\RectangleErase.png" />
+    <None Remove="Assets\Mogus.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\CommandImages\Ellipse.png" />
+    <EmbeddedResource Include="Assets\CommandImages\EllipseErase.png" />
+    <EmbeddedResource Include="Assets\CommandImages\LineErase.png" />
+    <EmbeddedResource Include="Assets\CommandImages\PathErase.png" />
+    <EmbeddedResource Include="Assets\CommandImages\RectangleErase.png" />
+    <EmbeddedResource Include="Assets\CommandImages\Line.png" />
+    <EmbeddedResource Include="Assets\CommandImages\Path.png" />
+    <EmbeddedResource Include="Assets\CommandImages\Rectangle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>

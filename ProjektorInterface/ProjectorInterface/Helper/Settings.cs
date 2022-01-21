@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace ProjectorInterface
+namespace ProjectorInterface.Helper
 {
     // static class, which holds all of the constant variables needed for the GUI
     static class Settings
@@ -20,7 +20,7 @@ namespace ProjectorInterface
         
         public static readonly int CANVAS_RESOLUTION = 1080;
 
-        public static readonly int SHAPE_THICKNESS = CANVAS_RESOLUTION / 150;
+        public static readonly int SHAPE_THICKNESS = CANVAS_RESOLUTION / 80;
         public static readonly Brush SHAPE_COLOR = new SolidColorBrush(Colors.Red);
     }
 }

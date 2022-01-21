@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ProjectorInterface.Helper;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Threading;

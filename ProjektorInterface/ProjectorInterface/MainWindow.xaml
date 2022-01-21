@@ -19,6 +19,9 @@
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
                 <MenuItem Header="Stop Lasershow" Click="StopShowClick"/>
             </MenuItem>
+
+            <ComboBox x:Name="Combo" Grid.Row="0" Padding="1"/>
+
         </Menu>
         <Viewbox Stretch="Uniform" Grid.Row="1">
             <local:DrawingCanvas x:Name="DrawCon" Width="{Binding CanvasResolution}" Height="{Binding CanvasResolution}"

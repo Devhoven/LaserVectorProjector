@@ -4,6 +4,7 @@ using ProjectorInterface.GalvoInterface;
 using ProjectorInterface.Helper;
 using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -38,6 +39,13 @@ namespace ProjectorInterface
             HistoryWindow.Left = this.Left + this.Width - HistoryWindow.Width;
             HistoryWindow.Top = this.Top + 80;
             HistoryWindow.Show();
+
+            string[] ports = SerialPort.GetPortNames();
+            foreach (string port in ports)
+            {
+                Combo.Items.Add(port);
+            }
+            Combo.SelectedIndex = 0;
 
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);

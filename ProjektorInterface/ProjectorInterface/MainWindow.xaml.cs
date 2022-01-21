@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using ProjectorInterface.Commands;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ProjectorInterface
 {
@@ -22,7 +25,13 @@ namespace ProjectorInterface
         {
             // ESC closes the app
             if (e.Key == Key.Escape)
+            {
                 Application.Current.Shutdown();
+            }
+            else if (e.Key == Key.D0)
+            {
+                List<LineSegment> tmp = ShapesToPoints.getPoints();
+            }
         }
     }
 }

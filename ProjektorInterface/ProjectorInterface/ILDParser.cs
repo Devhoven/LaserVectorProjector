@@ -24,40 +24,29 @@ namespace ProjectorInterface
 
         static HeaderInfo CurrentHeader;
 
-        public static void Parse()
+        public static void LoadFromFolder(string path)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo("C:/Users/Vincent/Pictures/LaserShow");
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
 
             foreach (var dir in dirInfo.GetFiles())
             {
-                try
+                BinaryReader reader = new BinaryReader(new FileStream(dir.FullName, FileMode.Open));
+
+                CurrentHeader = ReadHeader(reader);
+
+                for (int i = 0; i < CurrentHeader.FrameCount; i++)
                 {
-                    BinaryReader reader = new BinaryReader(new FileStream(dir.FullName, FileMode.Open));
+                    if (CurrentHeader.FormatCode == FormatCode.ColorPalette)
+                        ReadColorPalette(reader);
+                    else
+                        SerialManager.AddImg(ReadImgData(reader, ReadDataRecord));
 
                     CurrentHeader = ReadHeader(reader);
-
-                    for (int i = 0; i < CurrentHeader.FrameCount; i++)
-                    {
-                        switch (CurrentHeader.FormatCode)
-                        {
-                            case FormatCode.Coord3DIndexed:
-                                SerialManager.AddImg(new VectorizedImage(ReadData(reader, Read3DIndexed).ToArray()));
-                                break;
-                            case FormatCode.Coord2DIndexed:
-                                SerialManager.AddImg(new VectorizedImage(ReadData(reader, Read2DIndexed).ToArray()));
-                                break;
-                        }
-                        CurrentHeader = ReadHeader(reader);
-                    }
                 }
-                catch (Exception ex)
-                { }
             }
-
-
-            SerialManager.Initialize("COM5");
         }
 
+        // Reads the next header
         static HeaderInfo ReadHeader(BinaryReader reader)
         {
             HeaderInfo result = new HeaderInfo();
@@ -74,7 +63,7 @@ namespace ProjectorInterface
             // (0 = 3D coordinate section, 1 = 2D coordinate section, 2 = Colour palette section)
             result.FormatCode = (FormatCode)reader.ReadByte();
 
-            // Skipping the bytes from 9 to 24 (This is just the name of the frame and company name)
+            // Skipping the bytes 9 to 24 (This is just the name of the frame and company name)
             reader.Skip(16);
 
             result.EntryCount = reader.ReadInt16BE();
@@ -89,61 +78,46 @@ namespace ProjectorInterface
             return result;
         }
 
-        static List<PointF> ReadData(BinaryReader reader, Func<BinaryReader, (bool, PointF)> readFunc)
+        // Iterates over the current data section and returns an normalized image
+        static VectorizedImage ReadImgData(BinaryReader reader, Func<BinaryReader, PointF> readFunc)
         {
             List<PointF> result = new List<PointF>();
 
-            bool lastCoord = false;
-            PointF newPoint;
+            for (int i = 0; i < CurrentHeader.EntryCount; i++)
+                result.Add(readFunc(reader));
 
-            while(!lastCoord)
-            {
-                (lastCoord, newPoint) = readFunc(reader);
-                result.Add(newPoint);
-            }
-
-            return result;
+            return new VectorizedImage(result.ToArray());
         }
 
-        static (bool, PointF) Read3DIndexed(BinaryReader reader)
+        // Is able to read a data record of any frame
+        static PointF ReadDataRecord(BinaryReader reader)
         {
             // Reading the x and y coord
             short xPos = reader.ReadInt16BE();
             short yPos = reader.ReadInt16BE();
 
             // Skipping the z-Coordinate, since I don't need it
-            reader.Skip(2);
+            if (CurrentHeader.FormatCode == FormatCode.Coord3DIndexed)
+                reader.Skip(2);
 
             // The status code contains in the 8th bit if this is the last point
             // and in the 7th bit if the laser should be one or off 
             byte statusCode = reader.ReadByte();
 
             // Skipping the color index
-            reader.Skip(1);
+            // Either one byte or two, depending on the current format code
+            if (CurrentHeader.FormatCode == FormatCode.Coord3DIndexed || CurrentHeader.FormatCode == FormatCode.Coord2DIndexed)
+                reader.Skip(1);
+            else
+                reader.Skip(3);
 
-            return (statusCode >> 7 == 1, new PointF(xPos, yPos, statusCode >> 6 == 1));
+            return new PointF(xPos, yPos, (statusCode & 0b01000000) == 64);
         }
 
-        static (bool, PointF) Read2DIndexed(BinaryReader reader)
-        {
-            // Reading the x and y coord
-            short xPos = reader.ReadInt16BE();
-            short yPos = reader.ReadInt16BE();
-
-            // The status code contains in the 8th bit if this is the last point
-            // and in the 7th bit if the laser should be one or off 
-            byte statusCode = reader.ReadByte();
-
-            // Skipping the color index
-            reader.Skip(1);
-
-            return (statusCode >> 7 == 1, new PointF(xPos, yPos, statusCode >> 6 == 1));
-        }
-
-        // Skips to the given position
-        // The next value that is going to be read is going to be at the given position
-        static void SkipTo(this BinaryReader reader, uint pos)
-            => reader.BaseStream.Position = pos - 1; // - 1, since its zero basesd
+        // "Reads" the color palette section
+        // Skipping it, since we don't need it yet
+        static void ReadColorPalette(BinaryReader reader)
+            => reader.Skip((uint)(CurrentHeader.EntryCount * 3));
 
         // Skips 'count' - bytes in the stream
         static void Skip(this BinaryReader reader, uint count)
@@ -161,9 +135,7 @@ namespace ProjectorInterface
             public short FrameCount;
 
             public override string ToString()
-            {
-                return "Format Code: " + FormatCode + " Entry Count: " + EntryCount + " Frame Number: " + FrameNumber + " Frame Count: " + FrameCount;
-            }
+                => "Format Code: " + FormatCode + " Entry Count: " + EntryCount + " Frame Number: " + FrameNumber + " Frame Count: " + FrameCount;
         }  
     }
 }

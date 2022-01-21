@@ -55,11 +55,8 @@ namespace ProjectorInterface
                 Filter = "Image files (*.png; *.jpg; *.jpeg; *.bmp;)|*.png;*.jpg;*.jpeg;*.bmp;"
             };
 
-            // Display OpenFileDialog by calling ShowDialog method 
-            bool? result = fileDialog.ShowDialog();
-
             // Checking if the user selected something
-            if (result == true)
+            if (fileDialog.ShowDialog() == true)
             {
                 Source = new BitmapImage(new Uri(fileDialog.FileName));
                 Reset();

@@ -8,7 +8,19 @@
         x:Name="Window" Title="MainWindow" WindowState="Maximized" Background="Black"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
-        <Viewbox Stretch="Uniform">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="_Select Lasershow folder" Click="SelectShowClick"/>
+                <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
+                <MenuItem Header="Stop Lasershow" Click="StopShowClick"/>
+            </MenuItem>
+        </Menu>
+        <Viewbox Stretch="Uniform" Grid.Row="1">
             <local:DrawingCanvas x:Name="DrawCon" Width="{Binding CanvasResolution}" Height="{Binding CanvasResolution}"
                                  Margin="20" Background="White" ClipToBounds="True" Focusable="True"/>
         </Viewbox>

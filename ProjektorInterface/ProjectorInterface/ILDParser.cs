@@ -24,25 +24,21 @@ namespace ProjectorInterface
 
         static HeaderInfo CurrentHeader;
 
-        public static void LoadFromFolder(string path)
+        // Loads the frames from the selected file into the given images list
+        public static void LoadFromPath(string path, ref List<VectorizedImage> images)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open));
 
-            foreach (var dir in dirInfo.GetFiles())
+            CurrentHeader = ReadHeader(reader);
+
+            for (int i = 0; i < CurrentHeader.FrameCount; i++)
             {
-                BinaryReader reader = new BinaryReader(new FileStream(dir.FullName, FileMode.Open));
+                if (CurrentHeader.FormatCode == FormatCode.ColorPalette)
+                    ReadColorPalette(reader);
+                else
+                    images.Add(ReadImgData(reader, ReadDataRecord));
 
                 CurrentHeader = ReadHeader(reader);
-
-                for (int i = 0; i < CurrentHeader.FrameCount; i++)
-                {
-                    if (CurrentHeader.FormatCode == FormatCode.ColorPalette)
-                        ReadColorPalette(reader);
-                    else
-                        SerialManager.AddImg(ReadImgData(reader, ReadDataRecord));
-
-                    CurrentHeader = ReadHeader(reader);
-                }
             }
         }
 
@@ -127,6 +123,7 @@ namespace ProjectorInterface
         static short ReadInt16BE(this BinaryReader reader)
             => BitConverter.ToInt16(reader.ReadBytes(2).Reverse().ToArray());
 
+        // Contains the information of each header
         struct HeaderInfo
         {
             public FormatCode FormatCode;

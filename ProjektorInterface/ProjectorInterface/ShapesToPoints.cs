@@ -14,100 +14,103 @@ namespace ProjectorInterface.Commands
         public static List<LineSegment> points = new List<LineSegment>();
         static LineSegment seg = new LineSegment();
         static Point currentp = new Point();
-        static double precision = 4;
+        static double ellipseAccuracy = 0.01;
 
         public static List<LineSegment> getPoints()
         {
             foreach (UIElement child in Parent.Children)
             {
-                if (child is Line)
+                if (child is Line line)
                 {
                     // moving to (X1, Y1) with laser OFF
-                    seg.IsStroked = false;
-                    currentp.X = ((Line)child).X1;
-                    currentp.Y = ((Line)child).Y1;
-                    seg.Point = currentp;
-                    points.Add(seg.Clone());
+                    CalcCoord(false, line.X1, line.Y1);
 
                     // moving to (X2, Y2) with laser ON
-                    seg.IsStroked = true;
-                    currentp.X = ((Line)child).X2;
-                    currentp.Y = ((Line)child).Y2;
-                    seg.Point = currentp;
-                    points.Add(seg.Clone());
+                    CalcCoord(true, line.X2, line.Y2);
                 }
-                else if (child is Rectangle)
+                else if (child is Rectangle rectangle)
                 {
-                    Point p = new Point(Canvas.GetLeft(child), Canvas.GetTop(child));//Parent.TranslatePoint(new Point(0, 0), ((Rectangle)child));
+                    Point p = new Point(Canvas.GetLeft(child), Canvas.GetTop(child));
+
                     // moving to "upper left" corner with laser OFF
-                    calcCoord(false, p.X, p.Y);
+                    CalcCoord(false, p.X, p.Y);
 
-                    // "upper right" corner
-                    calcCoord(true, currentp.X + ((Rectangle)child).Width, currentp.Y);
+                    // upper right corner
+                    CalcCoord(true, currentp.X + rectangle.Width, currentp.Y);
 
-                    // "lower right" corner
-                    calcCoord(true, currentp.X, currentp.Y + ((Rectangle)child).Height);
+                    // lower right corner
+                    CalcCoord(true, currentp.X, currentp.Y + rectangle.Height);
 
-                    // "lower left" corner
-                    calcCoord(true, currentp.X - ((Rectangle)child).Width, currentp.Y);
+                    // lower left corner
+                    CalcCoord(true, currentp.X - rectangle.Width, currentp.Y);
 
-                    // back to "upper left"
-                    calcCoord(true, currentp.X, currentp.Y - ((Rectangle)child).Height);
+                    // back to upper left
+                    CalcCoord(true, currentp.X, currentp.Y - rectangle.Height);
                 }
-                else if (child is Ellipse)
+                else if (child is Ellipse ellipse)
                 {
-                    Point p = Parent.TranslatePoint(new Point(0, 0), ((Ellipse)child));
+                    Point p = new Point(Canvas.GetLeft(child), Canvas.GetTop(child));
 
-                    // moving to center with laser OFF
-                    calcCoord(false, p.X, p.Y);
-                    // moving to the north ("12 o' clock")
-                    calcCoord(false, currentp.X, currentp.Y - ((Ellipse)child).Height / 2);
-
-
-                    //calcCoord(true, currentp.X + Math.Sin(precision / (2*Math.PI)), currentp.Y * Math.Cos(precision/ (Math.PI)));
-
-
-
-                    List<Point> pointsInEllipse = new List<Point>();
+                    // moving to the center of the ellipse from where the other points are calculated
+                    CalcCoord(false, currentp.X + ellipse.Width / 2 + p.X, currentp.Y + ellipse.Height / 2 + p.Y);
 
                     // Distance in radians between angles measured on the ellipse
                     double deltaAngle = 0.001;
-                    double circumference = GetLengthOfEllipse(deltaAngle, (Ellipse)child);
+                    double circumference = GetLengthOfEllipse(deltaAngle, ellipse);
 
-                    double arcLength = 0.1;
+                    // Length of each ellipse-arc
+                    double arcLength = 100;
 
                     double angle = 0;
 
-                    double r1 = ((Ellipse)child).Width;
-                    double r2 = ((Ellipse)child).Height;
-
-                    if (r1 > r2)
-                    {
-                        double temp = r1;
-                        r1 = r2;
-                        r2 = temp;
-                    }
+                    double r1 = ellipse.Width / 2;
+                    double r2 = ellipse.Height / 2;
 
                     // Loop until we get all the points out of the ellipse
                     for (int numPoints = 0; numPoints < circumference / arcLength; numPoints++)
                     {
                         angle = GetAngleForArcLengthRecursively(0, arcLength, angle, deltaAngle, r2, r1);
 
-                        double x = r1 * Math.Cos(angle);
-                        double y = r2 * Math.Sin(angle);
-                        calcCoord(true, x, y);
-                    }
+                        double x = r1 * Math.Cos(angle) + r1 + p.X;
+                        double y = r2 * Math.Sin(angle) + r2 + p.Y;
 
+                        // checks if point already is inside list
+                        if ((points[points.Count - 1].Point.X == (x / CANVAS_RESOLUTION)) && (points[points.Count - 1].Point.Y == (y / CANVAS_RESOLUTION)))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            CalcCoord(true, x, y);
+                        }
+                    }
                 }
                 else
                 {
                     continue;
                 }
             }
+
+            // TESTING CONVERSION TO POINTS
+            /*
+            foreach (LineSegment ls in points)
+            {
+                Ellipse tmp = new Ellipse()
+                {
+                    StrokeThickness = 4,
+                    Stroke = new SolidColorBrush(Colors.Blue),
+                    Width = 10,
+                    Height = 10
+                };
+                Canvas.SetLeft(tmp, ls.Point.X * CANVAS_RESOLUTION);
+                Canvas.SetTop(tmp, ls.Point.Y * CANVAS_RESOLUTION);
+                Parent.Children.Add(tmp);
+            }*/
+
             return points;
         }
 
-
+        // Calculates the curcumference of a given Ellipse 
         private static double GetLengthOfEllipse(double deltaAngle, Ellipse child)
         {
             // Distance in radians between angles
@@ -126,46 +129,44 @@ namespace ProjectorInterface.Commands
             return length;
         }
 
+        // Calculates the angle for the next arc piece
         private static double GetAngleForArcLengthRecursively(double currentArcPos, double goalArcPos, double angle, double angleSeg, double maj, double min)
         {
-            double ARC_ACCURACY = 1;
+            // Accuracy for when we are overshooting/undershooting
+            double ARC_ACCURACY = ellipseAccuracy;
             // Calculate arc length at new angle
             double nextSegLength = ComputeArcOverAngle(maj, min, angle + angleSeg, angleSeg);
 
-            // If we've overshot, reduce the delta angle and try again
             if (currentArcPos + nextSegLength > goalArcPos)
             {
+                // If we've overshot, reduce the delta angle and try again
                 return GetAngleForArcLengthRecursively(currentArcPos, goalArcPos, angle, angleSeg / 2, maj, min);
-
-                // We're below the our goal value but not in range (
             }
             else if (currentArcPos + nextSegLength < goalArcPos - ((goalArcPos - currentArcPos) * ARC_ACCURACY))
             {
+                // We're below our goal value but not in range
                 return GetAngleForArcLengthRecursively(currentArcPos + nextSegLength, goalArcPos, angle + angleSeg, angleSeg, maj, min);
-
-                // current arc length is in range (within error), so return the angle
             }
             else
+            {
+                // Current arc length is in range (within our Accuracy), so return the angle
                 return angle;
+            }
         }
 
+        // Calculates arc lengh of an Ellipse with a given angle as a line
         private static double ComputeArcOverAngle(double r1, double r2, double angle, double angleSeg)
         {
-            double distance = 0.0;
-
             double dpt_sin = Math.Pow(r1 * Math.Sin(angle), 2.0);
             double dpt_cos = Math.Pow(r2 * Math.Cos(angle), 2.0);
-            distance = Math.Sqrt(dpt_sin + dpt_cos);
+            double distance = Math.Sqrt(dpt_sin + dpt_cos);
 
             // Scale the value of distance
             return distance * angleSeg;
         }
 
-
-
-
-        // Adds a new LineSegment towards the point (x,y) with the laserstatus stroke to the list
-        static void calcCoord(bool stroke, double x, double y)
+        // Adds a new LineSegment towards the normalized point (x,y) with the laserstatus stroke
+        static void CalcCoord(bool stroke, double x, double y)
         {
             seg.IsStroked = stroke;
             currentp.X = x;
@@ -174,6 +175,5 @@ namespace ProjectorInterface.Commands
             seg.Point = normalized;
             points.Add(seg.Clone());
         }
-
     }
 }

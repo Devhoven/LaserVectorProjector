@@ -37,8 +37,6 @@ namespace ProjectorInterface.DrawingTools
 
         // Copy returns a copy of the shape which the tool is supposed to draw
         public virtual Shape CopyShape()
-        {
-            return Current;
-        }
+            => Current;
     }
 }

@@ -36,11 +36,16 @@ namespace ProjectorInterface.GalvoInterface
             Images = new List<VectorizedImage>();
             Buffer = new byte[BUFFER_SIZE];
         }
-        
+
         // Initializes the port 
         public static void Initialize(string portName)
         {
-            Port = new SerialPort(portName, BAUD_RATE);
+            if (Port != null)
+                Port.Close();
+
+            if (Port == null)
+                Port = new SerialPort(portName, BAUD_RATE);
+
             Port.Open();
         }
 
@@ -94,14 +99,15 @@ namespace ProjectorInterface.GalvoInterface
 
         static void SendImgLoop()
         {
+            VectorizedImage currentImg;
+            Line currentLine;
             while (Running)
             {
-                VectorizedImage currentImg = Images[CurrentImgIndex];
+                currentImg = Images[CurrentImgIndex];
                 // Locking the image, since this method runs in a different thread and delete functionality is going to be implemented
                 lock (currentImg)
                 {
                     // Looping through all of the lines contained in the current image
-                    Line currentLine;
                     for (int i = 0; i < currentImg.Lines.Length; i++)
                     {
                         currentLine = currentImg.Lines[i];
@@ -112,14 +118,8 @@ namespace ProjectorInterface.GalvoInterface
                         Buffer[2] = (byte)currentLine.Y;
                         Buffer[3] = (byte)(currentLine.Y >> 8);
 
-                        //// Writing the delay into the buffer
-                        //Buffer[4] = currentLine.Delay;
-                        //// The last bit of the delay contains the information if the laser has to be turned off or on on this line
-                        //Buffer[4] = (byte)((Buffer[4] & 0b0111111) | (Convert.ToByte(currentLine.On) << 7));
-
                         // Sending the data
                         Port.Write(Buffer, 0, BUFFER_SIZE);
-
                     }
                 }
                 // Moving on to the next image, or looping to the beginning

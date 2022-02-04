@@ -13,7 +13,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Menu Grid.Row="0" KeyboardNavigation.DirectionalNavigation="None">
+        <Menu x:Name="NavigationBar" Grid.Row="0" KeyboardNavigation.DirectionalNavigation="None">
             <MenuItem Header="File">
                 <MenuItem Header="Select Lasershow folder" Click="SelectShowClick"/>
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>

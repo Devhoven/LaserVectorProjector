@@ -37,7 +37,7 @@ namespace ProjectorInterface
             HistoryWindow.Owner = this;
             // This way it starts in the top right corner of the window
             HistoryWindow.Left = this.Left + this.Width - HistoryWindow.Width;
-            HistoryWindow.Top = this.Top + 80;
+            HistoryWindow.Top = this.Top + NavigationBar.Height;
             HistoryWindow.Show();
 
             string[] ports = SerialPort.GetPortNames();

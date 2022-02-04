@@ -13,9 +13,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Menu Grid.Row="0">
+        <Menu Grid.Row="0" KeyboardNavigation.DirectionalNavigation="None">
             <MenuItem Header="File">
-                <MenuItem Header="_Select Lasershow folder" Click="SelectShowClick"/>
+                <MenuItem Header="Select Lasershow folder" Click="SelectShowClick"/>
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
                 <MenuItem Header="Stop Lasershow" Click="StopShowClick"/>
             </MenuItem>

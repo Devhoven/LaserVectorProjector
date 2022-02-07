@@ -5,27 +5,95 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectorInterface"
         mc:Ignorable="d"
-        x:Name="Window" Title="MainWindow" WindowState="Maximized" Background="Black"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        x:Name="Window" Title="Lasershow" WindowState="Maximized" Background="Black"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
+        <!-- Navigationbar -->
         <Menu x:Name="NavigationBar" Grid.Row="0" KeyboardNavigation.DirectionalNavigation="None">
-            <MenuItem Header="File">
-                <MenuItem Header="Select Lasershow folder" Click="SelectShowClick"/>
+            <MenuItem Header="_File">
+                <MenuItem Header="Select Lasershow folder" Click="SelectShowClick" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
                 <MenuItem Header="Stop Lasershow" Click="StopShowClick"/>
+                <Separator/>
+                <MenuItem Header="Open Image" Click="OpenImageClick"/>
             </MenuItem>
 
-            <ComboBox x:Name="Combo" Grid.Row="0" Padding="1"/>
+            <MenuItem Header="Settings">
+                <MenuItem Header="Settings"/>
+            </MenuItem>
 
+            <MenuItem Header="Other">
+                <MenuItem Header="GitHub" Click="GitHubClick"/>
+            </MenuItem>
+            
+            <ComboBox x:Name="Combo" Grid.Row="0" Padding="1" SelectionChanged="Combo_SelectionChanged"/>
         </Menu>
-        <Viewbox Stretch="Uniform" Grid.Row="1">
-            <local:DrawingCanvas x:Name="DrawCon" Width="{Binding CanvasResolution}" Height="{Binding CanvasResolution}"
-                                 Margin="20" Background="White" ClipToBounds="True" Focusable="True"/>
-        </Viewbox>
+
+        
+        <!-- Lower Container -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Width="50" Height="50" VerticalAlignment="Bottom" Grid.Row="0" Click="SelectLineClick">
+                    <Button.Content>
+                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
+                    </Button.Content>
+                </Button>
+
+                <Button Width="50" Height="50" Grid.Row="1" Click="SelectRectangleClick">
+                    <Button.Content>
+                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
+                    </Button.Content>
+                </Button>
+
+                <Button Width="50" Height="50" Grid.Row="2" Click="SelectCircleClick">
+                    <Button.Content>
+                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
+                    </Button.Content>
+                </Button>
+
+                <Button Width="50" Height="50" Grid.Row="3" Click="SelectPathClick">
+                    <Button.Content>
+                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+            <Viewbox Stretch="Uniform" Grid.Row ="1" Grid.Column="1">
+                <local:DrawingCanvas x:Name="DrawCon" Width="{Binding CanvasResolution}" Height="{Binding CanvasResolution}"
+                                     Margin="20" Background="White" ClipToBounds="True" Focusable="True"/>
+            </Viewbox>
+
+            <Border Grid.Row="4" Grid.Column="0">
+                
+            </Border>
+
+            <Border Grid.Column="2" Grid.Row="1">
+                <StackPanel Grid.Column="2" Grid.Row="1">
+                    <Menu DockPanel.Dock="Top">
+                        <MenuItem Header="Undo" Click="UndoClick"/>
+                        <MenuItem Header="Redo" Click="RedoClick"/>
+                    </Menu>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

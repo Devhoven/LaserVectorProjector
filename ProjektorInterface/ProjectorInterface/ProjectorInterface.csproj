@@ -20,14 +20,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\CommandImages\Ellipse.png" />
-    <EmbeddedResource Include="Assets\CommandImages\EllipseErase.png" />
-    <EmbeddedResource Include="Assets\CommandImages\LineErase.png" />
-    <EmbeddedResource Include="Assets\CommandImages\PathErase.png" />
-    <EmbeddedResource Include="Assets\CommandImages\RectangleErase.png" />
-    <EmbeddedResource Include="Assets\CommandImages\Line.png" />
-    <EmbeddedResource Include="Assets\CommandImages\Path.png" />
-    <EmbeddedResource Include="Assets\CommandImages\Rectangle.png" />
+    <EmbeddedResource Include="Assets\CommandImages\Ellipse.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\EllipseErase.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\LineErase.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\PathErase.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\RectangleErase.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\Line.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\Path.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\CommandImages\Rectangle.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

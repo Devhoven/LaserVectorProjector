@@ -13,7 +13,7 @@ using static ProjectorInterface.Helper.Settings;
 namespace ProjectorInterface
 {
     // A image which can be moved and zoomed
-    class MoveableImage : Image
+    public class MoveableImage : Image
     {
         double Top = 0;
         double Left = 0;

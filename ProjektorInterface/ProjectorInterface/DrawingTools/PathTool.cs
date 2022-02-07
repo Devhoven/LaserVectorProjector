@@ -17,6 +17,8 @@ namespace ProjectorInterface.DrawingTools
 
         GeometryGroup Geometry;
 
+        // determines the "smoothness" of the path with each segment length
+        double length = 5;
         Point LastPoint;
 
         public PathTool() : base(new Path())
@@ -30,15 +32,18 @@ namespace ProjectorInterface.DrawingTools
 
         public override void Render(Point start, Point end)
         {
-            if (LastPoint.X == 0 && LastPoint.Y == 0)
+            if (Math.Abs(end.X - LastPoint.X) > length || Math.Abs(end.Y - LastPoint.Y) > length)
             {
-                LastPoint = start;
-                Geometry.Children.Add(new LineGeometry(LastPoint, end));
-            }
-            else
-            {
-                Geometry.Children.Add(new LineGeometry(LastPoint, end));
-                LastPoint = end;
+                if (LastPoint.X == 0 && LastPoint.Y == 0)
+                {
+                    LastPoint = start;
+                    Geometry.Children.Add(new LineGeometry(LastPoint, end));
+                }
+                else
+                {
+                    Geometry.Children.Add(new LineGeometry(LastPoint, end));
+                    LastPoint = end;
+                }
             }
         }
 

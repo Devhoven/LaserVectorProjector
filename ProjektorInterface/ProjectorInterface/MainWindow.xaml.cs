@@ -1,9 +1,11 @@
 ﻿using Ookii.Dialogs.Wpf;
 using ProjectorInterface.Commands;
+using ProjectorInterface.DrawingTools;
 using ProjectorInterface.GalvoInterface;
 using ProjectorInterface.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Windows;
 using System.Windows.Input;
@@ -23,8 +25,6 @@ namespace ProjectorInterface
         public MainWindow()
         {
             InitializeComponent();
-
-            SerialManager.Initialize("COM5");
 
             // You somehow can't override this event
             Loaded += OnLoaded;
@@ -47,6 +47,10 @@ namespace ProjectorInterface
             }
             Combo.SelectedIndex = 0;
 
+            Combo.Items.Add("COM 5");
+
+            SerialManager.Initialize(Combo.Text);
+
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);
         }
@@ -62,10 +66,12 @@ namespace ProjectorInterface
             {
                 Application.Current.Shutdown();
             }
-            else if (e.Key == Key.D0)
+            else if (e.Key == Key.D0) // 0-Key converts shapes into list of points which can be given to the Arduino
             {
-                List<LineSegment> tmp = ShapesToPoints.getPoints();
+                List<LineSegment> points = ShapesToPoints.getPoints();
             }
+
+            Keyboard.Focus(DrawCon);
         }
 
         // Opens a folder dialog for selecting a folder with .ild files
@@ -88,5 +94,45 @@ namespace ProjectorInterface
         // Stops it
         private void StopShowClick(object sender, RoutedEventArgs e)
             => SerialManager.Stop();
+
+        private void Combo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (Combo.Text != "" && Combo.Items != null)
+            {
+                SerialManager.Initialize(Combo.Text);
+            }
+        }
+
+        private void OpenImageClick(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void GitHubClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo 
+            { 
+                FileName = "https://github.com/Devhoven/LaserVectorProjector", 
+                UseShellExecute = true 
+            });
+        }
+
+        private void SelectLineClick(object sender, RoutedEventArgs e)
+        {
+            DrawCon.CurrentTool = new LineTool();
+        }
+
+        private void SelectRectangleClick(object sender, RoutedEventArgs e)
+        {
+            DrawCon.CurrentTool = new RectTool();
+        }
+        private void SelectCircleClick(object sender, RoutedEventArgs e)
+        {
+            DrawCon.CurrentTool = new CircleTool();
+        }
+        private void SelectPathClick(object sender, RoutedEventArgs e)
+        {
+            DrawCon.CurrentTool = new PathTool();
+        }
     }
 }

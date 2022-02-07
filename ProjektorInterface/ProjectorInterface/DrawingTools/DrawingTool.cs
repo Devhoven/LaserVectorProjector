@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 namespace ProjectorInterface.DrawingTools
 {
     // Superclass for all of the drawing tools, like the line etc.
-    class DrawingTool : Border
+    public class DrawingTool : Border
     {
         protected Shape Current = null!;
 

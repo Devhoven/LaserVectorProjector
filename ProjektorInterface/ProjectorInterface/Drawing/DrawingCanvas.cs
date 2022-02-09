@@ -20,19 +20,18 @@ namespace ProjectorInterface
         Point StartMousePos;
 
         // Holds all of the actions the user did, like drawing or deleting something
-        public CommandHistory Commands;
+        public CommandHistory Commands { get; set; }
 
         // Holds the current tool one is drawing with
-        DrawingTool CurrentTool;
+        public DrawingTool CurrentTool;
 
         // Background image of the canvas
         // Can be controlled, so the user is able to trace the outlines
-        MoveableImage BackgroundImg;
+        public MoveableImage BackgroundImg;
 
         public DrawingCanvas()
         {
             CurrentTool = new LineTool();
-            Commands = new CommandHistory();
 
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
@@ -43,10 +42,17 @@ namespace ProjectorInterface
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             // Getting the mouse pos relative to the canvas
-            StartMousePos = e.GetPosition(this);
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                StartMousePos = e.GetPosition(this);
+                Children.Add(CurrentTool);
+            }else if (e.RightButton == MouseButtonState.Pressed)
+            {
+                
+            }
             // Resetting the position of the current tool, which makes it invisible at the start
             // Removes a bug
-            CurrentTool.Render(StartMousePos, StartMousePos);
+            // CurrentTool.Render(StartMousePos, StartMousePos);
 
             // If the user middleclicked on one of the shapes, it is going to be deleted
             if (e.MiddleButton == MouseButtonState.Pressed && e.OriginalSource is Shape)
@@ -54,9 +60,8 @@ namespace ProjectorInterface
                 Commands.Execute(new EraseShapeCommand((Shape)e.OriginalSource));
                 return;
             }
-
-            if (e.LeftButton == MouseButtonState.Pressed)
-                Children.Add(CurrentTool);
+                
+            Keyboard.Focus(this);
         }
 
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
@@ -72,6 +77,7 @@ namespace ProjectorInterface
         {
             if (e.ChangedButton == MouseButton.Left)
                 RemoveToolAndCopy(e.GetPosition(this));
+            Keyboard.Focus(this);
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -108,10 +114,11 @@ namespace ProjectorInterface
                 // CTRL + Z = Undo
                 if (Keyboard.IsKeyDown(Key.Z))
                     Commands.Undo();
-                // CTRL + Z = Redo
+                // CTRL + Y = Redo
                 else if (Keyboard.IsKeyDown(Key.Y))
                     Commands.Redo();
             }
+
 
             // Operations for the background image
             if (e.Key == Key.Delete)

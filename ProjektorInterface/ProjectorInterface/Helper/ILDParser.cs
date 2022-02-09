@@ -94,7 +94,7 @@ namespace ProjectorInterface.Helper
             short xPos = reader.ReadInt16BE();
             short yPos = reader.ReadInt16BE();
 
-            // Skipping the z-Coordinate, since I don't need it
+            // Skipping the z-Coordinate, since we don't need it
             if (CurrentHeader.FormatCode == FormatCode.Coord3DIndexed)
                 reader.Skip(2);
 
@@ -109,7 +109,7 @@ namespace ProjectorInterface.Helper
             else
                 reader.Skip(3);
 
-            return new PointF(xPos, yPos, (statusCode & 0b01000000) == 64);
+            return new PointF(xPos, yPos, (statusCode & 0b01000000) != 64);
         }
 
         // "Reads" the color palette section

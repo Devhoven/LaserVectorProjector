@@ -20,7 +20,7 @@ namespace ProjectorInterface.Helper
         
         public static readonly int CANVAS_RESOLUTION = 1080;
 
-        public static readonly int SHAPE_THICKNESS = CANVAS_RESOLUTION / 80;
+        public static readonly int SHAPE_THICKNESS = CANVAS_RESOLUTION / 200;
         public static readonly Brush SHAPE_COLOR = new SolidColorBrush(Colors.Red);
     }
 }

@@ -11,7 +11,7 @@ namespace ProjectorInterface.Helper
     static class Settings
     {
         // Holds the maximum voltage (in mV) 
-        public static readonly short MAX_VOLTAGE = 4100;
+        public static readonly short MAX_VOLTAGE = 4096;
         // You can't give the galvos too much change in voltage per command, this limits it to 100mV per command
         public static readonly short MAX_STEP_SIZE = 100;
 

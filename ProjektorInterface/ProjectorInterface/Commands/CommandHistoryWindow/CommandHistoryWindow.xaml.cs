@@ -5,21 +5,30 @@ using System.Windows.Media;
 
 namespace ProjectorInterface.Commands
 {
-    public partial class CommandHistoryWindow : Window
+    public partial class CommandHistoryWindow : UserControl
     {
-        CommandHistory History;
+        public CommandHistory History 
+        {
+            get => _History;
+            set
+            {
+                _History = value;
 
-        public CommandHistoryWindow(CommandHistory history)
+                // With these 4 events this window is synchronizing the history display with the commands 
+                _History.Executed += HistoryExecuted;
+                _History.Deleted += HistoryDeleted;
+                _History.Undid += HistoryUndid;
+                _History.Redid += HistoryRedid;
+            }
+        }
+
+        CommandHistory _History = null!;
+
+        public CommandHistoryWindow()
         {
             InitializeComponent();
 
-            History = history;
-
-            // With these 4 events this window is synchronizing the history display with the commands 
-            History.Executed += HistoryExecuted;
-            History.Deleted += HistoryDeleted;
-            History.Undid += HistoryUndid;
-            History.Redid += HistoryRedid;
+            this.DataContext = this;
         }
 
         private void HistoryDeleted(object? sender, int index)

@@ -20,7 +20,9 @@ namespace ProjectorInterface
             DependencyProperty.Register("CanvasResolution", typeof(int), typeof(MainWindow),
                 new PropertyMetadata(Settings.CANVAS_RESOLUTION));
 
-        CommandHistoryWindow HistoryWindow = null!;
+        public static readonly DependencyProperty CommandHistoryProperty =
+            DependencyProperty.Register("CommandHistory", typeof(CommandHistory), typeof(MainWindow),
+                new PropertyMetadata(new CommandHistory()));
 
         public MainWindow()
         {
@@ -32,14 +34,6 @@ namespace ProjectorInterface
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            // The owner of this window is only be able to set if the main window is open already
-            HistoryWindow = new CommandHistoryWindow(DrawCon.Commands);
-            HistoryWindow.Owner = this;
-            // This way it starts in the top right corner of the window
-            HistoryWindow.Left = this.Left + this.Width - HistoryWindow.Width;
-            HistoryWindow.Top = this.Top + NavigationBar.Height;
-            HistoryWindow.Show();
-
             string[] ports = SerialPort.GetPortNames();
             foreach (string port in ports)
             {
@@ -50,6 +44,9 @@ namespace ProjectorInterface
             Combo.Items.Add("COM 5");
 
             SerialManager.Initialize(Combo.Text);
+
+            DrawCon.Commands = (CommandHistory)GetValue(CommandHistoryProperty);
+            CommandHistoryDisplay.History = (CommandHistory)GetValue(CommandHistoryProperty);
 
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);
@@ -85,6 +82,8 @@ namespace ProjectorInterface
                 // Loading the new ones in
                 SerialManager.LoadImagesFromFolder(dialog.SelectedPath);
             }
+
+            SerialManager.drawImages(imgGallary);
         }
 
         // Starts the sending of data
@@ -118,21 +117,18 @@ namespace ProjectorInterface
         }
 
         private void SelectLineClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new LineTool();
-        }
+            => DrawCon.CurrentTool = new LineTool();
 
         private void SelectRectangleClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new RectTool();
-        }
+            => DrawCon.CurrentTool = new RectTool();
+
         private void SelectCircleClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new CircleTool();
-        }
+            => DrawCon.CurrentTool = new CircleTool();
+        
         private void SelectPathClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new PathTool();
-        }
+            => DrawCon.CurrentTool = new PathTool();        
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+            => DrawCon.Children.Clear();
     }
 }

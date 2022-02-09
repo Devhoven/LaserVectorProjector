@@ -20,7 +20,7 @@ namespace ProjectorInterface
         Point StartMousePos;
 
         // Holds all of the actions the user did, like drawing or deleting something
-        public CommandHistory Commands;
+        public CommandHistory Commands { get; set; }
 
         // Holds the current tool one is drawing with
         public DrawingTool CurrentTool;
@@ -32,7 +32,6 @@ namespace ProjectorInterface
         public DrawingCanvas()
         {
             CurrentTool = new LineTool();
-            Commands = new CommandHistory();
 
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
@@ -47,6 +46,9 @@ namespace ProjectorInterface
             {
                 StartMousePos = e.GetPosition(this);
                 Children.Add(CurrentTool);
+            }else if (e.RightButton == MouseButtonState.Pressed)
+            {
+                
             }
             // Resetting the position of the current tool, which makes it invisible at the start
             // Removes a bug

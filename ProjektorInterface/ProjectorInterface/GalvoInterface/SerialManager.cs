@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Threading;
+using System.Windows;
 
 namespace ProjectorInterface.GalvoInterface
 {
@@ -46,7 +47,7 @@ namespace ProjectorInterface.GalvoInterface
             if (Port == null)
                 Port = new SerialPort(portName, BAUD_RATE);
 
-            Port.Open();
+            //Port.Open();
         }
 
         // Starts the thread if it isn't already running and some images were loaded in
@@ -80,7 +81,7 @@ namespace ProjectorInterface.GalvoInterface
             {
                 if (dir.Name.EndsWith(".ild"))
                     ILDParser.LoadFromPath(dir.FullName, ref Images);
-            }
+            }          
         }
 
         // Removes the given image from the list and sets the the CurrenImgIndex to 0, in order to prevent errors
@@ -125,6 +126,11 @@ namespace ProjectorInterface.GalvoInterface
                 // Moving on to the next image, or looping to the beginning
                 CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
             }
+        }
+
+        public static void drawImages(UIElement panel)
+        {
+            VectorizedAnimation rImage = new VectorizedAnimation(Images, panel);
         }
     }
 }

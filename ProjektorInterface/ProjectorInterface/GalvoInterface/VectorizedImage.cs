@@ -59,7 +59,7 @@ namespace ProjectorInterface.GalvoInterface
                     y += (short)(MAX_STEP_SIZE * yRatio);
                     if (Math.Abs(x - newX) < MAX_STEP_SIZE && Math.Abs(y - newY) < MAX_STEP_SIZE)
                     {
-                        lines.Add(new Line(newX, newY, 0, true));
+                        lines.Add(new Line(newX, newY, 0, points[i].On));
                         break;
                     }
                     lines.Add(new Line(x, y, 0, true));

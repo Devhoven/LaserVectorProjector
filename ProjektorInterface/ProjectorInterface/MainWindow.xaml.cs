@@ -24,7 +24,7 @@ namespace ProjectorInterface
         {
             InitializeComponent();
 
-            SerialManager.Initialize("COM5");
+            SerialManager.Initialize("COM11");
 
             // You somehow can't override this event
             Loaded += OnLoaded;

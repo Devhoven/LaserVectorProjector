@@ -7,45 +7,53 @@
 // We can also define a MCP4812 or MCP4802
 MCP4822 Converter(PinOut);
 
-int PosX{ 0 }, PosY{ 0 };
+long PosX{ 0 }, PosY{ 0 };
 
 bool On = true;
 
 void setup() 
 {
-  Serial.begin(2000000);
-  Serial.println("Started");
+    Serial.begin(2000000);
+    Serial.println("Started");
 
-  // We call the init() method to initialize the instance
-  Converter.init();
+    // We call the init() method to initialize the instance
+    Converter.init();
 
-  // The channels are turned off at startup so we need to turn the channel we need on
-  Converter.turnOnChannelA();
-  Converter.turnOnChannelB();
+    // The channels are turned off at startup so we need to turn the channel we need on
+    Converter.turnOnChannelA();
+    Converter.turnOnChannelB();
+
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() 
 {
-    if (Serial.available() < 4) 
+    if (Serial.available() < 2) 
+    {
+        digitalWrite(LED_BUILTIN, HIGH);
         return; 
+    }
 
-    int old = PosX;
+    digitalWrite(LED_BUILTIN, LOW);
 
     PosX = Serial.read();
-    PosX |= (Serial.read() << 8);
+    PosX *= 16;
+    // PosX |= (Serial.read() << 8);
 
     PosY = Serial.read();
-    PosY |= (Serial.read() << 8);
+    PosY *= 16;
+    // PosY |= (Serial.read() << 8);
+
+    Serial.println("Why y");
 
     // Delay = Serial.read();
     // On = Delay >> 7;
-
     UpdateDAC(PosX, PosY);
 }
 
-void UpdateDAC(int& x, int& y) 
+void UpdateDAC(long& x, long& y) 
 {
-    Converter.setVoltageB(x);
-    Converter.setVoltageA(y);
+    Converter.setVoltageB(y);
+    Converter.setVoltageA(x);
     Converter.updateDAC();
 }

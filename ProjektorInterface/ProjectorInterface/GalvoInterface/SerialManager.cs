@@ -1,5 +1,6 @@
 ﻿using ProjectorInterface.Helper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Threading;
@@ -9,11 +10,11 @@ namespace ProjectorInterface.GalvoInterface
     static class SerialManager
     {
         // Defines the baud rate at which the pc is going to communicate with the arduino
-        const int BAUD_RATE = 2_000_000;
+        const int BAUD_RATE = 9600;
         // Defines the size of the buffer in bytes
         // The first two bytes are for the position (between 0 and 4100, normally) 
         // The fifth byte is for the delay (in microseconds) and the last bit of it is for if the laser is turned on for this line
-        const int BUFFER_SIZE = 4;
+        const int BUFFER_SIZE = 2;
 
         // Port object through which the communication is going to be held
         static SerialPort Port;
@@ -96,9 +97,10 @@ namespace ProjectorInterface.GalvoInterface
             CurrentImgIndex = 0;
             Images.Clear();
         }
-
+        
         static void SendImgLoop()
         {
+            Stopwatch stopwatch = new Stopwatch();
             VectorizedImage currentImg;
             Line currentLine;
             while (Running)
@@ -107,6 +109,7 @@ namespace ProjectorInterface.GalvoInterface
                 // Locking the image, since this method runs in a different thread and delete functionality is going to be implemented
                 lock (currentImg)
                 {
+                    stopwatch.Restart();
                     // Looping through all of the lines contained in the current image
                     for (int i = 0; i < currentImg.Lines.Length; i++)
                     {
@@ -114,13 +117,21 @@ namespace ProjectorInterface.GalvoInterface
 
                         // Writing the x and y coordinates into the buffer 
                         Buffer[0] = (byte)currentLine.X;
-                        Buffer[1] = (byte)(currentLine.X >> 8);
-                        Buffer[2] = (byte)currentLine.Y;
-                        Buffer[3] = (byte)(currentLine.Y >> 8);
+                        //Buffer[1] = (byte)(currentLine.X >> 8);
+                        Buffer[1] = (byte)currentLine.Y;
+                        //Buffer[3] = (byte)(currentLine.Y >> 8);
 
                         // Sending the data
-                        Port.Write(Buffer, 0, BUFFER_SIZE);
+                        Port.Write(Buffer, 0, 2);
+
+                        Debug.WriteLine(Port.ReadExisting());
+
+                        if (stopwatch.ElapsedMilliseconds < 200)
+                        {
+                            Thread.Sleep(200 - (int)stopwatch.ElapsedMilliseconds);
+                        }
                     }
+                    
                 }
                 // Moving on to the next image, or looping to the beginning
                 CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;

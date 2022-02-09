@@ -38,7 +38,9 @@ namespace ProjectorInterface.Helper
                 else
                     images.Add(ReadImgData(reader, ReadDataRecord));
 
-                CurrentHeader = ReadHeader(reader);
+                // Not every .ild file has a closing header
+                if (i < CurrentHeader.FrameCount - 1)
+                    CurrentHeader = ReadHeader(reader);
             }
         }
 

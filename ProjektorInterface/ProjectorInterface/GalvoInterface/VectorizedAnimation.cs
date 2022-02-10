@@ -18,12 +18,11 @@ namespace ProjectorInterface
     {
         public List<VectorizedImage> img;
         public VectorizedImage currentImage;
-        public RenderedImage rImage;
 
         public VectorizedAnimation(List<VectorizedImage> list, UIElement p)
         {
             img = list;
-            currentImage = getImageAt(0);
+            currentImage = getImageAt(39);
             ((StackPanel)p).Children.Add(new RenderedImage(this));
         }
 
@@ -32,9 +31,9 @@ namespace ProjectorInterface
 
 
        public VectorizedImage getImageAt(int i)
-        {
+       {
             return img.ElementAt(i);
-        }
+       }
 
 
         VectorizedImage getCurrent()

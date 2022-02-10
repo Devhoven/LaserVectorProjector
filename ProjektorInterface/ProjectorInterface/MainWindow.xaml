@@ -21,7 +21,7 @@
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
                 <MenuItem Header="Stop Lasershow" Click="StopShowClick"/>
                 <Separator/>
-                <MenuItem Header="Save Image" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Save Frame" InputGestureText="Ctrl+S" Click="AddRenderedImage"/>
                 <MenuItem Header="Open Image" Click="OpenImageClick"/>
             </MenuItem>
 
@@ -33,6 +33,7 @@
                 <MenuItem Header="GitHub" Click="GitHubClick"/>
             </MenuItem>
             
+            <!-- Toolbar around Combobox eventually-->
             <ComboBox x:Name="Combo" Grid.Row="0" Padding="1" SelectionChanged="Combo_SelectionChanged"/>
         </Menu>
 
@@ -96,8 +97,12 @@
 
                         <Label Content="Frames:" FontSize="15" Foreground="Black" Grid.Row="0"/>
 
-                        <uc:AutoScrollViewer Grid.Row="1"/>
-                        
+                        <!-- uc:AutoScrollViewer Grid.Row="1"/> -->
+
+                        <ScrollViewer x:Name="FrameScroller" Grid.Row="1" Visibility="Visible" >
+                            <StackPanel x:Name="FramePanel" Grid.Row="1"/>
+                        </ScrollViewer>
+
                     </Grid>
                 </Border>
             </Grid>
@@ -143,9 +148,9 @@
 
                         <Label Content="Animation Frames:" FontSize="15" Foreground="Black" Grid.Row="0"/>
 
-                       <!-- <uc:AutoScrollViewer Grid.Row="1"/> -->
-
-                        <StackPanel x:Name="imgGallary" Grid.Row="1"/>
+                        <ScrollViewer x:Name="AnimationScroller"  Grid.Row="1" Visibility="Visible">
+                            <StackPanel x:Name="imgGallary" Grid.Row="1"/>
+                        </ScrollViewer>
                     </Grid>
                 </Border>
             </Grid>
@@ -153,5 +158,3 @@
         </Grid>
     </Grid>
 </Window>
-
-    

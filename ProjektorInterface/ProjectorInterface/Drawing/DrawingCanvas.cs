@@ -1,14 +1,10 @@
 ﻿using ProjectorInterface.Commands;
 using ProjectorInterface.DrawingTools;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ProjectorInterface.Helper;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace ProjectorInterface
@@ -35,6 +31,13 @@ namespace ProjectorInterface
 
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
+
+            Width = Settings.CANVAS_RESOLUTION; 
+            Height = Settings.CANVAS_RESOLUTION;
+            Margin = new Thickness(20);
+            Background = Brushes.White;
+            ClipToBounds = true;
+            Focusable = true;
 
             CanvasCommand.Parent = this;
         }

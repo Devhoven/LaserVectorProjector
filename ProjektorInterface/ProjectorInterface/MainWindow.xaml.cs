@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -48,6 +49,8 @@ namespace ProjectorInterface
             DrawCon.Commands = (CommandHistory)GetValue(CommandHistoryProperty);
             CommandHistoryDisplay.History = (CommandHistory)GetValue(CommandHistoryProperty);
 
+            //FramePanel.Children.Add(DrawCon);
+
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);
         }
@@ -63,12 +66,22 @@ namespace ProjectorInterface
             {
                 Application.Current.Shutdown();
             }
-            else if (e.Key == Key.D0) // 0-Key converts shapes into list of points which can be given to the Arduino
+            else if (e.Key == Key.D0) // 0-Key converts shapes into array of points which can be given to the Arduino
             {
-                List<LineSegment> points = ShapesToPoints.getPoints();
+                LineSegment[] points = ShapesToPoints.getPoints();
+            }else if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                AddRenderedImage(null, null);
             }
 
             Keyboard.Focus(DrawCon);
+        }
+
+        private void AddRenderedImage(object sender, RoutedEventArgs e)
+        {
+            FramePanel.Children.Add(new Label() { Content = "Frame:" });
+            FramePanel.Children.Add(new RenderedImage(ShapesToPoints.getPoints()));
+            FrameScroller.ScrollToEnd();
         }
 
         // Opens a folder dialog for selecting a folder with .ild files
@@ -84,7 +97,8 @@ namespace ProjectorInterface
             }
 
             SerialManager.drawImages(imgGallary);
-        }
+            AnimationScroller.ScrollToEnd();
+;        }
 
         // Starts the sending of data
         private void StartShowClick(object sender, RoutedEventArgs e)

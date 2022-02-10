@@ -22,29 +22,18 @@ void setup()
     // The channels are turned off at startup so we need to turn the channel we need on
     Converter.turnOnChannelA();
     Converter.turnOnChannelB();
-
-    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() 
 {
-    if (Serial.available() < 2) 
-    {
-        digitalWrite(LED_BUILTIN, HIGH);
+    if (Serial.available() < 4) 
         return; 
-    }
-
-    digitalWrite(LED_BUILTIN, LOW);
 
     PosX = Serial.read();
-    PosX *= 16;
-    // PosX |= (Serial.read() << 8);
+    PosX |= (Serial.read() << 8);
 
     PosY = Serial.read();
-    PosY *= 16;
-    // PosY |= (Serial.read() << 8);
-
-    Serial.println("Why y");
+    PosY |= (Serial.read() << 8);
 
     // Delay = Serial.read();
     // On = Delay >> 7;

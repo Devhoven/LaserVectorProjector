@@ -40,6 +40,8 @@ namespace ProjectorInterface
             Focusable = true;
 
             CanvasCommand.Parent = this;
+
+            Commands = (CommandHistory)GetValue(MainWindow.CommandHistoryProperty);
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)

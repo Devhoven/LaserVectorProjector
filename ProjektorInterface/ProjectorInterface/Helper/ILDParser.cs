@@ -31,17 +31,21 @@ namespace ProjectorInterface.Helper
 
             CurrentHeader = ReadHeader(reader);
 
+            VectorizedImage newImg = new VectorizedImage();
+
             for (int i = 0; i < CurrentHeader.FrameCount; i++)
             {
                 if (CurrentHeader.FormatCode == FormatCode.ColorPalette)
                     ReadColorPalette(reader);
                 else
-                    images.Add(ReadImgData(reader, ReadDataRecord));
+                    newImg.AddFrame(ReadImgData(reader, ReadDataRecord));
 
                 // Not every .ild file has a closing header
                 if (i < CurrentHeader.FrameCount - 1)
                     CurrentHeader = ReadHeader(reader);
             }
+
+            images.Add(newImg);
         }
 
         // Reads the next header
@@ -77,14 +81,14 @@ namespace ProjectorInterface.Helper
         }
 
         // Iterates over the current data section and returns an normalized image
-        static VectorizedImage ReadImgData(BinaryReader reader, Func<BinaryReader, PointF> readFunc)
+        static VectorizedFrame ReadImgData(BinaryReader reader, Func<BinaryReader, PointF> readFunc)
         {
             List<PointF> result = new List<PointF>();
 
             for (int i = 0; i < CurrentHeader.EntryCount; i++)
                 result.Add(readFunc(reader));
 
-            return new VectorizedImage(result.ToArray());
+            return new VectorizedFrame(result.ToArray());
         }
 
         // Is able to read a data record of any frame
@@ -103,7 +107,7 @@ namespace ProjectorInterface.Helper
             byte statusCode = reader.ReadByte();
 
             // Skipping the color index
-            // Either one byte or two, depending on the current format code
+            // Either one byte or three, depending on the current format code
             if (CurrentHeader.FormatCode == FormatCode.Coord3DIndexed || CurrentHeader.FormatCode == FormatCode.Coord2DIndexed)
                 reader.Skip(1);
             else

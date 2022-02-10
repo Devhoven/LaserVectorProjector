@@ -27,8 +27,9 @@ namespace ProjectorInterface.Commands
         public CommandHistoryWindow()
         {
             InitializeComponent();
-
             this.DataContext = this;
+
+            History = (CommandHistory)GetValue(MainWindow.CommandHistoryProperty);
         }
 
         private void HistoryDeleted(object? sender, int index)

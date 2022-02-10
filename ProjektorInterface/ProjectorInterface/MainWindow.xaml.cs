@@ -38,18 +38,11 @@ namespace ProjectorInterface
             string[] ports = SerialPort.GetPortNames();
             foreach (string port in ports)
             {
-                Combo.Items.Add(port);
+                SelectPortComboBox.Items.Add(port);
             }
-            Combo.SelectedIndex = 0;
+            SelectPortComboBox.SelectedIndex = 0;
 
-            Combo.Items.Add("COM 5");
-
-            SerialManager.Initialize(Combo.Text);
-
-            DrawCon.Commands = (CommandHistory)GetValue(CommandHistoryProperty);
-            CommandHistoryDisplay.History = (CommandHistory)GetValue(CommandHistoryProperty);
-
-            //FramePanel.Children.Add(DrawCon);
+            SerialManager.Initialize("COM10");
 
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);
@@ -71,7 +64,7 @@ namespace ProjectorInterface
                 LineSegment[] points = ShapesToPoints.getPoints();
             }else if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                AddRenderedImage(null, null);
+                AddRenderedImage(null!, null!);
             }
 
             Keyboard.Focus(DrawCon);
@@ -95,10 +88,11 @@ namespace ProjectorInterface
                 // Loading the new ones in
                 SerialManager.LoadImagesFromFolder(dialog.SelectedPath);
             }
-
-            SerialManager.drawImages(imgGallary);
-            AnimationScroller.ScrollToEnd();
-;        }
+            foreach (VectorizedImage img in SerialManager.Images)
+            {
+                AnimationFramesGallery.Children.Add(new RenderedImage(img));
+            }
+        }
 
         // Starts the sending of data
         private void StartShowClick(object sender, RoutedEventArgs e)
@@ -108,11 +102,11 @@ namespace ProjectorInterface
         private void StopShowClick(object sender, RoutedEventArgs e)
             => SerialManager.Stop();
 
-        private void Combo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void SelectPortComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Combo.Text != "" && Combo.Items != null)
+            if (SelectPortComboBox.Text != "" && SelectPortComboBox.Items != null)
             {
-                SerialManager.Initialize(Combo.Text);
+                SerialManager.Initialize(SelectPortComboBox.Text);
             }
         }
 

@@ -11,24 +11,24 @@ namespace ProjectorInterface.GalvoInterface
         // Array of all the finished lines
         public readonly Line[] Lines;
 
-        public VectorizedFrame(params PointF[] points)
+        public VectorizedFrame(params Line[] lines)
         {
-            List<Line> lines = new List<Line>();
+            List<Line> interpolatedLines = new List<Line>();
             short x, y;
             short newX, newY;
             short diffX, diffY;
             float dist;
             float xRatio, yRatio;
             float mult;
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < lines.Length - 1; i++)
             {
                 // Retreiving the start points
-                x = (short)(points[i].X * MAX_VOLTAGE);
-                y = (short)(points[i].Y * MAX_VOLTAGE);
+                x = lines[i].X;
+                y = lines[i].Y;
                 // Retreiving the end points of this line segment
                 // Loops around, so that the last points are connected to the first
-                newX = (short)(points[(i + 1) % points.Length].X * MAX_VOLTAGE);
-                newY = (short)(points[(i + 1) % points.Length].Y * MAX_VOLTAGE);
+                newX = lines[i + 1].X;
+                newY = lines[i + 1].Y;
 
                 // Calculating the difference between the old and new coordinates
                 diffX = (short)(newX - x);
@@ -50,45 +50,22 @@ namespace ProjectorInterface.GalvoInterface
 
                 // Otherwise the first point won't be added
                 if (i == 0)
-                    lines.Add(new Line(x, y, points[i].On));
+                    interpolatedLines.Add(new Line(x, y, lines[i].On));
 
                 // Traverses from one point to another until the distance is too short and adds the points on the way
                 while (true)
                 {
                     x += (short)(MAX_STEP_SIZE * xRatio);
                     y += (short)(MAX_STEP_SIZE * yRatio);
-                    if (Math.Abs(x - newX) < MAX_STEP_SIZE && Math.Abs(y - newY) < MAX_STEP_SIZE)
+                    if (Math.Abs(x - newX) <= MAX_STEP_SIZE && Math.Abs(y - newY) <= MAX_STEP_SIZE)
                     {
-                        lines.Add(new Line(newX, newY, points[i].On));
+                        interpolatedLines.Add(new Line(newX, newY, lines[i + 1].On));
                         break;
                     }
-                    lines.Add(new Line(x, y, points[i].On));
+                    interpolatedLines.Add(new Line(x, y, lines[i].On));
                 }
             }
-            Lines = lines.ToArray();
-        }
-    }
-
-    // struct, which holds normalized coordinates between 0 and 1
-    // and, if the line which is formed between this point and the one after it, should have the laser enabled
-    struct PointF
-    {
-        public float X;
-        public float Y;
-        public bool On;
-
-        public PointF(short x, short y, bool on = false)
-        {
-            // Normalizing the x and y short coordinates between 0 and 1
-            X = (x + short.MaxValue) / (float)(short.MaxValue * 2);
-            y *= -1;
-            Y = (y + short.MaxValue) / (float)(short.MaxValue * 2);
-            On = on;
-        }
-
-        public override string ToString()
-        {
-            return "(" + X + ", " + Y + ")";
+            Lines = interpolatedLines.ToArray();
         }
     }
 
@@ -105,6 +82,24 @@ namespace ProjectorInterface.GalvoInterface
             X = (short)x;
             Y = (short)y;
             On = on;
+        }
+
+        public static Line NormalizedLine(int x, int y, bool on, int normalizeTo)
+        {
+            Line result;
+            result.X = (short)((x + short.MaxValue) / (float)(short.MaxValue * 2) * normalizeTo);
+            result.Y = (short)((y + short.MaxValue) / (float)(short.MaxValue * 2) * normalizeTo);
+            result.On = on;
+            return result;
+        }
+
+        public static Line NormalizedLine(int x, int y, bool on, int oldMax, int newMax)
+        {
+            Line result;
+            result.X = (short)(x / (float)oldMax * newMax);
+            result.Y = (short)(y / (float)oldMax * newMax);
+            result.On = on;
+            return result;
         }
 
         public override string ToString()

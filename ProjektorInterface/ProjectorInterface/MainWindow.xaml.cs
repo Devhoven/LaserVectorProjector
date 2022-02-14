@@ -61,21 +61,17 @@ namespace ProjectorInterface
             }
             else if (e.Key == Key.D0) // 0-Key converts shapes into array of points which can be given to the Arduino
             {
-                LineSegment[] points = ShapesToPoints.getPoints();
+                //LineSegment[] points = ShapesToPoints.getPoints();
             }else if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                AddRenderedImage(null!, null!);
+                FramePanel.Children.Add(new Label() { Content = "Frame:" });
+                FramePanel.Children.Add(new RenderedImage(ShapesToPoints.getPoints()));
+                FrameScroller.ScrollToEnd();
             }
 
             Keyboard.Focus(DrawCon);
         }
 
-        private void AddRenderedImage(object sender, RoutedEventArgs e)
-        {
-            FramePanel.Children.Add(new Label() { Content = "Frame:" });
-            FramePanel.Children.Add(new RenderedImage(ShapesToPoints.getPoints()));
-            FrameScroller.ScrollToEnd();
-        }
 
         // Opens a folder dialog for selecting a folder with .ild files
         private void SelectShowClick(object sender, RoutedEventArgs e)
@@ -108,11 +104,6 @@ namespace ProjectorInterface
             {
                 SerialManager.Initialize(SelectPortComboBox.Text);
             }
-        }
-
-        private void OpenImageClick(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void GitHubClick(object sender, RoutedEventArgs e)

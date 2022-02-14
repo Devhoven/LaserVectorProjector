@@ -22,24 +22,10 @@ namespace ProjectorInterface.GalvoInterface
         {
             Image = image;
             Margin = new Thickness(20, 10, 20, 10);
-            RenderImage(image[0]);
+            RenderImage(image[image.FrameCount - 1]);
         }
 
-        public RenderedImage(LineSegment[] l)
-        {
-            ContextMenu = new ContextMenu();
-            MenuItem DeleteImageItem = new MenuItem()
-            {
-                Header = "Delete Image"
-            };
-
-            ContextMenu.Items.Add(DeleteImageItem);
-
-            DeleteImageItem.Click += DeleteImageClick;
-            MouseLeftButtonDown += OnImageClick;
-            
-            CreateImage(l);
-        }
+  
 
 
         private void DeleteImageClick(object sender, RoutedEventArgs e)
@@ -55,39 +41,6 @@ namespace ProjectorInterface.GalvoInterface
             {
                 
             }
-        }
-
-        void CreateImage(LineSegment[] lines)
-        {
-            Bitmap bmp = new Bitmap(200, 200);
-
-            float max_vol = Settings.MAX_VOLTAGE;
-            float res = Settings.CANVAS_RESOLUTION;
-
-            using (Graphics graph = Graphics.FromImage(bmp))
-            {
-                graph.Clear(Color.White);
-                for (int i = 1; i < lines.Length; i++)
-                {
-                    if (lines.ElementAt(i - 1).IsStroked)
-                    {
-                        graph.DrawLine(new System.Drawing.Pen(System.Drawing.Brushes.Red, 1.0f),
-                            (int)(lines[i-1].Point.X * bmp.Width), (int)(lines[i - 1].Point.Y * bmp.Height),
-                            (int)(lines[i].Point.X * bmp.Width), (int)(lines[i].Point.Y * bmp.Height));
-                    }
-                }
-            }
-
-            MemoryStream ms = new MemoryStream();
-            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-
-            BitmapImage bmpimage = new BitmapImage();
-            bmpimage.BeginInit();
-            ms.Seek(0, SeekOrigin.Begin);
-            bmpimage.StreamSource = ms;
-            bmpimage.EndInit();
-            
-            Source = bmpimage;
         }
 
         void RenderImage(VectorizedFrame frame)

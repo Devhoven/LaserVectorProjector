@@ -81,9 +81,9 @@ namespace ProjectorInterface.Helper
         }
 
         // Iterates over the current data section and returns an normalized image
-        static VectorizedFrame ReadImgData(BinaryReader reader, Func<BinaryReader, PointF> readFunc)
+        static VectorizedFrame ReadImgData(BinaryReader reader, Func<BinaryReader, Line> readFunc)
         {
-            List<PointF> result = new List<PointF>();
+            List<Line> result = new List<Line>();
 
             for (int i = 0; i < CurrentHeader.EntryCount; i++)
                 result.Add(readFunc(reader));
@@ -92,7 +92,7 @@ namespace ProjectorInterface.Helper
         }
 
         // Is able to read a data record of any frame
-        static PointF ReadDataRecord(BinaryReader reader)
+        static Line ReadDataRecord(BinaryReader reader)
         {
             // Reading the x and y coord
             short xPos = reader.ReadInt16BE();
@@ -103,7 +103,7 @@ namespace ProjectorInterface.Helper
                 reader.Skip(2);
 
             // The status code contains in the 8th bit if this is the last point
-            // and in the 7th bit if the laser should be one or off 
+            // and in the 7th bit if the laser should be one or off     
             byte statusCode = reader.ReadByte();
 
             // Skipping the color index
@@ -113,7 +113,7 @@ namespace ProjectorInterface.Helper
             else
                 reader.Skip(3);
 
-            return new PointF(xPos, yPos, (statusCode & 0b01000000) != 64);
+            return Line.NormalizedLine(xPos, yPos *= -1, (statusCode & 0b01000000) != 64, Settings.MAX_VOLTAGE);
         }
 
         // "Reads" the color palette section

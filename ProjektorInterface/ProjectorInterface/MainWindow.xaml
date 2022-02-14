@@ -21,8 +21,8 @@
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
                 <MenuItem Header="Stop Lasershow" Click="StopShowClick"/>
                 <Separator/>
-                <MenuItem Header="Save Frame" InputGestureText="Ctrl+S" Click="AddRenderedImage"/>
-                <MenuItem Header="Open Image" Click="OpenImageClick"/>
+                <MenuItem Header="Save Frame" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Save Animation"/>
             </MenuItem>
 
             <MenuItem Header="Settings">
@@ -49,9 +49,6 @@
             <Grid Grid.Column="0" ClipToBounds="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
@@ -59,29 +56,34 @@
                     <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Width="50" Height="50" Grid.Row="0" HorizontalAlignment="Left" Click="SelectLineClick">
-                    <Button.Content>
-                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
-                    </Button.Content>
-                </Button>
+                <WrapPanel Grid.Row="0" HorizontalAlignment="Center">
+                    <Button Width="50" Height="50" Grid.Column="0" Click="SelectLineClick">
+                        <Button.Content>
+                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
+                        </Button.Content>
+                    </Button>
 
-                <Button Width="50" Height="50" Grid.Row="1" HorizontalAlignment="Left" Click="SelectRectangleClick">
-                    <Button.Content>
-                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
-                    </Button.Content>
-                </Button>
+                    <Button Width="50" Height="50" Click="SelectRectangleClick">
+                        <Button.Content>
+                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
+                        </Button.Content>
+                    </Button>
 
-                <Button Width="50" Height="50" Grid.Row="2" HorizontalAlignment="Left" Click="SelectCircleClick">
-                    <Button.Content>
-                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
-                    </Button.Content>
-                </Button>
+                    <Button Width="50" Height="50" Click="SelectCircleClick">
+                        <Button.Content>
+                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
+                        </Button.Content>
+                    </Button>
 
-                <Button Width="50" Height="50" Grid.Row="3" HorizontalAlignment="Left" Click="SelectPathClick">
-                    <Button.Content>
-                        <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
-                    </Button.Content>
-                </Button>
+                    <Button Width="50" Height="50" Click="SelectPathClick">
+                        <Button.Content>
+                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
+                        </Button.Content>
+                    </Button>
+
+                </WrapPanel>
+
+               
 
                 <Border Grid.Column="0" Grid.Row="4" Margin="0 5 0 0" CornerRadius="5" HorizontalAlignment="Left" ClipToBounds="True" Background="LightBlue">
                     <Grid x:Name="Frames">

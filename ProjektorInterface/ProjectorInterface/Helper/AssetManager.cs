@@ -9,22 +9,9 @@ namespace ProjectorInterface.Helper
 {
     static class AssetManager
     {
-        static Assembly Assembly;
-
-        static string[] ResourceNames;
-        static AssetManager()
-        {
-            Assembly = Assembly.GetExecutingAssembly();
-            ResourceNames = Assembly.GetManifestResourceNames();
-        }
-
         public static Stream GetStream(string assetName)
         {
-            string fullName = ResourceNames.Single(str => str.EndsWith(assetName));
-            Stream? result = Assembly.GetManifestResourceStream(fullName);
-            if (result == null)
-                throw new FileNotFoundException("This embedded resource does not exist");
-            return result;
+            return System.Windows.Application.GetResourceStream(new Uri(@"/Assets/CommandImages/" + assetName, UriKind.Relative)).Stream;
         }
     }
 }

@@ -2,6 +2,8 @@
 using ProjectorInterface.Commands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.GalvoInterface;
+using ProjectorInterface.GalvoInterface.UiElements;
+using ProjectorInterface.GalvoInterface.UIElements;
 using ProjectorInterface.Helper;
 using System;
 using System.Collections.Generic;
@@ -67,25 +69,16 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.Key == Key.D0) // 0-Key converts shapes into array of points which can be given to the Arduino
-            {  
-                //LineSegment[] points = ShapesToPoints.getPoints();
-            }
-            else if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                Border imgBorder = new Border()
-                {
-                    Child = new RenderedImage(ShapesToPoints.getPoints(), FramePanel.Children.Count),
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(1),
-                    Margin = new Thickness(20, 10, 20, 10)
-                };
-                FramePanel.Children.Add(imgBorder);
+                // Converts the shapes from the canvas into a frame and writes appends it to ShapesToPoints.DrawImage
+                ShapesToPoints.CalcFrameFromCanvas();
+                FramePanel.Children.Add(new RenderedItemBorder(
+                    new RenderedFrame(
+                        ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
             }
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
-            {
                 SelectShowClick(null!, null!);
-            }
 
             Keyboard.Focus(DrawCon);
         }
@@ -101,17 +94,11 @@ namespace ProjectorInterface
                 SerialManager.ClearImages();
                 // Loading the new ones in
                 SerialManager.LoadImagesFromFolder(dialog.SelectedPath);
-            }
-            foreach (VectorizedImage img in SerialManager.Images)
-            {
-                Border imgBorder = new Border()
-                {
-                    Child = new RenderedImage(img),
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(1),
-                    Margin = new Thickness(20, 10, 20, 10)
-                };
-                AnimationFramesGallery.Children.Add(imgBorder);
+
+                // Clearing all of the old animations and adding the new ones
+                AnimationFramesGallery.Children.Clear();
+                foreach (VectorizedImage img in SerialManager.Images)
+                    AnimationFramesGallery.Children.Add(new RenderedItemBorder(new RenderedImage(img)));
             }
         }
 
@@ -126,9 +113,7 @@ namespace ProjectorInterface
         private void SelectPortComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (SelectPortComboBox.Text != "" && SelectPortComboBox.Items != null)
-            {
                 SerialManager.Initialize(SelectPortComboBox.Text);
-            }
         }
 
         private void GitHubClick(object sender, RoutedEventArgs e)
@@ -154,5 +139,11 @@ namespace ProjectorInterface
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
             => DrawCon.Children.Clear();
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SerialManager.ClearImages();
+            SerialManager.AddImage(ShapesToPoints.DrawnImage);
+        }
     }
 }

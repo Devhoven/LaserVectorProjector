@@ -11,27 +11,28 @@ using Point = System.Windows.Point;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using Line = ProjectorInterface.GalvoInterface.Line;
 using WPFLine = System.Windows.Shapes.Line;
+using ProjectorInterface.GalvoInterface;
 
-namespace ProjectorInterface.Commands
+namespace ProjectorInterface.GalvoInterface
 {
     static class ShapesToPoints
     {
-        static List<Line> points = new List<Line>();
-        static Line currentp = new Line();
-        static double ellipseAccuracy = 0.001; //99.9
-        static VectorizedImage tempImage = new VectorizedImage();
-        static int CanvasResolution;
+        public static VectorizedImage DrawnImage = new VectorizedImage();
+        static readonly int CanvasResolution;
+
+        static List<Line> Lines = new List<Line>();
+        static Line CurrentLine = new Line();
+
+        static double EllipseAccuracy = 0.001; //99.9%
 
         static ShapesToPoints()
-        {
-            CanvasResolution = (int)MainWindow.Instance.DrawCon.ActualWidth;
-        }
+            => CanvasResolution = (int)MainWindow.Instance.DrawCon.ActualWidth;
 
-        public static VectorizedImage getPoints()
+        public static void CalcFrameFromCanvas()
         {
-            foreach (UIElement child in Parent.Children)
+            foreach (UIElement child in Parent.Children)    
             {
-                currentp.On = false;
+                CurrentLine.On = false;
 
                 if (child is WPFLine line)
                 {
@@ -49,16 +50,16 @@ namespace ProjectorInterface.Commands
                     CalcCoord(false, p.X, p.Y);
 
                     // upper right corner
-                    CalcCoord(true, currentp.X + rectangle.Width, currentp.Y);
+                    CalcCoord(true, CurrentLine.X + rectangle.Width, CurrentLine.Y);
 
                     // lower right corner
-                    CalcCoord(true, currentp.X, currentp.Y + rectangle.Height);
+                    CalcCoord(true, CurrentLine.X, CurrentLine.Y + rectangle.Height);
 
                     // lower left corner
-                    CalcCoord(true, currentp.X - rectangle.Width, currentp.Y);
+                    CalcCoord(true, CurrentLine.X - rectangle.Width, CurrentLine.Y);
 
                     // back to upper left
-                    CalcCoord(true, currentp.X, currentp.Y - rectangle.Height);
+                    CalcCoord(true, CurrentLine.X, CurrentLine.Y - rectangle.Height);
                 }
                 else if (child is Ellipse ellipse)
                 {
@@ -90,7 +91,7 @@ namespace ProjectorInterface.Commands
                         double y = r2 * Math.Sin(angle) + r2 + p.Y;
 
                         // checks if point already is inside list
-                        if ((points[points.Count - 1].X == (x / CanvasResolution)) && (points[points.Count - 1].Y == (y / CanvasResolution)))
+                        if ((Lines[Lines.Count - 1].X == (x / CanvasResolution)) && (Lines[Lines.Count - 1].Y == (y / CanvasResolution)))
                         {
                             continue;
                         }
@@ -102,34 +103,37 @@ namespace ProjectorInterface.Commands
                 }
                 else if (child is Path path)
                 {
-                    foreach (LineGeometry lineSeg in ((GeometryGroup)path.Data).Children)
+                    GeometryCollection lineSegments = ((GeometryGroup)path.Data).Children;
+                    LineGeometry currentLine = (LineGeometry)lineSegments[0];
+                    CalcCoord(false, currentLine.StartPoint.X, currentLine.StartPoint.Y);
+                    CalcCoord(true, currentLine.EndPoint.X, currentLine.EndPoint.Y);
+                    for (int i = 1; i < lineSegments.Count; i++)
                     {
-                        // moving to (X1, Y1) with laser OFF
-                        CalcCoord(false, lineSeg.StartPoint.X, lineSeg.StartPoint.Y);
+                        currentLine = (LineGeometry)lineSegments[i];
 
+                        // moving to (X1, Y1) with laser OFF
+                        CalcCoord(true, currentLine.StartPoint.X, currentLine.StartPoint.Y);
 
                         // moving to (X2, Y2) with laser ON
-                        CalcCoord(true, lineSeg.EndPoint.X, lineSeg.EndPoint.Y);
+                        CalcCoord(true, currentLine.EndPoint.X, currentLine.EndPoint.Y);
                     }
                 }
                 // Bugfix: No more connecting lines between shapes
                 //CalcCoord(false, currentp.X * CanvasResolution, currentp.Y * CanvasResolution);
                 //currentp.On = false;
-
             }
 
             // testpoints();
 
-            Line[] tmp = points.ToArray();
-            points.Clear();
-            tempImage.AddFrame(new GalvoInterface.VectorizedFrame(tmp));
-            return tempImage;
+            Line[] tmp = Lines.ToArray();
+            Lines.Clear();
+            DrawnImage.AddFrame(new VectorizedFrame(tmp));
         }
 
         // Testing conversion to Points
         static void testPoints()
         {
-            foreach (Line p in points)
+            foreach (Line p in Lines)
             {
                 Ellipse tmp = new Ellipse()
                 {
@@ -167,7 +171,7 @@ namespace ProjectorInterface.Commands
         private static double GetAngleForArcLengthRecursively(double currentArcPos, double goalArcPos, double angle, double angleSeg, double maj, double min)
         {
             // Accuracy for when we are overshooting/undershooting
-            double ARC_ACCURACY = ellipseAccuracy;
+            double ARC_ACCURACY = EllipseAccuracy;
             // Calculate arc length at new angle
             double nextSegLength = ComputeArcOverAngle(maj, min, angle + angleSeg, angleSeg);
 
@@ -202,11 +206,11 @@ namespace ProjectorInterface.Commands
         // Adds a new LineSegment towards the normalized point (x,y) with the laserstatus stroke
         static void CalcCoord(bool stroke, double x, double y)
         {
-            currentp.X = (short)x;
-            currentp.Y = (short)y;
-            currentp.On = stroke;
-            Line l = Line.NormalizedLine(currentp.X, currentp.Y, currentp.On, CanvasResolution, MAX_VOLTAGE);
-            points.Add(l);
+            CurrentLine.X = (short)x;
+            CurrentLine.Y = (short)y;
+            CurrentLine.On = stroke;
+            Line l = Line.NormalizedLine(CurrentLine.X, CurrentLine.Y, CurrentLine.On, CanvasResolution, MAX_VOLTAGE);
+            Lines.Add(l);
         }
     }
 }

@@ -118,7 +118,6 @@ namespace ProjectorInterface
                     Commands.Redo();
             }
 
-
             // Operations for the background image
             if (e.Key == Key.Delete)
                 BackgroundImg.ToggleOpacity();

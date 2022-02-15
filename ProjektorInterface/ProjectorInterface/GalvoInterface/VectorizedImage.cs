@@ -28,7 +28,10 @@ namespace ProjectorInterface
         public VectorizedImage()
             => Frames = new List<VectorizedFrame>();
 
-        public void AddFrame(VectorizedFrame vImage)
-            => Frames.Add(vImage);
+        public void AddFrame(VectorizedFrame frame)
+            => Frames.Add(frame);
+
+        public void RemoveFrame(VectorizedFrame frame)
+            => Frames.Remove(frame);    
     }
 }

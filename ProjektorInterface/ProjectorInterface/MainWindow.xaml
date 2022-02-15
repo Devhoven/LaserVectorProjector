@@ -153,6 +153,11 @@
                             <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3"/>
                         </Button.Content>
                     </Button>
+                    <Button Click="Button_Click">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3"/>
+                        </Button.Content>
+                    </Button>
                 </WrapPanel>
                 
                 <!-- Animation Frames -->

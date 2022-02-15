@@ -94,6 +94,12 @@ namespace ProjectorInterface.GalvoInterface
             }
         }
 
+        public static void AddImage(VectorizedImage img)
+        {
+            lock (Images)
+                Images.Add(img);
+        }
+
         // Removes the given image from the list and sets the the CurrenImgIndex to 0, in order to prevent errors
         public static void RemoveImg(VectorizedImage img)
         {
@@ -142,6 +148,9 @@ namespace ProjectorInterface.GalvoInterface
                             Buffer[1] = (byte)(currentLine.X >> 8);
                             Buffer[2] = (byte)currentLine.Y;
                             Buffer[3] = (byte)(currentLine.Y >> 8);
+
+                            if (currentLine.On)
+                                Buffer[3] |= 0x80;
 
                             // Sending the data
                             Port.Write(Buffer, 0, BUFFER_SIZE);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using static ProjectorInterface.Helper.Settings;
 
 namespace ProjectorInterface.GalvoInterface
@@ -41,8 +42,6 @@ namespace ProjectorInterface.GalvoInterface
                 xRatio = diffX / dist;
                 yRatio = diffY / dist;
 
-                // TODO: SHOULD CHECK IF TWO POINTS ARE THE SAME
-
                 // Scaling one of the ratios up to 1, (the other one accordingly) so that the galvos move the fastest they possibly can per step
                 mult = 1 / MathF.Abs(MathF.Abs(xRatio) > MathF.Abs(yRatio) ? xRatio : yRatio);
                 xRatio *= mult;
@@ -67,6 +66,7 @@ namespace ProjectorInterface.GalvoInterface
             }
             Lines = interpolatedLines.ToArray();
         }
+   
     }
 
     // This line - struct contains the x and y coordinates (normalized between 0 and MaxValue) and how many microseconds the arduino should wait 
@@ -102,9 +102,23 @@ namespace ProjectorInterface.GalvoInterface
             return result;
         }
 
-        public override string ToString()
+        public static bool operator==(Line left, Line right)
+            => left.X == right.X && left.Y == right.Y && left.On == right.On;
+
+        public static bool operator !=(Line left, Line right)
+            => !(left == right);
+
+        public override bool Equals(object? obj)
         {
-            return "(" + X + ", " + Y + ") " + On;
+            if (obj == null)
+                return false;
+            return this == (Line)obj;
         }
+
+        public override int GetHashCode()
+            => base.GetHashCode();
+
+        public override string ToString()
+            => "(" + X + ", " + Y + ") " + On;
     }
 }

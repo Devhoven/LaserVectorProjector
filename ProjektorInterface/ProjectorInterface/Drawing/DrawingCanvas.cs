@@ -44,13 +44,10 @@ namespace ProjectorInterface
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             // Getting the mouse pos relative to the canvas
-            if (e.LeftButton == MouseButtonState.Pressed && !Keyboard.IsKeyDown(Key.LeftAlt))
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 StartMousePos = e.GetPosition(this);
                 Children.Add(CurrentTool);
-            }else if(e.LeftButton == MouseButtonState.Pressed && Keyboard.IsKeyDown(Key.LeftAlt))
-            {
-                StartMousePos = e.GetPosition(this);
             }
             
             // If the user middleclicked on one of the shapes, it is going to be deleted
@@ -67,13 +64,7 @@ namespace ProjectorInterface
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && !Keyboard.IsKeyDown(Key.LeftAlt))
-            {
                 CurrentTool.Render(StartMousePos, e.GetPosition(this));
-            }else if (e.LeftButton == MouseButtonState.Pressed && Keyboard.IsKeyDown(Key.LeftAlt))
-            {
-                Point temp = new Point(StartMousePos.X - e.GetPosition(this).X, StartMousePos.Y - e.GetPosition(this).Y);
-                BackgroundImg.MoveImage((int)temp.X, (int)temp.Y);
-            }
         }
 
         // If the user releases one of the mouse buttons the tool visuals are going to be removed 
@@ -135,17 +126,6 @@ namespace ProjectorInterface
                 BackgroundImg.ChooseImg();
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();
-
-            // For moving the background image 
-            if (Keyboard.IsKeyDown(Key.Up))
-                BackgroundImg.MoveUp();
-            else if (Keyboard.IsKeyDown(Key.Down))
-                BackgroundImg.MoveDown();
-
-            if (Keyboard.IsKeyDown(Key.Left))
-                BackgroundImg.MoveLeft();
-            else if (Keyboard.IsKeyDown(Key.Right))
-                BackgroundImg.MoveRight();
         }
     }
 }

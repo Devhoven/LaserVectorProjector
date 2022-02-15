@@ -9,6 +9,7 @@ using System.Windows.Media;
 
 namespace ProjectorInterface.GalvoInterface.UIElements
 {
+    // A border which holds an image and has to be added into some kind of panel
     class RenderedItemBorder : Border
     {
         static readonly Thickness BORDER_THICKNESS = new Thickness(1);

@@ -15,13 +15,24 @@ namespace ProjectorInterface
     // A image which can be moved and zoomed
     public class MoveableImage : Image
     {
-        double Top = 0;
-        double Left = 0;
+        double _Top, _Left;
+        bool IsDragging = false;
+        Point LastPos;
+
+        double Top
+        {
+            get => _Top;
+            set => Canvas.SetTop(this, _Top = value);
+        }
+
+        double Left
+        {
+            get => _Left;
+            set => Canvas.SetLeft(this, _Left = value);
+        }
 
         public MoveableImage()
-        {
-            Opacity = 255;
-        }
+            => Opacity = 180;
 
         // The width and height gets altered for the illusion of zooming in and out 
         public void ZoomIn()
@@ -35,19 +46,47 @@ namespace ProjectorInterface
             Height = Math.Max(0, Height - ZOOM_IMG_SPEED);
         }
 
-        // Methods for moving the image through the canvas
-        public void MoveUp()
-            => Canvas.SetTop(this, Top = Top - MOVE_IMG_SPEED);
-        public void MoveDown()
-            => Canvas.SetTop(this, Top = Top + MOVE_IMG_SPEED);
-        public void MoveLeft()
-            => Canvas.SetLeft(this, Left = Left - MOVE_IMG_SPEED);
-        public void MoveRight()
-            => Canvas.SetLeft(this, Left = Left + MOVE_IMG_SPEED);
-        public void MoveImage(int speedX, int speedY)
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
-            Canvas.SetTop(this, Top = -speedY);
-            Canvas.SetLeft(this, Left = -speedX);
+            IsDragging = true;
+            LastPos = e.GetPosition((Canvas)Parent);
+            e.Handled = true;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.RightButton == MouseButtonState.Pressed && IsDragging)
+            {
+                Point newPos = e.GetPosition((Canvas)Parent);
+                Vector diff = Point.Subtract(LastPos, newPos);
+                LastPos = e.GetPosition((Canvas)Parent);
+
+                Left -= diff.X;
+                Top -= diff.Y;
+
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+            if (IsDragging)
+            {
+                IsDragging = false;
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            double zoom = e.Delta > 0 ? 20 : -20;
+
+            // Some arbitrary values to limit the how small / big the image can get
+            if (Width + zoom < 300 || Width + zoom > ((FrameworkElement)Parent).ActualWidth * 2)
+                return;
+
+            Width += zoom;
+            Height += zoom;
         }
 
         // Disables and shows the image again

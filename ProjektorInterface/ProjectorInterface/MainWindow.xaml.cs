@@ -17,16 +17,29 @@ namespace ProjectorInterface
     public partial class MainWindow : Window
     {
         // Makes the value accessible in the XAML code
-        public static readonly DependencyProperty CanvasResolutionProperty =
-            DependencyProperty.Register("CanvasResolution", typeof(int), typeof(MainWindow),
-                new PropertyMetadata(Settings.CANVAS_RESOLUTION));
-
         public static readonly DependencyProperty CommandHistoryProperty =
             DependencyProperty.Register("CommandHistory", typeof(CommandHistory), typeof(MainWindow),
                 new PropertyMetadata(new CommandHistory()));
 
+        public static readonly DependencyProperty RenderedImgSizeProperty =
+            DependencyProperty.Register("RenderedImgSize", typeof(int), typeof(MainWindow),
+                new PropertyMetadata(Settings.RENDERED_IMG_SIZE));
+
+        public static readonly DependencyProperty BackgroundColorProperty =
+            DependencyProperty.Register("BackgroundColor", typeof(Brush), typeof(MainWindow),
+                new PropertyMetadata(Brushes.White));
+
+        public static readonly DependencyProperty ForegroundColorProperty =
+            DependencyProperty.Register("ForegroundColor", typeof(Brush), typeof(MainWindow),
+                new PropertyMetadata(Brushes.WhiteSmoke));
+
+        // Contains a reference to the currently running MainWindow
+        public static MainWindow Instance = null!;
+
         public MainWindow()
         {
+            Instance = this;
+
             InitializeComponent();
 
             // You somehow can't override this event
@@ -54,19 +67,24 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            // ESC closes the app
-            if (e.Key == Key.Escape)
-            {
-                Application.Current.Shutdown();
-            }
-            else if (e.Key == Key.D0) // 0-Key converts shapes into array of points which can be given to the Arduino
-            {
+            if (e.Key == Key.D0) // 0-Key converts shapes into array of points which can be given to the Arduino
+            {  
                 //LineSegment[] points = ShapesToPoints.getPoints();
-            }else if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+            }
+            else if(e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                FramePanel.Children.Add(new Label() { Content = "Frame:" });
-                FramePanel.Children.Add(new RenderedImage(ShapesToPoints.getPoints()));
-                FrameScroller.ScrollToEnd();
+                Border imgBorder = new Border()
+                {
+                    Child = new RenderedImage(ShapesToPoints.getPoints(), FramePanel.Children.Count),
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Margin = new Thickness(20, 10, 20, 10)
+                };
+                FramePanel.Children.Add(imgBorder);
+            }
+            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                SelectShowClick(null!, null!);
             }
 
             Keyboard.Focus(DrawCon);
@@ -86,7 +104,14 @@ namespace ProjectorInterface
             }
             foreach (VectorizedImage img in SerialManager.Images)
             {
-                AnimationFramesGallery.Children.Add(new RenderedImage(img));
+                Border imgBorder = new Border()
+                {
+                    Child = new RenderedImage(img),
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Margin = new Thickness(20, 10, 20, 10)
+                };
+                AnimationFramesGallery.Children.Add(imgBorder);
             }
         }
 

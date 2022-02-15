@@ -74,8 +74,8 @@ namespace ProjectorInterface
             Canvas.SetLeft(this, 0);
             Canvas.SetTop(this, 0);
 
-            Width = ((FrameworkElement)Parent).Width;
-            Height = ((FrameworkElement)Parent).Height;
+            Width = ((FrameworkElement)Parent).ActualWidth;
+            Height = ((FrameworkElement)Parent).ActualHeight;
         }
     }
 }

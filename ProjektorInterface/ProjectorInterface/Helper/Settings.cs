@@ -18,9 +18,10 @@ namespace ProjectorInterface.Helper
         public static readonly int ZOOM_IMG_SPEED = 15;
         public static readonly int MOVE_IMG_SPEED = 15;
         
-        public static readonly int CANVAS_RESOLUTION = 1080;
-
-        public static readonly int SHAPE_THICKNESS = CANVAS_RESOLUTION / 200;
+        public static readonly int SHAPE_THICKNESS = 5;
         public static readonly Brush SHAPE_COLOR = new SolidColorBrush(Colors.Red);
+
+        public static readonly int RENDERED_IMG_BMP_SIZE = 500;
+        public static readonly int RENDERED_IMG_SIZE = 270;
     }
 }

@@ -6,16 +6,30 @@
         xmlns:local="clr-namespace:ProjectorInterface"
         xmlns:uc="clr-namespace:ProjectorInterface.Commands"
         mc:Ignorable="d"
-        x:Name="Window" Title="Lasershow" WindowState="Maximized" Background="Black"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" >
-    <Grid x:Name="LowerGrid">
+        x:Name="Window" Title="Lasershow" WindowState="Maximized" Background="{Binding BackgroundColor}"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" 
+        Width="1920" Height="1080">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="{Binding ForegroundColor}"/>
+        </Style>
+
+        <Style TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant"/>
+        </Style>
+        
+    </Window.Resources>
+    <Grid x:Name="LowerGrid" Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="0"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <!-- Navigationbar -->
-        <Menu x:Name="NavigationBar" Grid.Row="0" KeyboardNavigation.DirectionalNavigation="None">
+        <Menu x:Name="NavigationBar" Visibility="Collapsed" Grid.Row="0" KeyboardNavigation.DirectionalNavigation="None">
             <MenuItem Header="_File">
                 <MenuItem Header="Select Lasershow folder" Click="SelectShowClick" InputGestureText="Ctrl+O"/>
                 <MenuItem Header="Start Lasershow" Click="StartShowClick"/>
@@ -35,7 +49,6 @@
 
             <ComboBox x:Name="SelectPortComboBox" Grid.Row="0" Padding="1" SelectionChanged="SelectPortComboBoxSelectionChanged"/>
         </Menu>
-
         
         <!-- Lower Container -->
         <Grid Grid.Row="1">
@@ -48,44 +61,15 @@
             <!-- Left Container -->
             <Grid Grid.Column="0" ClipToBounds="True">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <WrapPanel Grid.Row="0" HorizontalAlignment="Center">
-                    <Button Width="50" Height="50" Grid.Column="0" Click="SelectLineClick">
-                        <Button.Content>
-                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
-                        </Button.Content>
-                    </Button>
-
-                    <Button Width="50" Height="50" Click="SelectRectangleClick">
-                        <Button.Content>
-                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
-                        </Button.Content>
-                    </Button>
-
-                    <Button Width="50" Height="50" Click="SelectCircleClick">
-                        <Button.Content>
-                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
-                        </Button.Content>
-                    </Button>
-
-                    <Button Width="50" Height="50" Click="SelectPathClick">
-                        <Button.Content>
-                            <Image Stretch="UniformToFill" Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
-                        </Button.Content>
-                    </Button>
-
-                </WrapPanel>
-
-               
-
-                <Border Grid.Column="0" Grid.Row="4" Margin="0 5 0 0" CornerRadius="5" HorizontalAlignment="Left" ClipToBounds="True" Background="LightBlue">
+                <Border Grid.Column="0" CornerRadius="5" HorizontalAlignment="Left" ClipToBounds="True" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1">
                     <Grid x:Name="Frames">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="36"/>
@@ -93,48 +77,86 @@
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="{Binding RenderedImgSize}"/>
                         </Grid.ColumnDefinitions>
 
                         <Label Content="Frames:" FontSize="15" Foreground="Black" Grid.Row="0"/>
 
-                        <ScrollViewer x:Name="FrameScroller" Grid.Row="1" Visibility="Visible" >
-                            <StackPanel x:Name="FramePanel" Grid.Row="1"/>
-                        </ScrollViewer>
-                        
+                        <uc:AutoScrollViewer x:Name="FrameScroller" Grid.Row="1" Visibility="Visible" >
+                            <StackPanel x:Name="FramePanel"/>
+                        </uc:AutoScrollViewer>
                     </Grid>
                 </Border>
+
+                <WrapPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center">
+                    <Button Grid.Column="0" Click="SelectLineClick">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Click="SelectRectangleClick">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Click="SelectCircleClick">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Click="SelectPathClick">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
+                        </Button.Content>
+                    </Button>
+                </WrapPanel>
             </Grid>
 
             <!-- Drawing Canvas -->
-            <Viewbox Stretch="Uniform" Grid.Row ="1" Grid.Column="1" HorizontalAlignment="Center" ClipToBounds="True">
-                <local:DrawingCanvas x:Name="DrawCon" Width="{Binding CanvasResolution}" Height="{Binding CanvasResolution}"
-                                     Margin="20" Background="White" ClipToBounds="True" Focusable="True">
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Grid.Column="1" Padding="1">
+                <local:DrawingCanvas x:Name="DrawCon" Background="{Binding ForegroundColor}" ClipToBounds="True" Focusable="True"
+                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <local:DrawingCanvas.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Clear Canvas" Click="MenuItem_Click"/>
                         </ContextMenu>
                     </local:DrawingCanvas.ContextMenu>
                 </local:DrawingCanvas>
-            </Viewbox>
+            </Border>
             
             <!-- Right Container -->            
-            <Grid Grid.Column="2" ClipToBounds="True">
+            <Grid Grid.Column="2" HorizontalAlignment="Right">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
                 <!-- Commandhistory -->
-                <uc:CommandHistoryWindow x:Name="CommandHistoryDisplay" Margin="0 5 0 0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                <uc:CommandHistoryWindow Visibility="Collapsed" x:Name="CommandHistoryDisplay" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 
-
+                <!-- Right Buttons -->
+                <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
+                    <Button Click="StartShowClick">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/StartButton.png" Margin="3"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Click="StopShowClick">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3"/>
+                        </Button.Content>
+                    </Button>
+                </WrapPanel>
+                
                 <!-- Animation Frames -->
-                <Border Grid.Column="2" Grid.Row="1" Margin="0 5 0 0" CornerRadius="5" HorizontalAlignment="Center" ClipToBounds="True" Background="LightBlue">
+                <Border Grid.Column="1" CornerRadius="5" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1"> 
                     <Grid x:Name="AnimationFrames">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="36"/>
@@ -142,14 +164,13 @@
                         </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="{Binding RenderedImgSize}"/>
                             </Grid.ColumnDefinitions>
 
                         <Label Content="Animation Frames:" FontSize="15" Foreground="Black" Grid.Row="0"/>
 
                         <uc:AutoScrollViewer Grid.Row="1">
-                            <StackPanel x:Name="AnimationFramesGallery">
-                            </StackPanel>
+                            <StackPanel x:Name="AnimationFramesGallery"/>
                         </uc:AutoScrollViewer>
                     </Grid>
                 </Border>

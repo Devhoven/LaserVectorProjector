@@ -18,34 +18,16 @@ namespace ProjectorInterface.GalvoInterface
     {
         VectorizedImage Image;
 
-        public RenderedImage(VectorizedImage image)
+        public RenderedImage(VectorizedImage image, int thumbnailIndex = 0)
         {
             Image = image;
-            Margin = new Thickness(20, 10, 20, 10);
-            RenderImage(image[image.FrameCount - 1]);
-        }
-
-  
-
-
-        private void DeleteImageClick(object sender, RoutedEventArgs e)
-        {
-            // TODO Child entfernen
-            
-        }
-
-        //Clicking on Images to load them into the Canvas
-        private void OnImageClick(object sender, MouseButtonEventArgs e)
-        {
-            if(e.ClickCount == 2)
-            {
-                
-            }
+            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.Fant);
+            RenderImage(image[thumbnailIndex]);
         }
 
         void RenderImage(VectorizedFrame frame)
         {
-            Bitmap bmp = new Bitmap(500, 500);
+            Bitmap bmp = new Bitmap(Settings.RENDERED_IMG_BMP_SIZE, Settings.RENDERED_IMG_BMP_SIZE);
 
             float maxVolF = Settings.MAX_VOLTAGE;
 
@@ -56,7 +38,7 @@ namespace ProjectorInterface.GalvoInterface
 
                 for (int i = 0; i < frame.Lines.Length - 1; i++)
                 {
-                    if (frame.Lines[i].On)
+                    if (frame.Lines[i + 1].On)
                     {
                         graph.DrawLine(linePen, TransformX(i), TransformY(i), TransformX(i + 1), TransformY(i + 1));
                     }

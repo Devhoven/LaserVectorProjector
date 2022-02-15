@@ -32,9 +32,6 @@ namespace ProjectorInterface
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
 
-            Width = Settings.CANVAS_RESOLUTION; 
-            Height = Settings.CANVAS_RESOLUTION;
-            Margin = new Thickness(20);
             Background = Brushes.White;
             ClipToBounds = true;
             Focusable = true;
@@ -51,9 +48,6 @@ namespace ProjectorInterface
             {
                 StartMousePos = e.GetPosition(this);
                 Children.Add(CurrentTool);
-            }else if (e.RightButton == MouseButtonState.Pressed)
-            {
-                
             }
             // Resetting the position of the current tool, which makes it invisible at the start
             // Removes a bug

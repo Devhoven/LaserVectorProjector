@@ -17,6 +17,8 @@
     <None Remove="Assets\CommandImages\Rectangle.png" />
     <None Remove="Assets\CommandImages\RectangleErase.png" />
     <None Remove="Assets\Mogus.jpg" />
+    <None Remove="Assets\PauseButton.png" />
+    <None Remove="Assets\StartButton.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +46,8 @@
     <Resource Include="Assets\CommandImages\Rectangle.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\PauseButton.png" />
+    <Resource Include="Assets\StartButton.png" />
   </ItemGroup>
 
   <ItemGroup>

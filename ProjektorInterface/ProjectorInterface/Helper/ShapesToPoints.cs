@@ -20,6 +20,12 @@ namespace ProjectorInterface.Commands
         static Line currentp = new Line();
         static double ellipseAccuracy = 0.001; //99.9
         static VectorizedImage tempImage = new VectorizedImage();
+        static int CanvasResolution;
+
+        static ShapesToPoints()
+        {
+            CanvasResolution = (int)MainWindow.Instance.DrawCon.ActualWidth;
+        }
 
         public static VectorizedImage getPoints()
         {
@@ -30,17 +36,17 @@ namespace ProjectorInterface.Commands
                 if (child is WPFLine line)
                 {
                     // moving to (X1, Y1) with laser OFF
-                    CalcCoord(true, line.X1, line.Y1);
+                    CalcCoord(false, line.X1, line.Y1);
 
                     // moving to (X2, Y2) with laser ON
-                    CalcCoord(false, line.X2, line.Y2);
+                    CalcCoord(true, line.X2, line.Y2);
                 }
                 else if (child is Rectangle rectangle)
                 {
                     Point p = new Point(Canvas.GetLeft(child), Canvas.GetTop(child));
 
                     // moving to "upper left" corner with laser OFF
-                    CalcCoord(true, p.X, p.Y);
+                    CalcCoord(false, p.X, p.Y);
 
                     // upper right corner
                     CalcCoord(true, currentp.X + rectangle.Width, currentp.Y);
@@ -52,14 +58,14 @@ namespace ProjectorInterface.Commands
                     CalcCoord(true, currentp.X - rectangle.Width, currentp.Y);
 
                     // back to upper left
-                    CalcCoord(false, currentp.X, currentp.Y - rectangle.Height);
+                    CalcCoord(true, currentp.X, currentp.Y - rectangle.Height);
                 }
                 else if (child is Ellipse ellipse)
                 {
                     Point p = new Point(Canvas.GetLeft(child), Canvas.GetTop(child));
 
                     // moving to the top of the ellipse from where the other points are calculated
-                    CalcCoord(true, ellipse.Width + p.X, ellipse.Height / 2 + p.Y);
+                    CalcCoord(false, ellipse.Width + p.X, ellipse.Height / 2 + p.Y);
 
                     // Distance in radians between angles measured on the ellipse
                     double deltaAngle = 0.001;
@@ -73,8 +79,10 @@ namespace ProjectorInterface.Commands
                     double r1 = ellipse.Width / 2;
                     double r2 = ellipse.Height / 2;
 
+                    int end = (int)Math.Ceiling(circumference / arcLength);
+
                     // Loop until we get all the points out of the ellipse
-                    for (int numPoints = 0; numPoints < circumference / arcLength; numPoints++)
+                    for (int numPoints = 0; numPoints < end; numPoints++)
                     {
                         angle = GetAngleForArcLengthRecursively(0, arcLength, angle, deltaAngle, r2, r1);
 
@@ -82,7 +90,7 @@ namespace ProjectorInterface.Commands
                         double y = r2 * Math.Sin(angle) + r2 + p.Y;
 
                         // checks if point already is inside list
-                        if ((points[points.Count - 1].X == (x / CANVAS_RESOLUTION)) && (points[points.Count - 1].Y == (y / CANVAS_RESOLUTION)))
+                        if ((points[points.Count - 1].X == (x / CanvasResolution)) && (points[points.Count - 1].Y == (y / CanvasResolution)))
                         {
                             continue;
                         }
@@ -92,12 +100,20 @@ namespace ProjectorInterface.Commands
                         }
                     }
                 }
-                else
+                else if (child is Path path)
                 {
-                    // TODO Freihandzeichnen
+                    foreach (LineGeometry lineSeg in ((GeometryGroup)path.Data).Children)
+                    {
+                        // moving to (X1, Y1) with laser OFF
+                        CalcCoord(false, lineSeg.StartPoint.X, lineSeg.StartPoint.Y);
+
+
+                        // moving to (X2, Y2) with laser ON
+                        CalcCoord(true, lineSeg.EndPoint.X, lineSeg.EndPoint.Y);
+                    }
                 }
                 // Bugfix: No more connecting lines between shapes
-                //CalcCoord(false, currentp.X * CANVAS_RESOLUTION, currentp.Y * CANVAS_RESOLUTION);
+                //CalcCoord(false, currentp.X * CanvasResolution, currentp.Y * CanvasResolution);
                 //currentp.On = false;
 
             }
@@ -107,7 +123,6 @@ namespace ProjectorInterface.Commands
             Line[] tmp = points.ToArray();
             points.Clear();
             tempImage.AddFrame(new GalvoInterface.VectorizedFrame(tmp));
-
             return tempImage;
         }
 
@@ -123,8 +138,8 @@ namespace ProjectorInterface.Commands
                     Width = 10,
                     Height = 10
                 };
-                Canvas.SetLeft(tmp, p.X * CANVAS_RESOLUTION);
-                Canvas.SetTop(tmp, p.Y * CANVAS_RESOLUTION);
+                Canvas.SetLeft(tmp, p.X * CanvasResolution);
+                Canvas.SetTop(tmp, p.Y * CanvasResolution);
                 Parent.Children.Add(tmp);
             }
         }
@@ -190,9 +205,8 @@ namespace ProjectorInterface.Commands
             currentp.X = (short)x;
             currentp.Y = (short)y;
             currentp.On = stroke;
-            Line l = Line.NormalizedLine(currentp.X, currentp.Y, currentp.On, CANVAS_RESOLUTION, MAX_VOLTAGE);
+            Line l = Line.NormalizedLine(currentp.X, currentp.Y, currentp.On, CanvasResolution, MAX_VOLTAGE);
             points.Add(l);
-
         }
     }
 }

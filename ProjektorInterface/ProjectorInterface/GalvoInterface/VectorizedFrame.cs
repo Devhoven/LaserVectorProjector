@@ -50,7 +50,7 @@ namespace ProjectorInterface.GalvoInterface
 
                 // Otherwise the first point won't be added
                 if (i == 0)
-                    interpolatedLines.Add(new Line(x, y, lines[i].On));
+                    interpolatedLines.Add(new Line(x, y, false));
 
                 // Traverses from one point to another until the distance is too short and adds the points on the way
                 while (true)
@@ -62,7 +62,7 @@ namespace ProjectorInterface.GalvoInterface
                         interpolatedLines.Add(new Line(newX, newY, lines[i + 1].On));
                         break;
                     }
-                    interpolatedLines.Add(new Line(x, y, lines[i].On));
+                    interpolatedLines.Add(new Line(x, y, lines[i + 1].On));
                 }
             }
             Lines = interpolatedLines.ToArray();

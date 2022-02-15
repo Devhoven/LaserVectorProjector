@@ -13,6 +13,12 @@ namespace ProjectorInterface.Commands
     {
         private bool AutoScroll = true;
 
+        public AutoScrollViewer() : base()
+        {
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+        }
+
         protected override void OnScrollChanged(ScrollChangedEventArgs e)
         {
             // User scroll event : set or unset auto-scroll mode

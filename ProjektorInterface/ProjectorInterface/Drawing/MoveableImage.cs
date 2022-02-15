@@ -44,6 +44,11 @@ namespace ProjectorInterface
             => Canvas.SetLeft(this, Left = Left - MOVE_IMG_SPEED);
         public void MoveRight()
             => Canvas.SetLeft(this, Left = Left + MOVE_IMG_SPEED);
+        public void MoveImage(int speedX, int speedY)
+        {
+            Canvas.SetTop(this, Top = -speedY);
+            Canvas.SetLeft(this, Left = -speedX);
+        }
 
         // Disables and shows the image again
         public void ToggleOpacity()

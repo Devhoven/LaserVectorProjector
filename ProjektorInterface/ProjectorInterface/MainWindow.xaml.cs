@@ -135,15 +135,28 @@ namespace ProjectorInterface
             => DrawCon.CurrentTool = new CircleTool();
         
         private void SelectPathClick(object sender, RoutedEventArgs e)
-            => DrawCon.CurrentTool = new PathTool();        
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-            => DrawCon.Children.Clear();
+            => DrawCon.CurrentTool = new PathTool();
+        
+        private void ClearCanvasClick(object sender, RoutedEventArgs e) 
+        {
+            if (DrawCon.Children[0] != DrawCon.BackgroundImg)
+                DrawCon.Children.Clear();
+            else
+                DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             SerialManager.ClearImages();
             SerialManager.AddImage(ShapesToPoints.DrawnImage);
+        }
+
+        private void AnimationSelectClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2) 
+            {
+         
+            }
         }
     }
 }

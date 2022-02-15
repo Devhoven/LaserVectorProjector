@@ -44,15 +44,15 @@ namespace ProjectorInterface
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             // Getting the mouse pos relative to the canvas
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && !Keyboard.IsKeyDown(Key.LeftAlt))
             {
                 StartMousePos = e.GetPosition(this);
                 Children.Add(CurrentTool);
+            }else if(e.LeftButton == MouseButtonState.Pressed && Keyboard.IsKeyDown(Key.LeftAlt))
+            {
+                StartMousePos = e.GetPosition(this);
             }
-            // Resetting the position of the current tool, which makes it invisible at the start
-            // Removes a bug
-            // CurrentTool.Render(StartMousePos, StartMousePos);
-
+            
             // If the user middleclicked on one of the shapes, it is going to be deleted
             if (e.MiddleButton == MouseButtonState.Pressed && e.OriginalSource is Shape)
             {
@@ -66,15 +66,21 @@ namespace ProjectorInterface
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && !Keyboard.IsKeyDown(Key.LeftAlt))
+            {
                 CurrentTool.Render(StartMousePos, e.GetPosition(this));
+            }else if (e.LeftButton == MouseButtonState.Pressed && Keyboard.IsKeyDown(Key.LeftAlt))
+            {
+                Point temp = new Point(StartMousePos.X - e.GetPosition(this).X, StartMousePos.Y - e.GetPosition(this).Y);
+                BackgroundImg.MoveImage((int)temp.X, (int)temp.Y);
+            }
         }
 
         // If the user releases one of the mouse buttons the tool visuals are going to be removed 
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left && !Keyboard.IsKeyDown(Key.LeftAlt))
                 RemoveToolAndCopy(e.GetPosition(this));
             Keyboard.Focus(this);
         }

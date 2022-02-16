@@ -17,6 +17,7 @@ namespace ProjectorInterface
     {
         double _Top, _Left;
         bool IsDragging = false;
+        Point StartPos;
         Point LastPos;
 
         double Top
@@ -49,7 +50,8 @@ namespace ProjectorInterface
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             IsDragging = true;
-            LastPos = e.GetPosition((Canvas)Parent);
+            StartPos = e.GetPosition((Canvas)Parent);
+            LastPos = StartPos;
             e.Handled = true;
         }
 
@@ -57,9 +59,9 @@ namespace ProjectorInterface
         {
             if (e.RightButton == MouseButtonState.Pressed && IsDragging)
             {
-                Point newPos = e.GetPosition((Canvas)Parent);
-                Vector diff = Point.Subtract(LastPos, newPos);
-                LastPos = e.GetPosition((Canvas)Parent);
+                Point currentPos = e.GetPosition((Canvas)Parent);
+                Vector diff = Point.Subtract(LastPos, currentPos);
+                LastPos = currentPos;
 
                 Left -= diff.X;
                 Top -= diff.Y;
@@ -73,7 +75,9 @@ namespace ProjectorInterface
             if (IsDragging)
             {
                 IsDragging = false;
-                e.Handled = true;
+                Point currentPos = e.GetPosition((Canvas)Parent);
+                if (Point.Subtract(currentPos, StartPos).LengthSquared > 5)
+                    e.Handled = true;
             }
         }
 

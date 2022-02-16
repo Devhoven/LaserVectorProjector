@@ -395,3 +395,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 __vm/
+Hardware/BipolarCircuit-cache.lib
+Hardware/BipolarCircuit.sch-bak

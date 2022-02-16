@@ -8,7 +8,7 @@
 // We can also define a MCP4812 or MCP4802
 MCP4822 Converter(PinOut);
 
-long PosX{ 0 }, PosY{ 0 };
+int16_t PosX{ 0 }, PosY{ 0 };
 
 void setup() 
 {
@@ -31,11 +31,9 @@ void loop()
     if (Serial.available() < 4) 
         return; 
 
-    PosX = Serial.read();
-    PosX |= (Serial.read() << 8);
+    PosX = Serial.read() | (Serial.read() << 8);
 
-    PosY = Serial.read();
-    PosY |= (Serial.read() << 8);
+    PosY = Serial.read() | (Serial.read() << 8);
 
     if ((PosY & 0x8000) == 0x8000)
         digitalWrite(TTLSwitch, HIGH);
@@ -47,7 +45,7 @@ void loop()
     UpdateDAC(PosX, PosY);
 }
 
-void UpdateDAC(long& x, long& y) 
+void UpdateDAC(int16_t x, int16_t y) 
 {
     Converter.setVoltageB(y);
     Converter.setVoltageA(x);

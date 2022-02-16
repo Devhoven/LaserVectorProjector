@@ -9,9 +9,7 @@ using static ProjectorInterface.Commands.CanvasCommand;
 using static ProjectorInterface.Helper.Settings;
 using Point = System.Windows.Point;
 using Rectangle = System.Windows.Shapes.Rectangle;
-using Line = ProjectorInterface.GalvoInterface.Line;
 using WPFLine = System.Windows.Shapes.Line;
-using ProjectorInterface.GalvoInterface;
 
 namespace ProjectorInterface.GalvoInterface
 {

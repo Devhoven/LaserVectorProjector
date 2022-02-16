@@ -137,6 +137,8 @@ namespace ProjectorInterface.GalvoInterface
             VectorizedImage currentImg;
             VectorizedFrame currentFrame;
             Line currentLine;
+            // Contain the coordinates which are going to be sent to the arduino
+            short correctedX, correctedY;
             while (Running)
             {
                 // Setting it to false here, so not every frame after a delete call gets skipped
@@ -155,11 +157,15 @@ namespace ProjectorInterface.GalvoInterface
                         {
                             currentLine = currentFrame.Lines[j];
 
+                            // TODO: Refactor this
+                            correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + (Settings.MAX_VOLTAGE - Settings.MAX_VOLTAGE * Settings.IMG_SECTION) / 2);
+                            correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + (Settings.MAX_VOLTAGE - Settings.MAX_VOLTAGE * Settings.IMG_SECTION) / 2);
+
                             // Writing the x and y coordinates into the buffer 
-                            Buffer[0] = (byte)currentLine.X;
-                            Buffer[1] = (byte)(currentLine.X >> 8);
-                            Buffer[2] = (byte)currentLine.Y;
-                            Buffer[3] = (byte)(currentLine.Y >> 8);
+                            Buffer[0] = (byte)correctedX;
+                            Buffer[1] = (byte)(correctedX >> 8);
+                            Buffer[2] = (byte)correctedY;
+                            Buffer[3] = (byte)(correctedY >> 8);
 
                             if (currentLine.On)
                                 Buffer[3] |= 0x80;
@@ -167,7 +173,7 @@ namespace ProjectorInterface.GalvoInterface
                             // Sending the data
                             Port.Write(Buffer, 0, BUFFER_SIZE);
                         }
-
+                        
                         if (stopwatch.ElapsedMilliseconds < 42)
                             Thread.Sleep(42 - (int)stopwatch.ElapsedMilliseconds);
 

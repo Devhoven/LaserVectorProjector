@@ -199,8 +199,6 @@
                         <uc:AutoScrollViewer Grid.Row="1">
                             <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
                         </uc:AutoScrollViewer>
-
-                        
                     </Grid>
                 </Border>
             </Grid>

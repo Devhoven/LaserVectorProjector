@@ -25,6 +25,10 @@ namespace ProjectorInterface
         // Can be controlled, so the user is able to trace the outlines
         public MoveableImage BackgroundImg;
 
+        public SelectionTool select = new SelectionTool();
+
+        public bool isSelecting = false;
+
         public DrawingCanvas()
         {
             CurrentTool = new LineTool();
@@ -46,6 +50,9 @@ namespace ProjectorInterface
             // Getting the mouse pos relative to the canvas
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                if (isSelecting)
+                    Children.RemoveAt(Children.Count - 1);
+
                 StartMousePos = e.GetPosition(this);
                 Children.Add(CurrentTool);
                 CurrentTool.Render(StartMousePos, StartMousePos);
@@ -64,17 +71,26 @@ namespace ProjectorInterface
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && !Keyboard.IsKeyDown(Key.LeftAlt))
-                CurrentTool.Render(StartMousePos, e.GetPosition(this));
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (!isSelecting)
+                    CurrentTool.Render(StartMousePos, e.GetPosition(this));
+                else
+                    select.Render(StartMousePos, e.GetPosition(this));
+            }
         }
 
         // If the user releases one of the mouse buttons the tool visuals are going to be removed 
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left && !Keyboard.IsKeyDown(Key.LeftAlt))
-                RemoveToolAndCopy(e.GetPosition(this));
-            Keyboard.Focus(this);
+            if (!isSelecting)
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                    RemoveToolAndCopy(e.GetPosition(this));
+                Keyboard.Focus(this);
+            }
+
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)

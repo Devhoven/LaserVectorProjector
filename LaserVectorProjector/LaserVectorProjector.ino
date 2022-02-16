@@ -41,7 +41,7 @@ void loop()
         digitalWrite(TTLSwitch, LOW);
 
     PosY &= 0x7FFF;
-
+    
     UpdateDAC(PosX, PosY);
 }
 

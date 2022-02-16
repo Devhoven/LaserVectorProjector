@@ -187,8 +187,8 @@ namespace ProjectorInterface.GalvoInterface
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again
                 while (Images.Count == 0) ;
                 // Moving on to the next image, or looping to the beginning
-                if (!StopCurrentImg)
-                    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
+                //if (!StopCurrentImg)
+                //    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
             }
         }
     }

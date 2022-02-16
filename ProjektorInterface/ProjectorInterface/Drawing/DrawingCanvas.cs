@@ -48,6 +48,7 @@ namespace ProjectorInterface
             {
                 StartMousePos = e.GetPosition(this);
                 Children.Add(CurrentTool);
+                CurrentTool.Render(StartMousePos, StartMousePos);
             }
             
             // If the user middleclicked on one of the shapes, it is going to be deleted

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectorInterface"
-        xmlns:uc="clr-namespace:ProjectorInterface.Commands"
+        xmlns:uc="clr-namespace:ProjectorInterface.Commands" xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements"
         mc:Ignorable="d"
         x:Name="Window" Title="Lasershow" WindowState="Maximized" Background="{Binding BackgroundColor}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" 
@@ -162,7 +162,7 @@
                 
                 <!-- Animation Frames -->
                 <Border Grid.Column="1" CornerRadius="5" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1"> 
-                    <Grid x:Name="AnimationFrames">
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="36"/>
                             <RowDefinition Height="1*"/>
@@ -172,15 +172,14 @@
                                 <ColumnDefinition Width="{Binding RenderedImgSize}"/>
                             </Grid.ColumnDefinitions>
 
-                        <Label Content="Animation Frames:" FontSize="15" Foreground="Black" Grid.Row="0"/>
+                        <Label Content="Animations:" FontSize="15" Foreground="Black" Grid.Row="0"/>
 
                         <uc:AutoScrollViewer Grid.Row="1">
-                            <StackPanel x:Name="AnimationFramesGallery"/>
+                            <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
                         </uc:AutoScrollViewer>
                     </Grid>
                 </Border>
             </Grid>
-
         </Grid>
     </Grid>
 </Window>

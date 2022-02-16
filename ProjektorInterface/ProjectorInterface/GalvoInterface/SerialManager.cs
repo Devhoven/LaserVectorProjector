@@ -75,7 +75,6 @@ namespace ProjectorInterface.GalvoInterface
                 return;
 
             Running = true;
-            CurrentImgIndex = 0;
             SendImgThread = new Thread(new ThreadStart(SendImgLoop));
             SendImgThread.Start();
         }
@@ -94,8 +93,9 @@ namespace ProjectorInterface.GalvoInterface
         // Loads all the .ild files from the selected folder into the Images - list
         public static void LoadImagesFromFolder(string path)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            CurrentImgIndex = 0;
 
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
             lock (Images)
             {
                 foreach (var dir in dirInfo.GetFiles())
@@ -179,7 +179,8 @@ namespace ProjectorInterface.GalvoInterface
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again
                 while (Images.Count == 0) ;
                 // Moving on to the next image, or looping to the beginning
-                CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
+                if (!StopCurrentImg)
+                    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
             }
         }
     }

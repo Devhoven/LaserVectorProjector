@@ -11,6 +11,12 @@ namespace ProjectorInterface.GalvoInterface.UIElements
     {
         public AnimationGalleryPanel()
             => SerialManager.OnImgIndexChanged += OnImgIndexChanged;
+        
+        public void Clear()
+            => Children.Clear();
+
+        public void AddBorder(RenderedItemBorder newElement)
+            => Children.Add(newElement);
 
         private void OnImgIndexChanged(int oldVal, int newVal)
         {

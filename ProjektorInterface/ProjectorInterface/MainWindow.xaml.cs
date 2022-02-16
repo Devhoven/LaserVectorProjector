@@ -96,13 +96,13 @@ namespace ProjectorInterface
                 SerialManager.LoadImagesFromFolder(dialog.SelectedPath);
 
                 // Clearing all of the old animations and adding the new ones
-                AnimationGallery.Children.Clear();
+                AnimationGallery.Clear();
                 foreach (VectorizedImage img in SerialManager.Images)
-                    AnimationGallery.Children.Add(new RenderedItemBorder(new RenderedImage(img)));
+                    AnimationGallery.AddBorder(new RenderedItemBorder(new RenderedImage(img)));
             }
         }
 
-        // Starts the sending of data
+        // Starts the show
         private void StartShowClick(object sender, RoutedEventArgs e)
             => SerialManager.Start();
 
@@ -138,9 +138,7 @@ namespace ProjectorInterface
             => DrawCon.CurrentTool = new PathTool();
         
         private void ClearCanvasClick(object sender, RoutedEventArgs e) 
-        {
-            DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
-        }
+            => DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

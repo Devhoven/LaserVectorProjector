@@ -76,16 +76,12 @@
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding RenderedImgSize}"/>
-                        </Grid.ColumnDefinitions>
-
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <Label Content="Frames:" VerticalAlignment="Center" FontSize="15" Foreground="Black" Grid.Column="0"/>
 
                             <Button Grid.Column="1" Width="20" Height="20" VerticalAlignment="Center" Click="ProjectCanvasClick" ToolTip="Project current Image">
@@ -94,7 +90,6 @@
                                 </Button.Content>
                             </Button>
                         </Grid>
-                        
                         
                         <uc:AutoScrollViewer x:Name="FrameScroller" Grid.Row="1" Visibility="Visible" >
                             <StackPanel x:Name="FramePanel"/>
@@ -130,7 +125,8 @@
             </Grid>
 
             <!-- Drawing Canvas -->
-            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Grid.Column="1" Padding="1">
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Grid.Column="1" Padding="1"
+                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
                 <local:DrawingCanvas x:Name="DrawCon" Background="{Binding ForegroundColor}" ClipToBounds="True" Focusable="True"
                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <local:DrawingCanvas.ContextMenu>
@@ -177,10 +173,6 @@
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{Binding RenderedImgSize}"/>
-                            </Grid.ColumnDefinitions>
-
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
@@ -196,7 +188,7 @@
                             </Button>
                         </Grid>
 
-                        <uc:AutoScrollViewer Grid.Row="1">
+                        <uc:AutoScrollViewer Grid.Row="1" HorizontalContentAlignment="Stretch">
                             <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
                         </uc:AutoScrollViewer>
                     </Grid>

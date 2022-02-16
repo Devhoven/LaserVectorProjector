@@ -207,7 +207,7 @@ namespace ProjectorInterface.GalvoInterface
             CurrentLine.X = (short)x;
             CurrentLine.Y = (short)y;
             CurrentLine.On = stroke;
-            Line l = Line.NormalizedLine(CurrentLine.X, CurrentLine.Y, CurrentLine.On, CanvasResolution, MAX_VOLTAGE);
+            Line l = Line.NormalizedLine(CurrentLine.X, CurrentLine.Y, CurrentLine.On, CanvasResolution, IMG_SECTION_SIZE);
             Lines.Add(l);
         }
     }

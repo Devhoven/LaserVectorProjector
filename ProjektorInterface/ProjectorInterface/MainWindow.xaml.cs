@@ -23,10 +23,6 @@ namespace ProjectorInterface
             DependencyProperty.Register("CommandHistory", typeof(CommandHistory), typeof(MainWindow),
                 new PropertyMetadata(new CommandHistory()));
 
-        public static readonly DependencyProperty RenderedImgSizeProperty =
-            DependencyProperty.Register("RenderedImgSize", typeof(int), typeof(MainWindow),
-                new PropertyMetadata(Settings.RENDERED_IMG_SIZE));
-
         public static readonly DependencyProperty BackgroundColorProperty =
             DependencyProperty.Register("BackgroundColor", typeof(Brush), typeof(MainWindow),
                 new PropertyMetadata(Brushes.White));
@@ -146,6 +142,7 @@ namespace ProjectorInterface
             {
                 SerialManager.ClearImages();
                 SerialManager.AddImage(ShapesToPoints.DrawnImage);
+                SerialManager.Start();
             }
         }
     }

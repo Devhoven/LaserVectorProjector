@@ -31,24 +31,30 @@ namespace ProjectorInterface.Helper
         {
             Bitmap bmp = new Bitmap(Settings.RENDERED_IMG_BMP_SIZE, Settings.RENDERED_IMG_BMP_SIZE);
 
-            float maxVolF = Settings.MAX_VOLTAGE;
+            float maxVolF = Settings.IMG_SECTION_SIZE;
 
             using (Graphics graph = Graphics.FromImage(bmp))
             {
                 graph.Clear(Color.White);
-                Pen linePen = new Pen(System.Drawing.Brushes.Red, 5f);
+                Pen linePen = new Pen(Brushes.Red, 5f);
 
-                for (int i = 0; i < frame.Lines.Length - 1; i++)
+                for (int i = 1; i < frame.Lines.Length; i++)
                 {
-                    if (frame.Lines[i + 1].On)
-                        graph.DrawLine(linePen, TransformX(i), TransformY(i), TransformX(i + 1), TransformY(i + 1));
+                    if (frame.Lines[i].On)
+                        graph.DrawLine(linePen, TransformX(i - 1), TransformY(i - 1), TransformX(i), TransformY(i));
                 }
 
                 int TransformX(int i)
-                    => (int)(frame.Lines[i].X / maxVolF * bmp.Width);
+                {
+                    int res = (int)(frame.Lines[i].X / maxVolF * bmp.Width);
+                    return res;
+                }
 
                 int TransformY(int i)
-                    => (int)(frame.Lines[i].Y / maxVolF * bmp.Height);
+                {
+                    int res = (int)(frame.Lines[i].Y / maxVolF * bmp.Height);
+                    return res;
+                }
             }
 
             // Possible "Memory Leak"

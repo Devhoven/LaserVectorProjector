@@ -102,19 +102,6 @@ namespace ProjectorInterface.GalvoInterface
             return result;
         }
 
-        public static bool operator==(Line left, Line right)
-            => left.X == right.X && left.Y == right.Y && left.On == right.On;
-
-        public static bool operator !=(Line left, Line right)
-            => !(left == right);
-
-        public override bool Equals(object? obj)
-        {
-            if (obj == null)
-                return false;
-            return this == (Line)obj;
-        }
-
         public override int GetHashCode()
             => base.GetHashCode();
 

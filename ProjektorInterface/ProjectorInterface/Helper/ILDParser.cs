@@ -113,7 +113,7 @@ namespace ProjectorInterface.Helper
             else
                 reader.Skip(3);
 
-            return Line.NormalizedLine(xPos, yPos *= -1, (statusCode & 0b01000000) != 64, Settings.MAX_VOLTAGE);
+            return Line.NormalizedLine(xPos, yPos *= -1, (statusCode & 0b01000000) != 64, Settings.IMG_SECTION_SIZE);
         }
 
         // "Reads" the color palette section

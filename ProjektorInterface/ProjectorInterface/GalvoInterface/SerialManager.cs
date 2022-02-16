@@ -104,6 +104,8 @@ namespace ProjectorInterface.GalvoInterface
                         ILDParser.LoadFromPath(dir.FullName, ref Images);
                 }
             }
+
+            Start();
         }
 
         public static void AddImage(VectorizedImage img)
@@ -158,8 +160,8 @@ namespace ProjectorInterface.GalvoInterface
                             currentLine = currentFrame.Lines[j];
 
                             // TODO: Refactor this
-                            correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + (Settings.MAX_VOLTAGE - Settings.MAX_VOLTAGE * Settings.IMG_SECTION) / 2);
-                            correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + (Settings.MAX_VOLTAGE - Settings.MAX_VOLTAGE * Settings.IMG_SECTION) / 2);
+                            correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
+                            correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
 
                             // Writing the x and y coordinates into the buffer 
                             Buffer[0] = (byte)correctedX;
@@ -173,9 +175,9 @@ namespace ProjectorInterface.GalvoInterface
                             // Sending the data
                             Port.Write(Buffer, 0, BUFFER_SIZE);
                         }
-                        
-                        if (stopwatch.ElapsedMilliseconds < 42)
-                            Thread.Sleep(42 - (int)stopwatch.ElapsedMilliseconds);
+
+                        if (stopwatch.ElapsedMilliseconds < 40)
+                            Thread.Sleep(40 - (int)stopwatch.ElapsedMilliseconds);
 
                         // If this bool is set, the current animation got deleted or swapped
                         if (StopCurrentImg)

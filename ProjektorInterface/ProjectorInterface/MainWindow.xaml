@@ -72,7 +72,7 @@
                 <Border Grid.Column="0" CornerRadius="5" HorizontalAlignment="Left" ClipToBounds="True" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1">
                     <Grid x:Name="Frames">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
@@ -80,8 +80,22 @@
                             <ColumnDefinition Width="{Binding RenderedImgSize}"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Content="Frames:" FontSize="15" Foreground="Black" Grid.Row="0"/>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Content="Frames:" VerticalAlignment="Center" FontSize="15" Foreground="Black" Grid.Column="0"/>
 
+                            <Button Grid.Column="1" Width="20" Height="20" VerticalAlignment="Center" Click="ProjectCanvasClick" ToolTip="Project current Image">
+                                <Button.Content>
+                                    <Image Source="pack://application:,,,/Assets/Upload.png" Margin="3"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                        
+                        
                         <uc:AutoScrollViewer x:Name="FrameScroller" Grid.Row="1" Visibility="Visible" >
                             <StackPanel x:Name="FramePanel"/>
                         </uc:AutoScrollViewer>
@@ -89,25 +103,25 @@
                 </Border>
 
                 <WrapPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center">
-                    <Button Grid.Column="0" Click="SelectLineClick">
+                    <Button Grid.Column="0" Click="SelectLineClick" ToolTip="Select Line Tool">
                         <Button.Content>
                             <Image Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
                         </Button.Content>
                     </Button>
 
-                    <Button Click="SelectRectangleClick">
+                    <Button Click="SelectRectangleClick" ToolTip="Select Rectangle Tool">
                         <Button.Content>
                             <Image Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
                         </Button.Content>
                     </Button>
 
-                    <Button Click="SelectCircleClick">
+                    <Button Click="SelectCircleClick" ToolTip="Select Circle Tool">
                         <Button.Content>
                             <Image Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
                         </Button.Content>
                     </Button>
 
-                    <Button Click="SelectPathClick">
+                    <Button Click="SelectPathClick" ToolTip="Select Path Tool">
                         <Button.Content>
                             <Image Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
                         </Button.Content>
@@ -142,20 +156,15 @@
                 <uc:CommandHistoryWindow Visibility="Collapsed" x:Name="CommandHistoryDisplay" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 
                 <!-- Right Buttons -->
-                <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
+                <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center" >
                     <Button Click="StartShowClick">
                         <Button.Content>
-                            <Image Source="pack://application:,,,/Assets/StartButton.png" Margin="3"/>
+                            <Image Source="pack://application:,,,/Assets/StartButton.png" Margin="3" ToolTip="Start Lasershow"/>
                         </Button.Content>
                     </Button>
                     <Button Click="StopShowClick">
                         <Button.Content>
-                            <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3"/>
-                        </Button.Content>
-                    </Button>
-                    <Button Click="Button_Click">
-                        <Button.Content>
-                            <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3"/>
+                            <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3" ToolTip="Stop Lasershow"/>
                         </Button.Content>
                     </Button>
                 </WrapPanel>
@@ -164,7 +173,7 @@
                 <Border Grid.Column="1" CornerRadius="5" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1"> 
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
@@ -172,11 +181,26 @@
                                 <ColumnDefinition Width="{Binding RenderedImgSize}"/>
                             </Grid.ColumnDefinitions>
 
-                        <Label Content="Animations:" FontSize="15" Foreground="Black" Grid.Row="0"/>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Content="Animations:" VerticalAlignment="Center" FontSize="15" Foreground="Black" Grid.Column="0"/>
+
+                            <Button Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Click="SelectShowClick" ToolTip="Open Animation Folder">
+                                <Button.Content>
+                                    <Image Source="pack://application:,,,/Assets/Folder.png"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
 
                         <uc:AutoScrollViewer Grid.Row="1">
                             <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
                         </uc:AutoScrollViewer>
+
+                        
                     </Grid>
                 </Border>
             </Grid>

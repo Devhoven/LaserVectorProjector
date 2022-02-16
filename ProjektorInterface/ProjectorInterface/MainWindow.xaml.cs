@@ -140,7 +140,7 @@ namespace ProjectorInterface
         private void ClearCanvasClick(object sender, RoutedEventArgs e) 
             => DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ProjectCanvasClick(object sender, RoutedEventArgs e)
         {
             SerialManager.ClearImages();
             SerialManager.AddImage(ShapesToPoints.DrawnImage);

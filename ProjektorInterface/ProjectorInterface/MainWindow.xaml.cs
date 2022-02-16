@@ -142,8 +142,11 @@ namespace ProjectorInterface
 
         private void ProjectCanvasClick(object sender, RoutedEventArgs e)
         {
-            SerialManager.ClearImages();
-            SerialManager.AddImage(ShapesToPoints.DrawnImage);
+            if (ShapesToPoints.DrawnImage.FrameCount > 0)
+            {
+                SerialManager.ClearImages();
+                SerialManager.AddImage(ShapesToPoints.DrawnImage);
+            }
         }
     }
 }

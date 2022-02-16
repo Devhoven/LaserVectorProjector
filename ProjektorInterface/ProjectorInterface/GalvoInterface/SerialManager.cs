@@ -1,4 +1,5 @@
 ﻿using ProjectorInterface.Helper;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -27,7 +28,18 @@ namespace ProjectorInterface.GalvoInterface
         static bool Running = false;
         static bool StopCurrentImg = false;
 
-        static int CurrentImgIndex;
+        public delegate void IndexChangedHandler(int oldVal, int newVal);
+        public static event IndexChangedHandler? OnImgIndexChanged;
+        static int CurrentImgIndex
+        {
+            get => _CurrentImgIndex; 
+            set 
+            {
+                OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
+                _CurrentImgIndex = value; 
+            }
+        }
+        static int _CurrentImgIndex;
         static byte[] Buffer;
 
         static SerialManager()
@@ -156,8 +168,8 @@ namespace ProjectorInterface.GalvoInterface
                             Port.Write(Buffer, 0, BUFFER_SIZE);
                         }
 
-                        if (stopwatch.ElapsedMilliseconds < 38)
-                            Thread.Sleep(38 - (int)stopwatch.ElapsedMilliseconds);
+                        if (stopwatch.ElapsedMilliseconds < 42)
+                            Thread.Sleep(42 - (int)stopwatch.ElapsedMilliseconds);
 
                         // If this bool is set, the current animation got deleted or swapped
                         if (StopCurrentImg)

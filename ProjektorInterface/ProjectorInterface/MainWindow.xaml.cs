@@ -96,9 +96,9 @@ namespace ProjectorInterface
                 SerialManager.LoadImagesFromFolder(dialog.SelectedPath);
 
                 // Clearing all of the old animations and adding the new ones
-                AnimationFramesGallery.Children.Clear();
+                AnimationGallery.Children.Clear();
                 foreach (VectorizedImage img in SerialManager.Images)
-                    AnimationFramesGallery.Children.Add(new RenderedItemBorder(new RenderedImage(img)));
+                    AnimationGallery.Children.Add(new RenderedItemBorder(new RenderedImage(img)));
             }
         }
 

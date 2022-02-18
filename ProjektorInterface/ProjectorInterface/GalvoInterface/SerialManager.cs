@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
-using System.Text;
 using System.Threading;
 
 namespace ProjectorInterface.GalvoInterface
@@ -33,11 +32,11 @@ namespace ProjectorInterface.GalvoInterface
         public static event IndexChangedHandler? OnImgIndexChanged;
         static int CurrentImgIndex
         {
-            get => _CurrentImgIndex; 
-            set 
+            get => _CurrentImgIndex;
+            set
             {
                 OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
-                _CurrentImgIndex = value; 
+                _CurrentImgIndex = value;
             }
         }
         static int _CurrentImgIndex;
@@ -106,7 +105,7 @@ namespace ProjectorInterface.GalvoInterface
                 }
             }
 
-            //Start();
+            Start();
         }
 
         public static void AddImage(VectorizedImage img)
@@ -132,7 +131,7 @@ namespace ProjectorInterface.GalvoInterface
                 Images.Clear();
             StopCurrentImg = true;
         }
-        
+
         static void SendImgLoop()
         {
             // This stopwatch ensures, that 24 frames are diplayed and not any more
@@ -151,9 +150,7 @@ namespace ProjectorInterface.GalvoInterface
                 // Locking the image, since this method runs in a different thread and delete functionality is going to be implemented
                 lock (currentImg)
                 {
-                    StringBuilder frame = new StringBuilder();
-                    int count = 1;
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < currentImg.FrameCount; i++)
                     {
                         currentFrame = currentImg[i];
                         stopwatch.Restart();
@@ -175,26 +172,17 @@ namespace ProjectorInterface.GalvoInterface
                             if (currentLine.On)
                                 Buffer[3] |= 0x80;
 
-                            //// Sending the data
-                            //Port.Write(Buffer, 0, BUFFER_SIZE);
-
-                            frame.Append(Buffer[0] + ", " + Buffer[1] + ", " + Buffer[2] + ", " + Buffer[3] + ", ");
-                            if (frame.Length > count * 5000)
-                            {
-                                frame.Append("\n");
-                                count++;
-                            }
+                            // Sending the data
+                            Port.Write(Buffer, 0, BUFFER_SIZE);
                         }
 
-                        //if (stopwatch.ElapsedMilliseconds < 40)
-                        //    Thread.Sleep(40 - (int)stopwatch.ElapsedMilliseconds);
+                        if (stopwatch.ElapsedMilliseconds < 40)
+                            Thread.Sleep(40 - (int)stopwatch.ElapsedMilliseconds);
 
                         // If this bool is set, the current animation got deleted or swapped
                         if (StopCurrentImg)
                             break;
                     }
-                    frame.Append(" }");
-                    string final = frame.ToString();
                 }
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again
                 while (Images.Count == 0) ;

@@ -53,7 +53,7 @@ namespace ProjectorInterface
             }
             SelectPortComboBox.SelectedIndex = 0;
 
-            SerialManager.Initialize("COM10");
+            SerialManager.Initialize("COM13");
 
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);

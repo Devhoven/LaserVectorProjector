@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectorInterface"
-        xmlns:uc="clr-namespace:ProjectorInterface.Commands" xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements"
+        xmlns:uc="clr-namespace:ProjectorInterface.DrawingCommands" xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements"
         mc:Ignorable="d"
         x:Name="Window" Title="Lasershow" WindowState="Maximized" Background="{Binding BackgroundColor}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" 
@@ -155,9 +155,6 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 
-                <!-- Commandhistory -->
-                <uc:CommandHistoryWindow Visibility="Collapsed" x:Name="CommandHistoryDisplay" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-
                 <!-- Right Buttons -->
                 <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
                     <Button Click="StartShowClick">

@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.Commands;
+﻿using ProjectorInterface.DrawingCommands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.Helper;
 using System.Windows;
@@ -17,6 +17,7 @@ namespace ProjectorInterface
 
         // Holds all of the actions the user did, like drawing or deleting something
         public CommandHistory Commands { get; set; }
+        CommandDisplay CommandDisplay;
 
         // Holds the current tool one is drawing with
         public DrawingTool CurrentTool;
@@ -42,7 +43,9 @@ namespace ProjectorInterface
 
             CanvasCommand.Parent = this;
 
-            Commands = (CommandHistory)GetValue(MainWindow.CommandHistoryProperty);
+            Commands = new CommandHistory();
+            CommandDisplay = new CommandDisplay(Commands);
+            Children.Add(CommandDisplay);
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -90,7 +93,6 @@ namespace ProjectorInterface
                     RemoveToolAndCopy(e.GetPosition(this));
                 Keyboard.Focus(this);
             }
-
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -144,5 +146,9 @@ namespace ProjectorInterface
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();
         }
+
+        // Clears the content of the canvas (only the lines etc.)
+        public void Clear()
+            => Children.RemoveRange(2, Children.Count - 1);
     }
 }

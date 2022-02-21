@@ -1,5 +1,5 @@
 ﻿using Ookii.Dialogs.Wpf;
-using ProjectorInterface.Commands;
+using ProjectorInterface.DrawingCommands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.GalvoInterface;
 using ProjectorInterface.GalvoInterface.UiElements;
@@ -20,10 +20,6 @@ namespace ProjectorInterface
     public partial class MainWindow : Window
     {
         // Makes the value accessible in the XAML code
-        public static readonly DependencyProperty CommandHistoryProperty =
-            DependencyProperty.Register("CommandHistory", typeof(CommandHistory), typeof(MainWindow),
-                new PropertyMetadata(new CommandHistory()));
-
         public static readonly DependencyProperty BackgroundColorProperty =
             DependencyProperty.Register("BackgroundColor", typeof(Brush), typeof(MainWindow),
                 new PropertyMetadata(Brushes.White));
@@ -140,9 +136,9 @@ namespace ProjectorInterface
         
         private void SelectPathClick(object sender, RoutedEventArgs e)
             => DrawCon.CurrentTool = new PathTool();
-        
-        private void ClearCanvasClick(object sender, RoutedEventArgs e) 
-            => DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
+
+        private void ClearCanvasClick(object sender, RoutedEventArgs e)
+            => DrawCon.Clear();
         
         private void SelectionClick(object sender, RoutedEventArgs e)
             => DrawCon.isSelecting = true;

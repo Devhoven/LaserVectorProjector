@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectorInterface.Commands
+namespace ProjectorInterface.DrawingCommands
 {
     // Wrapper for a do / undo history
     public class CommandHistory
@@ -15,11 +15,16 @@ namespace ProjectorInterface.Commands
         // Holds the index of the command which was executed last
         public int CurrentIndex;
 
-        // Used for the history window 
-        public event EventHandler<CanvasCommand>? Executed;
-        public event EventHandler<int>? Deleted;
-        public event EventHandler<int>? Undid;
-        public event EventHandler<int>? Redid;
+        // Used for the history display
+        public delegate void CommandEventHandler(CanvasCommand command);
+        // Event which fires, when a new command got executed
+        public event CommandEventHandler? Executed;
+
+        public delegate void ActionEventHandler(int index);
+        // When a command got undone, sends the command which was undone with it
+        public event CommandEventHandler? Undid;
+        // When a command was redid, sends the command which was redid with it
+        public event CommandEventHandler? Redid;
 
         public CommandHistory()
         {
@@ -33,17 +38,14 @@ namespace ProjectorInterface.Commands
             // If some commands have been undone, the CurrentIndex variable is going to be smaller than the number of the elements
             // The commands that were undone, have to be deleted from the list
             if (CurrentIndex < Commands.Count)
-            {
                 Commands.RemoveRange(CurrentIndex, Commands.Count - CurrentIndex);
-                Deleted?.Invoke(this, CurrentIndex);
-            }
 
-            // Adds the new command to the list, executes it and increses the index
+            // Adds the new command to the list, executes it and increases the index
             Commands.Add(command);
             command.Execute();
             CurrentIndex++;
 
-            Executed?.Invoke(this, command);
+            Executed?.Invoke(command);
         }
 
         // Lowers CurrentIndex and undos the last command, but does not delete it yet
@@ -57,7 +59,7 @@ namespace ProjectorInterface.Commands
             }
             Commands[CurrentIndex].Undo();
 
-            Undid?.Invoke(this, CurrentIndex);
+            Undid?.Invoke(Commands[CurrentIndex]);
         }
 
         // Redoes the last undone command
@@ -67,7 +69,7 @@ namespace ProjectorInterface.Commands
                 return;
             Commands[CurrentIndex].Execute();
 
-            Redid?.Invoke(this, CurrentIndex);
+            Redid?.Invoke(Commands[CurrentIndex]);
 
             CurrentIndex++;
         }

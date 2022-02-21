@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using static ProjectorInterface.Commands.CanvasCommand;
+using static ProjectorInterface.DrawingCommands.CanvasCommand;
 using static ProjectorInterface.Helper.Settings;
 using Point = System.Windows.Point;
 using Rectangle = System.Windows.Shapes.Rectangle;

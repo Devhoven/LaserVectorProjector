@@ -9,9 +9,10 @@ namespace ProjectorInterface.Helper
 {
     static class AssetManager
     {
+        public static BitmapFrame GetBmpFrame(string fileName)
+            => BitmapFrame.Create(GetStream(fileName));
+
         public static Stream GetStream(string assetName)
-        {
-            return System.Windows.Application.GetResourceStream(new Uri(@"/Assets/CommandImages/" + assetName, UriKind.Relative)).Stream;
-        }
+            => System.Windows.Application.GetResourceStream(new Uri(@"/Assets/CommandImages/" + assetName, UriKind.Relative)).Stream;
     }
 }

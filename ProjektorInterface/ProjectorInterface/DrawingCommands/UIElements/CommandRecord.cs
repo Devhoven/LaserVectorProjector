@@ -19,8 +19,8 @@ namespace ProjectorInterface.DrawingCommands
 
         static CommandRecord()
         {
-            UndoIcon = AssetManager.GetBmpFrame("UndoIcon.png");
-            RedoIcon = AssetManager.GetBmpFrame("RedoIcon.png");
+            UndoIcon = AssetManager.GetBmpFrame("CommandImages/UndoIcon.png");
+            RedoIcon = AssetManager.GetBmpFrame("CommandImages/RedoIcon.png");
         }
 
         public static CommandRecord CreateNew(CanvasCommand command)
@@ -32,8 +32,6 @@ namespace ProjectorInterface.DrawingCommands
                 Source = command.GetBmpFrame(),
                 Height = RECORD_HEIGHT
             };
-            // Otherwise the ellipse image would look weird
-            RenderOptions.SetBitmapScalingMode(commandImg, BitmapScalingMode.Fant);
 
             Label commandDesc = new Label()
             {

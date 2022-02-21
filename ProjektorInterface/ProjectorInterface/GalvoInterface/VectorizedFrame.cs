@@ -10,7 +10,10 @@ namespace ProjectorInterface.GalvoInterface
     // It is going to be responsible for the normalization of the data and interpolation between the lines, if they are too far apart
     class VectorizedFrame
     {
-        public ushort LineCount => (ushort)Lines.Length; 
+        public ushort LineCount => (ushort)Lines.Length;
+
+        // How many times this frame should be repeated
+        public ushort ReplayCount = 1;
 
         // Array of all the finished lines
         public readonly Line[] Lines;

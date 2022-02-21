@@ -19,12 +19,18 @@
     <None Remove="Assets\CommandImages\RedoIcon.png" />
     <None Remove="Assets\CommandImages\Selection.png" />
     <None Remove="Assets\CommandImages\UndoIcon.png" />
+    <None Remove="Assets\Delete.png" />
     <None Remove="Assets\Folder.png" />
     <None Remove="Assets\Mogus.jpg" />
     <None Remove="Assets\PauseButton.png" />
     <None Remove="Assets\Save.png" />
+    <None Remove="Assets\Settings.png" />
     <None Remove="Assets\StartButton.png" />
     <None Remove="Assets\Upload.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Settings.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +61,7 @@
     <Resource Include="Assets\CommandImages\RedoIcon.png" />
     <Resource Include="Assets\CommandImages\Selection.png" />
     <Resource Include="Assets\CommandImages\UndoIcon.png" />
+    <Resource Include="Assets\Delete.png" />
     <Resource Include="Assets\Folder.png" />
     <Resource Include="Assets\PauseButton.png" />
     <Resource Include="Assets\Save.png" />

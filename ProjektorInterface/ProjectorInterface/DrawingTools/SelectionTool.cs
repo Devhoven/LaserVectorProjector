@@ -110,6 +110,5 @@ namespace ProjectorInterface.DrawingTools
                     e.Handled = true;
             }
         }
-
     }
 }

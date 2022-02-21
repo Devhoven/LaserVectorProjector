@@ -17,9 +17,9 @@ namespace ProjectorInterface.GalvoInterface.UIElements
         static readonly Brush BORDER_BRUSH = Brushes.Black;
 
         static readonly Thickness SELECTED_BORDER_THICKNESS = new Thickness(3);
-        static readonly Brush SELECTED_BORDER_BRUSH = Brushes.LightBlue;
+        static readonly Brush SELECTED_BORDER_BRUSH = SystemColors.HighlightBrush;
 
-        public RenderedItemBorder(Image child)
+        public RenderedItemBorder(UIElement child)
         {
             Child = child;
             Margin = MARGIN;

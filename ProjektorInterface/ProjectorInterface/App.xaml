@@ -4,6 +4,56 @@
              xmlns:local="clr-namespace:ProjectorInterface"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- GUI Colors -->
+        <SolidColorBrush x:Key="ForegroundColor">WhiteSmoke</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundColor">White</SolidColorBrush>
+
+        <!-- Storyboard animations -->
+        <!-- Fade in Animation -->
+        <Storyboard x:Key="FadeIn">
+            <ObjectAnimationUsingKeyFrames BeginTime="0:0:0" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Visible</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimation BeginTime="0:0:0.0" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
+        </Storyboard>
+        
+        <!-- Fade out Animation -->
+        <Storyboard x:Key="FadeOut">
+            <DoubleAnimation BeginTime="0:0:0" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5"/>
+            <ObjectAnimationUsingKeyFrames BeginTime="0:0:5.5" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0">
+                    <DiscreteObjectKeyFrame.Value>
+                        <Visibility>Hidden</Visibility>
+                    </DiscreteObjectKeyFrame.Value>
+                </DiscreteObjectKeyFrame>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <!-- Style for small buttons -->
+        <Style x:Key="SmallButton" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="{Binding ForegroundColor}"/>
+        </Style>
+
+        <!-- Style for bigger (default) buttons -->
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="{StaticResource ForegroundColor}"/>
+        </Style>
+
+        <!-- Sets the BitmapScalingMode for every image to the best one -->
+        <Style TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant"/>
+        </Style>
     </Application.Resources>
 </Application>

@@ -19,7 +19,7 @@ namespace ProjectorInterface.DrawingCommands
         protected CanvasCommand(string iconFileName)
         {
             if (!Icons.ContainsKey(iconFileName))
-                Icons.Add(iconFileName, AssetManager.GetBmpFrame(iconFileName));
+                Icons.Add(iconFileName, AssetManager.GetBmpFrame("CommandImages/" + iconFileName));
         }
 
         // Has to be implemented by the specific command

@@ -19,15 +19,6 @@ namespace ProjectorInterface
 {
     public partial class MainWindow : Window
     {
-        // Makes the value accessible in the XAML code
-        public static readonly DependencyProperty BackgroundColorProperty =
-            DependencyProperty.Register("BackgroundColor", typeof(Brush), typeof(MainWindow),
-                new PropertyMetadata(Brushes.White));
-
-        public static readonly DependencyProperty ForegroundColorProperty =
-            DependencyProperty.Register("ForegroundColor", typeof(Brush), typeof(MainWindow),
-                new PropertyMetadata(Brushes.WhiteSmoke));
-
         // Contains a reference to the currently running MainWindow
         public static MainWindow Instance = null!;
 
@@ -43,15 +34,6 @@ namespace ProjectorInterface
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            string[] ports = SerialPort.GetPortNames();
-            foreach (string port in ports)
-            {
-                SelectPortComboBox.Items.Add(port);
-            }
-            SelectPortComboBox.SelectedIndex = 0;
-
-            SerialManager.Initialize("COM13");
-
             // Did this, so the canvas would get the focus of the keyboard
             Keyboard.Focus(DrawCon);
         }
@@ -109,12 +91,6 @@ namespace ProjectorInterface
         // Stops it
         private void StopShowClick(object sender, RoutedEventArgs e)
             => SerialManager.Stop();
-
-        private void SelectPortComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (SelectPortComboBox.Text != "" && SelectPortComboBox.Items != null)
-                SerialManager.Initialize(SelectPortComboBox.Text);
-        }
 
         private void GitHubClick(object sender, RoutedEventArgs e)
         {

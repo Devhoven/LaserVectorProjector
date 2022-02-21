@@ -13,6 +13,6 @@ namespace ProjectorInterface.Helper
             => BitmapFrame.Create(GetStream(fileName));
 
         public static Stream GetStream(string assetName)
-            => System.Windows.Application.GetResourceStream(new Uri(@"/Assets/CommandImages/" + assetName, UriKind.Relative)).Stream;
+            => System.Windows.Application.GetResourceStream(new Uri(@"/Assets/" + assetName, UriKind.Relative)).Stream;
     }
 }

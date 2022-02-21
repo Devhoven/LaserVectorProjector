@@ -136,12 +136,12 @@ namespace ProjectorInterface
         
         private void SelectPathClick(object sender, RoutedEventArgs e)
             => DrawCon.CurrentTool = new PathTool();
-
-        private void ClearCanvasClick(object sender, RoutedEventArgs e)
-            => DrawCon.Clear();
         
+        private void ClearCanvasClick(object sender, RoutedEventArgs e) 
+            => DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
+
         private void SelectionClick(object sender, RoutedEventArgs e)
-            => DrawCon.isSelecting = true;
+            => DrawCon.CurrentTool = new SelectionTool();
 
         private void ProjectCanvasClick(object sender, RoutedEventArgs e)
         {

@@ -10,26 +10,37 @@ using System.Windows.Shapes;
 namespace ProjectorInterface.DrawingTools
 {
     // Allows the user to select Shapes
-    public class SelectionTool : Shape
+    public class SelectionTool : DrawingTool
     {
-        Rectangle RectObj = new Rectangle();
+        public Rectangle RectObj => (Rectangle)Current;
 
-        Point RectPos;
-        List<Line> selectedShapes = new List<Line>();
+        public Point RectPos, StartPos, LastPos;
+        public List<Shape> selectedShapes = new List<Shape>();
+        public double _Top, _Left;
+        public bool IsDragging = false;
 
-        protected override Geometry DefiningGeometry
+        public double Top
         {
-            get { return new RectangleGeometry(); }
+            get => _Top;
+            set => Canvas.SetTop(this, _Top = value);
         }
 
-        public SelectionTool() : base()
+        public double Left
+        {
+            get => _Left;
+            set => Canvas.SetLeft(this, _Left = value);
+        }
+
+        public SelectionTool() : base(new Rectangle())
         {
             RectObj.StrokeThickness = Settings.SHAPE_THICKNESS;
             RectObj.Stroke = Brushes.Black;
             RectObj.StrokeDashArray = new DoubleCollection() { 4 };
+            RectObj.Fill = Brushes.Transparent;
         }
 
-        public void Render(Point start, Point end)
+
+        public override void Render(Point start, Point end)
         {
             Point topLeft = new Point(Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             Point bottomRight = new Point(Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));
@@ -50,10 +61,55 @@ namespace ProjectorInterface.DrawingTools
             Canvas.SetTop(this, RectPos.Y = topLeft.Y);
         }
 
-        public void GetSelectedShapes()
+        public override Shape CopyShape()
         {
-            selectedShapes.Clear();
+            Rectangle tmp = new Rectangle()
+            {
+                StrokeThickness = Settings.SHAPE_THICKNESS,
+                Stroke = Brushes.Black,
+                StrokeDashArray = new DoubleCollection() { 4 },
+                Width = RectObj.Width,
+                Height = RectObj.Height,
+                Fill = Brushes.Transparent
+            };
+            tmp.Width = RectObj.Width;
+            tmp.Height = RectObj.Height;
 
+            Canvas.SetLeft(tmp, RectPos.X);
+            Canvas.SetTop(tmp, RectPos.Y);
+            return tmp;
         }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            IsDragging = true;
+            StartPos = e.GetPosition((Canvas)Parent);
+            LastPos = StartPos;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.RightButton == MouseButtonState.Pressed && IsDragging)
+            {
+                Point currentPos = e.GetPosition((Canvas)Parent);
+                Vector diff = Point.Subtract(LastPos, currentPos);
+                LastPos = currentPos;
+
+                Left -= diff.X;
+                Top -= diff.Y;
+            }
+        }
+
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+            if (IsDragging)
+            {
+                IsDragging = false;
+                Point currentPos = e.GetPosition((Canvas)Parent);
+                if (Point.Subtract(currentPos, StartPos).LengthSquared > 5)
+                    e.Handled = true;
+            }
+        }
+
     }
 }

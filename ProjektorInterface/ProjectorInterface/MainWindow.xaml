@@ -136,11 +136,7 @@
                     Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
                 <local:DrawingCanvas x:Name="DrawCon" Background="{Binding ForegroundColor}" ClipToBounds="True" Focusable="True"
                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <local:DrawingCanvas.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Clear Canvas" Click="ClearCanvasClick"/>
-                        </ContextMenu>
-                    </local:DrawingCanvas.ContextMenu>
+                    
                 </local:DrawingCanvas>
             </Border>
             

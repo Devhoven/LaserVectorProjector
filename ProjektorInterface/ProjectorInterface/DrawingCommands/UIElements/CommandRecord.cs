@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 namespace ProjectorInterface.DrawingCommands
 {
     // Used to display one command in the command history
-    class CommandRecord : Border
+    class CommandRecord : StackPanel
     {
         // Height of each record
         public const int RECORD_HEIGHT = 20;
@@ -27,11 +27,6 @@ namespace ProjectorInterface.DrawingCommands
         {
             CommandRecord result = new CommandRecord();
 
-            StackPanel contentPanel = new StackPanel()
-            {
-                Orientation = Orientation.Horizontal
-            };
-
             Image commandImg = new Image()
             {
                 Source = command.GetBmpFrame(),
@@ -46,19 +41,20 @@ namespace ProjectorInterface.DrawingCommands
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            contentPanel.Children.Add(commandImg);
-            contentPanel.Children.Add(commandDesc);
+            result.Children.Add(commandImg);
+            result.Children.Add(commandDesc);
 
-            result.Child = contentPanel;
+            result.Orientation = Orientation.Horizontal;
 
             return result;
         }
 
+        // Adds a undo picture in front of the record
         public static CommandRecord CreateNewUndid(CanvasCommand command)
         {
             CommandRecord result = CreateNew(command);
 
-            ((StackPanel)result.Child).Children.Insert(0, new Image()
+            result.Children.Insert(0, new Image()
             {
                 Source = UndoIcon,
                 Width = RECORD_HEIGHT
@@ -67,11 +63,12 @@ namespace ProjectorInterface.DrawingCommands
             return result;
         }
 
+        // Adds a redo picture in front of the record
         public static CommandRecord CreateNewRedid(CanvasCommand command)
         {
             CommandRecord result = CreateNew(command);
 
-            ((StackPanel)result.Child).Children.Insert(0, new Image()
+            result.Children.Insert(0, new Image()
             {
                 Source = RedoIcon,
                 Width = RECORD_HEIGHT

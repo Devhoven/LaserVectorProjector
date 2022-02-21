@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ProjectorInterface
+namespace ProjectorInterface.GalvoInterface
 {
     
     class VectorizedImage
@@ -23,7 +23,7 @@ namespace ProjectorInterface
             get => Frames[i]; 
         }
 
-        public int FrameCount => Frames.Count;
+        public ushort FrameCount => (ushort)Frames.Count;
 
         public VectorizedImage()
             => Frames = new List<VectorizedFrame>();

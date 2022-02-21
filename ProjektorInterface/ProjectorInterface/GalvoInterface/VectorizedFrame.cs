@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using static ProjectorInterface.Helper.Settings;
 
 namespace ProjectorInterface.GalvoInterface
@@ -9,10 +10,15 @@ namespace ProjectorInterface.GalvoInterface
     // It is going to be responsible for the normalization of the data and interpolation between the lines, if they are too far apart
     class VectorizedFrame
     {
+        public ushort LineCount => (ushort)Lines.Length; 
+
         // Array of all the finished lines
         public readonly Line[] Lines;
 
         public VectorizedFrame(params Line[] lines)
+            => Lines = InterpolateLines(lines);
+
+        Line[] InterpolateLines(Line[] lines)
         {
             List<Line> interpolatedLines = new List<Line>();
             short x, y;
@@ -64,9 +70,8 @@ namespace ProjectorInterface.GalvoInterface
                     interpolatedLines.Add(new Line(x, y, lines[i + 1].On));
                 }
             }
-            Lines = interpolatedLines.ToArray();
+            return interpolatedLines.ToArray();
         }
-   
     }
 
     // This line - struct contains the x and y coordinates (normalized between 0 and MaxValue) and how many microseconds the arduino should wait 

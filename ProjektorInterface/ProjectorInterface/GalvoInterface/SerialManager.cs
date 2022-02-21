@@ -105,7 +105,7 @@ namespace ProjectorInterface.GalvoInterface
                 }
             }
 
-            Start();
+            //Start();
         }
 
         public static void AddImage(VectorizedImage img)
@@ -155,7 +155,7 @@ namespace ProjectorInterface.GalvoInterface
                         currentFrame = currentImg[i];
                         stopwatch.Restart();
                         // Looping through all of the lines contained in the current image
-                        for (int j = 0; j < currentFrame.Lines.Length; j++)
+                        for (int j = 0; j < currentFrame.LineCount; j++)
                         {
                             currentLine = currentFrame.Lines[j];
 
@@ -187,8 +187,8 @@ namespace ProjectorInterface.GalvoInterface
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again
                 while (Images.Count == 0) ;
                 // Moving on to the next image, or looping to the beginning
-                //if (!StopCurrentImg)
-                //    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
+                if (!StopCurrentImg)
+                    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
             }
         }
     }

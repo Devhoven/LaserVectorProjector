@@ -53,9 +53,9 @@
         <!-- Lower Container -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             
             <!-- Left Container -->
@@ -65,43 +65,36 @@
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" CornerRadius="5" HorizontalAlignment="Left" ClipToBounds="True" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1">
+                <Border Grid.Column="0" CornerRadius="5" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1">
                     <Grid x:Name="Frames">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                        <DockPanel Grid.Row="0">
+                            <Label Content="Frames:" DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
 
-                            <Label Content="Frames:" VerticalAlignment="Center" FontSize="15" Foreground="Black" Grid.Column="0"/>
+                            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
+                                <Button Width="30" Height="30" Click="ProjectCanvasClick" ToolTip="Project current Image">
+                                    <Button.Content>
+                                        <Image Source="pack://application:,,,/Assets/Upload.png" Margin="3"/>
+                                    </Button.Content>
+                                </Button>
 
-                            <Button Grid.Column="1" Width="30" Height="30" VerticalAlignment="Center" Click="ProjectCanvasClick" ToolTip="Project current Image">
-                                <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/Upload.png" Margin="3"/>
-                                </Button.Content>
-                            </Button>
-
-                            <Button Grid.Column="2" Width="30" Height="30" VerticalAlignment="Center" Click="SaveCanvasClick" ToolTip="Save your drawing">
-                                <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/Save.png" Margin="3"/>
-                                </Button.Content>
-                            </Button>
-                        </Grid>
+                                <Button Width="30" Height="30" Click="SaveCanvasClick" ToolTip="Save your drawing">
+                                    <Button.Content>
+                                        <Image Source="pack://application:,,,/Assets/Save.png" Margin="3"/>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
                         
-                        <uc:AutoScrollViewer x:Name="FrameScroller" Grid.Row="1" Visibility="Visible">
+                        <uc:AutoScrollViewer Grid.Row="1">
                             <StackPanel x:Name="FramePanel"/>
                         </uc:AutoScrollViewer>
                     </Grid>
@@ -152,21 +145,21 @@
             </Border>
             
             <!-- Right Container -->            
-            <Grid Grid.Column="2" HorizontalAlignment="Right">
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 
                 <!-- Commandhistory -->
                 <uc:CommandHistoryWindow Visibility="Collapsed" x:Name="CommandHistoryDisplay" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 
                 <!-- Right Buttons -->
-                <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center" >
+                <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
                     <Button Click="StartShowClick">
                         <Button.Content>
                             <Image Source="pack://application:,,,/Assets/StartButton.png" Margin="3" ToolTip="Start Lasershow"/>
@@ -180,30 +173,26 @@
                     </Button>
                 </WrapPanel>
 
-                <!-- Animation Frames -->
-                <Border Grid.Column="1" CornerRadius="5" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1"> 
-                    <Grid>
+                <!-- Animations -->
+                <Border Grid.Column="1" CornerRadius="5" Background="{Binding ForegroundColor}" BorderBrush="Black" BorderThickness="1">
+                    <Grid HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            
-                            <Label Content="Animations:" VerticalAlignment="Center" FontSize="15" Foreground="Black" Grid.Column="0"/>
+                        <DockPanel Grid.Row="0">
+                            <Label Content="Animations:" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="15" Foreground="Black"/>
 
-                            <Button Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30" Width="30" Click="SelectShowClick" ToolTip="Open Animation Folder">
+                            <Button VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right" Height="30" Width="30" 
+                                    Click="SelectShowClick" ToolTip="Open Animation Folder">
                                 <Button.Content>
                                     <Image Source="pack://application:,,,/Assets/Folder.png"/>
                                 </Button.Content>
                             </Button>
-                        </Grid>
+                        </DockPanel>
 
-                        <uc:AutoScrollViewer Grid.Row="1" HorizontalContentAlignment="Stretch">
+                        <uc:AutoScrollViewer Grid.Row="1">
                             <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
                         </uc:AutoScrollViewer>
                     </Grid>

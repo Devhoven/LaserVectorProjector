@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 
 namespace ProjectorInterface.DrawingCommands
 {
+    // Displays CommandRecords and limits them to MAX_CHILDREN_COUNT
     class CommandDisplay : StackPanel
     {
         const int MAX_CHILDREN_COUNT = 6;

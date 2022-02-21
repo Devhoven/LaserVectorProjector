@@ -11,8 +11,11 @@ namespace ProjectorInterface.DrawingCommands
         // A static reference to the canvas which is currently being drawn on 
         public static Canvas Parent = null!;
 
+        // Just used to cache all of the icons for the canvas commands
         protected static Dictionary<string, BitmapFrame> Icons = new Dictionary<string, BitmapFrame>();
 
+        // Gets called every time a new command is created
+        // Checks if the requested resource was cached already and if not, it loads it again
         protected CanvasCommand(string iconFileName)
         {
             if (!Icons.ContainsKey(iconFileName))

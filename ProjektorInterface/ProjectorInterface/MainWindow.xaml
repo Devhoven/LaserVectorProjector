@@ -144,7 +144,7 @@
                     <DockPanel Grid.Row="0">
                         <Label Content="Animations:" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="15" Foreground="Black"/>
 
-                        <Button Style="{StaticResource SmallButton}" VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right"
+                        <Button Style="{StaticResource SmallButton}" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right"
                                     Click="SelectShowClick" ToolTip="Open Animation Folder">
                             <Button.Content>
                                 <Image Source="pack://application:,,,/Assets/Folder.png"/>

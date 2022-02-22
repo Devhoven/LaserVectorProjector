@@ -57,8 +57,7 @@ namespace ProjectorInterface.GalvoInterface
             if (Port != null)
                 Port.Close();
 
-            if (Port == null)
-                Port = new SerialPort(portName, BAUD_RATE);
+            Port = new SerialPort(portName, BAUD_RATE);
 
             // If a port gets selected that cannot be opened, this would throw an exception
             try
@@ -71,7 +70,7 @@ namespace ProjectorInterface.GalvoInterface
         // Starts the thread if it isn't already running and some images were loaded in
         public static void Start()
         {
-            if (Running || Images.Count == 0)
+            if (Running || Images.Count == 0 || Port == null || !Port.IsOpen)
                 return;
 
             Running = true;
@@ -105,7 +104,7 @@ namespace ProjectorInterface.GalvoInterface
                 }
             }
 
-            //Start();
+            Start();
         }
 
         public static void AddImage(VectorizedImage img)
@@ -159,7 +158,7 @@ namespace ProjectorInterface.GalvoInterface
                         {
                             currentLine = currentFrame.Lines[j];
 
-                            // TODO: Refactor this
+                            // Maps the coordinates from 0 to 4096 to the correct image section
                             correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
                             correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
 
@@ -176,8 +175,9 @@ namespace ProjectorInterface.GalvoInterface
                             Port.Write(Buffer, 0, BUFFER_SIZE);
                         }
 
-                        if (stopwatch.ElapsedMilliseconds < 40)
-                            Thread.Sleep(40 - (int)stopwatch.ElapsedMilliseconds);
+                        // If the was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
+                        if (stopwatch.ElapsedMilliseconds < 41)
+                            Thread.Sleep(41 - (int)stopwatch.ElapsedMilliseconds);
 
                         // If this bool is set, the current animation got deleted or swapped
                         if (StopCurrentImg)

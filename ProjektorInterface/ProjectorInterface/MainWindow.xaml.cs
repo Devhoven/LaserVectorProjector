@@ -92,15 +92,6 @@ namespace ProjectorInterface
         private void StopShowClick(object sender, RoutedEventArgs e)
             => SerialManager.Stop();
 
-        private void GitHubClick(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo 
-            { 
-                FileName = "https://github.com/Devhoven/LaserVectorProjector", 
-                UseShellExecute = true 
-            });
-        }
-
         private void SelectLineClick(object sender, RoutedEventArgs e)
             => DrawCon.CurrentTool = new LineTool();
 

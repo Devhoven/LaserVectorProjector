@@ -20,7 +20,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
 
         Button DeleteBtn = null!;
         Button SettingsBtn = null!;
-        Panel SpeedBtnsPanel;
+        SpeedBtnPanel SpeedBtnPanel;
 
         public RenderedFrame(VectorizedFrame frame)
         {
@@ -36,16 +36,14 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             CreateDeleteBtn();
             CreateSettingsBtn();
 
-            SpeedBtnsPanel = new SpeedBtnPanel(Frame);
-            SpeedBtnsPanel.MouseEnter += (o, e) 
-                => ((Storyboard)Application.Current.Resources["FadeIn"]).Begin(SpeedBtnsPanel);
-
+            SpeedBtnPanel = new SpeedBtnPanel(Frame);
+            
             CreateButtonAnimations();
                 
             // Adding them to the frame
             Children.Add(DeleteBtn);
             Children.Add(SettingsBtn);
-            Children.Add(SpeedBtnsPanel);
+            Children.Add(SpeedBtnPanel);
         }
 
         void CreateDeleteBtn()
@@ -88,7 +86,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             };
 
             SettingsBtn.Click += (o, e) 
-                => AnimationPlayer.FadeIn(SpeedBtnsPanel);
+                => SpeedBtnPanel.FadeIn();
         }
 
         // Creating and adding the delete and settings button
@@ -106,7 +104,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             {
                 AnimationPlayer.FadeOut(DeleteBtn);
                 AnimationPlayer.FadeOut(SettingsBtn);
-                AnimationPlayer.FadeOut(SpeedBtnsPanel);
+                SpeedBtnPanel.FadeOut();
             };
         }
 
@@ -137,14 +135,16 @@ namespace ProjectorInterface.GalvoInterface.UiElements
         {
             ("1f", 1),
             ("12f", 12),
-            ("24f",   24)
+            ("24f", 24)
         };
-
-        // Referencing it here, so I can alter how many times the image has to be replayed
-        VectorizedFrame Frame;
 
         static readonly Brush SELECTED_BORDER_BRUSH = Brushes.LightBlue;
         static readonly Brush UNSELECTED_BORDER_BRUSH = Brushes.Black;
+
+        public bool IsCollapsed => Visibility == Visibility.Hidden;
+
+        // Referencing it here, so I can alter how many times the image has to be replayed
+        VectorizedFrame Frame;
 
         public SpeedBtnPanel(VectorizedFrame frame)
         {
@@ -179,10 +179,17 @@ namespace ProjectorInterface.GalvoInterface.UiElements
                     for (int i = 0; i < Children.Count; i++)
                         ((Button)Children[i]).BorderBrush = UNSELECTED_BORDER_BRUSH;
                     btn.BorderBrush = SELECTED_BORDER_BRUSH;
+                    FadeOut();
                 };
 
                 Children.Add(btn);
             }
         }
+
+        public void FadeIn()
+            => AnimationPlayer.FadeIn(this);
+
+        public void FadeOut()
+            => AnimationPlayer.FadeOut(this);
     }
 }

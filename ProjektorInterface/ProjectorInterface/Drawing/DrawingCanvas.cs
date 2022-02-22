@@ -1,5 +1,4 @@
-﻿using ProjectorInterface.Drawing;
-using ProjectorInterface.DrawingCommands;
+﻿using ProjectorInterface.DrawingCommands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.Helper;
 using System.Collections.Generic;
@@ -27,7 +26,6 @@ namespace ProjectorInterface
         // Background image of the canvas
         // Can be controlled, so the user is able to trace the outlines
         public MoveableImage BackgroundImg;
-
 
         public DrawingCanvas()
         {

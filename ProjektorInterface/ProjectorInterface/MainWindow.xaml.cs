@@ -62,6 +62,15 @@ namespace ProjectorInterface
             }
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
                 SelectShowClick(null!, null!);
+            else if (e.Key == Key.C)
+            {
+                PortSelectWindow test = new PortSelectWindow()
+                {
+                    Owner = this,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+                test.ShowDialog();
+            }
             Keyboard.Focus(DrawCon);
         }
 

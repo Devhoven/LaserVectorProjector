@@ -1,4 +1,5 @@
 ﻿using ProjectorInterface.Helper;
+using ProjectorInterface.Helpler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +20,8 @@ namespace ProjectorInterface.GalvoInterface
 
         // Port object through which the communication is going to be held
         static SerialPort Port;
+
+        public static string PortName => Port == null ? "" : Port.PortName;
 
         // List of all images which are going to be displayed one after another
         public static List<VectorizedImage> Images;
@@ -45,6 +48,10 @@ namespace ProjectorInterface.GalvoInterface
         static SerialManager()
         {
             Port = null!;
+            string portName = RegistryManager.GetVal("PortName", string.Empty);
+            if (portName != string.Empty)
+                Initialize(portName);
+
             SendImgThread = null!;
 
             Images = new List<VectorizedImage>();
@@ -66,7 +73,7 @@ namespace ProjectorInterface.GalvoInterface
             }
             catch { }
         }
-
+         
         // Starts the thread if it isn't already running and some images were loaded in
         public static void Start()
         {

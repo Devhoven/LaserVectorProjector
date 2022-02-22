@@ -33,8 +33,11 @@ namespace ProjectorInterface.Helper
                 for (ushort i = 0; i < img.FrameCount; i++)
                 {
                     currentFrame = img.Frames[i];
-                    WriteHeader(stream, currentFrame.LineCount, i, img.FrameCount);
-                    WriteFrame(stream, currentFrame);
+                    for (int j = 0; j < currentFrame.ReplayCount; j++)
+                    {
+                        WriteHeader(stream, currentFrame.LineCount, i, img.FrameCount);
+                        WriteFrame(stream, currentFrame);
+                    }
                 }
                 // The end header
                 WriteHeader(stream, 0, img.FrameCount, img.FrameCount);

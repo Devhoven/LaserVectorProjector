@@ -152,36 +152,39 @@ namespace ProjectorInterface.GalvoInterface
                     for (int i = 0; i < currentImg.FrameCount; i++)
                     {
                         currentFrame = currentImg[i];
-                        stopwatch.Restart();
-                        // Looping through all of the lines contained in the current image
-                        for (int j = 0; j < currentFrame.LineCount; j++)
+                        for (int replayIndex = 0; replayIndex < currentFrame.ReplayCount; replayIndex++)
                         {
-                            currentLine = currentFrame.Lines[j];
+                            stopwatch.Restart();
+                            // Looping through all of the lines contained in the current image
+                            for (int j = 0; j < currentFrame.LineCount; j++)
+                            {
+                                currentLine = currentFrame.Lines[j];
 
-                            // Maps the coordinates from 0 to 4096 to the correct image section
-                            correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
-                            correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
+                                // Maps the coordinates from 0 to 4096 to the correct image section
+                                correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
+                                correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
 
-                            // Writing the x and y coordinates into the buffer 
-                            Buffer[0] = (byte)correctedX;
-                            Buffer[1] = (byte)(correctedX >> 8);
-                            Buffer[2] = (byte)correctedY;
-                            Buffer[3] = (byte)(correctedY >> 8);
+                                // Writing the x and y coordinates into the buffer 
+                                Buffer[0] = (byte)correctedX;
+                                Buffer[1] = (byte)(correctedX >> 8);
+                                Buffer[2] = (byte)correctedY;
+                                Buffer[3] = (byte)(correctedY >> 8);
 
-                            if (currentLine.On)
-                                Buffer[3] |= 0x80;
+                                if (currentLine.On)
+                                    Buffer[3] |= 0x80;
 
-                            // Sending the data
-                            Port.Write(Buffer, 0, BUFFER_SIZE);
+                                // Sending the data
+                                Port.Write(Buffer, 0, BUFFER_SIZE);
+                            }
+
+                            // If the was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
+                            if (stopwatch.ElapsedMilliseconds < 41)
+                                Thread.Sleep(41 - (int)stopwatch.ElapsedMilliseconds);
+
+                            // If this bool is set, the current animation got deleted or swapped
+                            if (StopCurrentImg)
+                                break;
                         }
-
-                        // If the was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
-                        if (stopwatch.ElapsedMilliseconds < 41)
-                            Thread.Sleep(41 - (int)stopwatch.ElapsedMilliseconds);
-
-                        // If this bool is set, the current animation got deleted or swapped
-                        if (StopCurrentImg)
-                            break;
                     }
                 }
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again

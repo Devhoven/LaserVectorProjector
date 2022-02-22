@@ -103,9 +103,9 @@ namespace ProjectorInterface
         
         private void SelectPathClick(object sender, RoutedEventArgs e)
             => DrawCon.CurrentTool = new PathTool();
-        
-        private void ClearCanvasClick(object sender, RoutedEventArgs e) 
-            => DrawCon.Children.RemoveRange(1, DrawCon.Children.Count - 1);
+
+        private void ClearCanvasClick(object sender, RoutedEventArgs e)
+            => DrawCon.Clear();
 
         private void SelectionClick(object sender, RoutedEventArgs e)
             => DrawCon.CurrentTool = new SelectionTool();
@@ -136,5 +136,8 @@ namespace ProjectorInterface
             if (dialog.ShowDialog() == true)
                 ILDEncoder.EncodeImg(dialog.FileName, ShapesToPoints.DrawnImage);
         }
+
+        private void LoadImageClick(object sender, RoutedEventArgs e)
+            => DrawCon.ChooseBackgroundImg();
     }
 }

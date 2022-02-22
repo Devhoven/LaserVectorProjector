@@ -21,6 +21,7 @@
     <None Remove="Assets\CommandImages\UndoIcon.png" />
     <None Remove="Assets\Delete.png" />
     <None Remove="Assets\Folder.png" />
+    <None Remove="Assets\LoadImage.png" />
     <None Remove="Assets\Mogus.jpg" />
     <None Remove="Assets\PauseButton.png" />
     <None Remove="Assets\Save.png" />
@@ -30,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\LoadImage.png" />
     <Resource Include="Assets\Settings.png" />
   </ItemGroup>
 

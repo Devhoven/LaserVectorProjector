@@ -83,7 +83,7 @@ namespace ProjectorInterface
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            double zoom = e.Delta > 0 ? 20 : -20;
+            double zoom = e.Delta > 0 ? 40 : -40;
 
             // Some arbitrary values to limit the how small / big the image can get
             if (Width + zoom < 300 || Width + zoom > ((FrameworkElement)Parent).ActualWidth * 2)

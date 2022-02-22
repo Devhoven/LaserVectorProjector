@@ -1,4 +1,5 @@
-﻿using ProjectorInterface.DrawingCommands;
+﻿using ProjectorInterface.Drawing;
+using ProjectorInterface.DrawingCommands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.Helper;
 using System.Collections.Generic;
@@ -277,5 +278,8 @@ namespace ProjectorInterface
         // Clears the content of the canvas (only the lines etc.)
         public void Clear()
             => Children.RemoveRange(2, Children.Count - 1);
+
+        public void ChooseBackgroundImg()
+            => BackgroundImg.ChooseImg();
     }
 }

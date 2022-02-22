@@ -51,6 +51,10 @@
                                     <Image Source="pack://application:,,,/Assets/Save.png" Margin="3"/>
                                 </Button.Content>
                             </Button>
+
+                            <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="LoadImageClick" ToolTip="Load an background image">
+                                <Image Source="pack://application:,,,/Assets/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
+                            </Button>
                         </StackPanel>
                     </DockPanel>
                     

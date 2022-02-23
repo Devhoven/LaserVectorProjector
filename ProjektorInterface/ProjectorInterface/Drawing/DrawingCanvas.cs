@@ -27,6 +27,10 @@ namespace ProjectorInterface
         // Can be controlled, so the user is able to trace the outlines
         public MoveableImage BackgroundImg;
 
+        // Selection Rectangle to select multiple shapes
+        public SelectionRectangle Selection;
+
+
         public DrawingCanvas()
         {
             CurrentTool = new LineTool();
@@ -43,117 +47,69 @@ namespace ProjectorInterface
             Commands = new CommandHistory();
             CommandDisplay = new CommandDisplay(Commands);
             Children.Add(CommandDisplay);
+
+            Selection = new SelectionRectangle();
+            Selection.Visibility = Visibility.Visible;
+            Children.Add(Selection);
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            // Getting the mouse pos relative to the canvas
+            // Left click, either drawing or selecting
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (CurrentTool is SelectionTool curr)
+                // Selecting Shapes
+                if (Selection.isSelecting)
                 {
-                    if (Children[Children.Count - 1] is Rectangle r)
-                    {
-                        foreach (Shape s in curr.selectedShapes)
-                        {
-                            s.Stroke = Brushes.Red;
-                        }
-                        Children.RemoveAt(Children.Count - 1);
-                    }
-
-                    // Ctrl + Click Adds Shape to selected Shapes
+                    // Ctrl + Click Adds single Shape to selected Shapes
                     if (e.OriginalSource is Shape shape && Keyboard.IsKeyDown(Key.LeftCtrl))
+                        Selection.SelectShape(shape);
+                    else // Select multiple Shapes with SelectionRectangle
                     {
-                        if (((SelectionTool)CurrentTool).selectedShapes.Contains(shape))
-                        {
-                            ((SelectionTool)CurrentTool).selectedShapes.Remove(shape);
-                            shape.Stroke = Brushes.Red;
-                        }
-                        else
-                        {
-                            ((SelectionTool)CurrentTool).selectedShapes.Add(shape);
-                            shape.Stroke = Brushes.Blue;
-                        }
-                        
+                        Selection.StartPos = e.GetPosition(this);
+                        Selection.LastPos = Selection.StartPos;
+                        Selection.DeselectAll();
                     }
-                    curr.StartPos = e.GetPosition(this);
-                    curr.LastPos = curr.StartPos;
                 }
-
-                StartMousePos = e.GetPosition(this);
-                Children.Add(CurrentTool);
-                CurrentTool.Render(StartMousePos, StartMousePos);
-            }// If the user middleclicked on one of the shapes, it is going to be deleted
+                // Drawing Shapes
+                else
+                {
+                    Selection.Width = 0;
+                    Selection.Height = 0;
+                    StartMousePos = e.GetPosition(this);
+                    Children.Add(CurrentTool);
+                    CurrentTool.Render(StartMousePos, StartMousePos);
+                }
+            }
+            // If the user middleclicked on one of the shapes, it is going to be deleted
             else if (e.MiddleButton == MouseButtonState.Pressed && e.OriginalSource is Shape origShape)
             {
-                if (e.OriginalSource is Rectangle && CurrentTool is SelectionTool selec)
+                if (origShape is SelectionRectangle)
                 {
-                    foreach(Shape s in selec.selectedShapes)
-                    {
-                        Children.Remove(s);
-                    }
+                    Commands.Execute(new EraseSelectionCommand((Shape)e.OriginalSource));
+                }
+                else
+                {
                     Children.Remove(origShape);
-                    selec.selectedShapes.Clear();
-                }else
                     Commands.Execute(new EraseShapeCommand((Shape)e.OriginalSource));
-                return;
+                }
             }
-            else if(e.RightButton == MouseButtonState.Pressed && e.OriginalSource is Rectangle)
-            {
-                //((SelectionTool)CurrentTool).LastPos = e.GetPosition(this);
-            }
-                
+
             Keyboard.Focus(this);
         }
 
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.RightButton == MouseButtonState.Pressed && CurrentTool is SelectionTool selec)
-            {
-                Point currentPos = e.GetPosition(this);
-                Vector diff = Point.Subtract(selec.LastPos, currentPos);
-                selec.LastPos = currentPos;
-
-                SetLeft(Children[Children.Count - 1], -diff.X + GetLeft(Children[Children.Count - 1]));
-                SetTop(Children[Children.Count - 1], -diff.Y + GetTop(Children[Children.Count - 1]));
-                
-                foreach(Shape s in selec.selectedShapes)
-                {
-                    
-                    SetLeft((Shape)s, GetLeft((Shape)s) - diff.X);
-                    SetTop((Shape)s, GetTop((Shape)s) - diff.Y);
-
-                    if (s is Line line )
-                    {
-                        line.X1 -= diff.X;
-                        line.X2 -= diff.X;
-                        line.Y1 -= diff.Y;
-                        line.Y2 -= diff.Y;
-                    }
-                    else if (s is Rectangle rec)
-                    {
-                        SetLeft(rec, GetLeft(rec) - diff.X);
-                        SetTop(rec, GetTop(rec) - diff.Y);
-                    }
-                    else if (s is Ellipse ell)
-                    {
-                        SetLeft(ell, GetLeft(ell) + (ell.Width / 2) - diff.X);
-                        SetTop(ell, GetTop(ell) + (ell.Height / 2) - diff.Y);
-                    }
-                    else if (s is Path path)
-                    {
-                        //get points of path segments
-                    }
-                    else
-                        continue;
-                }
-                
-            }
-
-            if (e.LeftButton == MouseButtonState.Pressed)
+            // Drawing with left Mouse Button
+            if (e.LeftButton == MouseButtonState.Pressed && !Selection.isSelecting)
             {
                 CurrentTool.Render(StartMousePos, e.GetPosition(this));
+            }
+            // Selecting with left Mouse Button
+            else if (e.LeftButton == MouseButtonState.Pressed && Selection.isSelecting)
+            {
+                Selection.Render(Selection.StartPos, e.GetPosition(this));
             }
         }
 
@@ -161,61 +117,19 @@ namespace ProjectorInterface
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if(CurrentTool is SelectionTool seltool)
+            if (e.ChangedButton == MouseButton.Left && !Selection.isSelecting)
+                RemoveToolAndCopy(e.GetPosition(this));
+            else if (e.ChangedButton == MouseButton.Left && Selection.isSelecting)
             {
-                double x = GetLeft(seltool);
-                double y = GetTop(seltool);
-                double width = seltool.RectObj.Width;
-                double height = seltool.RectObj.Height;
-                Rect dragRect = new Rect(x, y, width, height);
-
-                seltool.selectedShapes.Clear();
-
-                foreach (object child in Children)
+                if (Selection.StartPos == e.GetPosition(this))
                 {
-                    if (child is Line line)
-                    {
-                        if (dragRect.Contains((int)line.X1, (int)line.Y1) || dragRect.Contains((int)line.X2, (int)line.Y2))
-                        {
-                            seltool.selectedShapes.Add(line);
-                            line.Stroke = Brushes.Blue;
-                        }
-                    }else if(child is Rectangle rec)
-                    {
-                        if (dragRect.Contains(GetLeft(rec), GetTop(rec)) || 
-                            dragRect.Contains(GetLeft(rec) + rec.Width, GetTop(rec)) || 
-                            dragRect.Contains(GetLeft(rec) + rec.Width, GetTop(rec) + (int)rec.Height) ||
-                            dragRect.Contains(GetLeft(rec) + rec.Width, GetTop(rec) + (int)rec.Height))
-                        {
-                            seltool.selectedShapes.Add(rec);
-                            rec.Stroke = Brushes.Blue;
-                        }
-                    }
-                    else if(child is Ellipse ell)
-                    {
-                        if (dragRect.Contains(GetLeft(ell) + ell.Width, GetTop(ell)) ||
-                            dragRect.Contains(GetLeft(ell), GetTop(ell) + ell.Height) ||
-                            dragRect.Contains(GetLeft(ell) + ell.Width*2, GetTop(ell) + ell.Height) ||
-                            dragRect.Contains(GetLeft(ell) + ell.Width, GetTop(ell) + ell.Height*2))
-                        {
-                            seltool.selectedShapes.Add(ell);
-                            ell.Stroke = Brushes.Blue;
-                        }
-                    }
-                    else if(child is Path path)
-                    {
-                        //get points of path segments
-                    }
-                    else
-                        continue;
+                    Selection.DeselectAll();
+                    Selection.Width = 0;
+                    Selection.Height = 0;
                 }
             }
-
-
-            if (e.ChangedButton == MouseButton.Left)
-                RemoveToolAndCopy(e.GetPosition(this));
             Keyboard.Focus(this);
-     
+
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -225,7 +139,6 @@ namespace ProjectorInterface
             if (e.LeftButton == MouseButtonState.Pressed)
                 RemoveToolAndCopy(e.GetPosition(this));
         }
-
 
         // Removes the visuals of the currently used tool from the canvas and adds the drawn shape onto it
         void RemoveToolAndCopy(Point current)
@@ -248,7 +161,7 @@ namespace ProjectorInterface
             else if (e.Key == Key.D4)
                 CurrentTool = new PathTool();
             else if (e.Key == Key.D5)
-                CurrentTool = new SelectionTool();
+                Selection.isSelecting = true;
 
             else if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
@@ -275,9 +188,6 @@ namespace ProjectorInterface
 
         // Clears the content of the canvas (only the lines etc.)
         public void Clear()
-            => Children.RemoveRange(2, Children.Count - 1);
-
-        public void ChooseBackgroundImg()
-            => BackgroundImg.ChooseImg();
+            => Children.RemoveRange(3, Children.Count - 1);
     }
 }

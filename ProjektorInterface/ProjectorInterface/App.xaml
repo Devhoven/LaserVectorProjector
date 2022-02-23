@@ -23,7 +23,7 @@
         
         <!-- Fade out Animation -->
         <Storyboard x:Key="FadeOut">
-            <DoubleAnimation BeginTime="0:0:0" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3"/>
+            <DoubleAnimation BeginTime="0:0:0" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5"/>
             <ObjectAnimationUsingKeyFrames BeginTime="0:0:5.5" Storyboard.TargetProperty="Visibility">
                 <DiscreteObjectKeyFrame KeyTime="0">
                     <DiscreteObjectKeyFrame.Value>

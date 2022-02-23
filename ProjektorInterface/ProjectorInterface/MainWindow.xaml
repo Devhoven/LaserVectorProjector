@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:ProjectorInterface"
         xmlns:uc="clr-namespace:ProjectorInterface.DrawingCommands" xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements"
         mc:Ignorable="d"
-        x:Name="Window" Title="Lasershow" WindowState="Maximized" Background="{StaticResource BackgroundColor}"
+        x:Name="Window" Icon= "Assets/LaserPointer.ico" Title="Lasershow" WindowState="Maximized" Background="{StaticResource BackgroundColor}"
         Width="1920" Height="1080">
+    
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -51,9 +52,6 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="LoadImageClick" ToolTip="Load an background image">
-                                <Image Source="pack://application:,,,/Assets/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
-                            </Button>
                         </StackPanel>
                     </DockPanel>
                     
@@ -101,11 +99,6 @@
                     Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
             <local:DrawingCanvas x:Name="DrawCon" Background="{StaticResource ForegroundColor}" ClipToBounds="True" Focusable="True"
                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <local:DrawingCanvas.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Click="ClearCanvasClick" Header="Clear Canvas"/>
-                    </ContextMenu>
-                </local:DrawingCanvas.ContextMenu>
             </local:DrawingCanvas>
         </Border>
 

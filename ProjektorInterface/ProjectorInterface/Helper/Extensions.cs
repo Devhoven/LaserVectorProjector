@@ -24,6 +24,8 @@ namespace ProjectorInterface.Helper
                 return "Ellipse";
             if (shape is System.Windows.Shapes.Path)
                 return "Path";
+            if (shape is ProjectorInterface.DrawingTools.SelectionRectangle)
+                return "Selection";
             return "Nothing";
         }
 

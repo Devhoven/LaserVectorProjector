@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Assets\CommandImages\Ellipse.png" />
     <None Remove="Assets\CommandImages\EllipseErase.png" />
+    <None Remove="Assets\CommandImages\Erase.png" />
     <None Remove="Assets\CommandImages\Line.png" />
     <None Remove="Assets\CommandImages\LineErase.png" />
     <None Remove="Assets\CommandImages\Path.png" />
@@ -18,9 +19,12 @@
     <None Remove="Assets\CommandImages\RectangleErase.png" />
     <None Remove="Assets\CommandImages\RedoIcon.png" />
     <None Remove="Assets\CommandImages\Selection.png" />
+    <None Remove="Assets\CommandImages\SelectionErase.png" />
     <None Remove="Assets\CommandImages\UndoIcon.png" />
     <None Remove="Assets\Delete.png" />
     <None Remove="Assets\Folder.png" />
+    <None Remove="Assets\LaserPointer.ico" />
+    <None Remove="Assets\LaserShowIcon.ico" />
     <None Remove="Assets\LoadImage.png" />
     <None Remove="Assets\Mogus.jpg" />
     <None Remove="Assets\PauseButton.png" />
@@ -31,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\CommandImages\Erase.png" />
+    <Resource Include="Assets\CommandImages\SelectionErase.png" />
+    <Resource Include="Assets\LaserPointer.ico" />
+    <Resource Include="Assets\LaserShowIcon.ico" />
     <Resource Include="Assets\LoadImage.png" />
     <Resource Include="Assets\Settings.png" />
   </ItemGroup>

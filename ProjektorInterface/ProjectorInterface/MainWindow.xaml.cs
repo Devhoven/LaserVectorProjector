@@ -102,22 +102,40 @@ namespace ProjectorInterface
             => SerialManager.Stop();
 
         private void SelectLineClick(object sender, RoutedEventArgs e)
-            => DrawCon.CurrentTool = new LineTool();
+        {
+            DrawCon.CurrentTool = new LineTool();
+            RemoveSelection();
+
+        }
 
         private void SelectRectangleClick(object sender, RoutedEventArgs e)
-            => DrawCon.CurrentTool = new RectTool();
+        {
+            DrawCon.CurrentTool = new RectTool();
+            RemoveSelection();
+        }
 
         private void SelectCircleClick(object sender, RoutedEventArgs e)
-            => DrawCon.CurrentTool = new CircleTool();
-        
-        private void SelectPathClick(object sender, RoutedEventArgs e)
-            => DrawCon.CurrentTool = new PathTool();
+        {
+            DrawCon.CurrentTool = new CircleTool();
+            RemoveSelection();
+        }
 
-        private void ClearCanvasClick(object sender, RoutedEventArgs e)
-            => DrawCon.Clear();
+        private void SelectPathClick(object sender, RoutedEventArgs e)
+        {
+            DrawCon.CurrentTool = new PathTool();
+            RemoveSelection();
+        }
+
+        private void RemoveSelection() {
+            DrawCon.Selection.isSelecting = false;
+            DrawCon.Selection.Width = 0;
+            DrawCon.Selection.Height = 0;
+            DrawCon.Selection.DeselectAll();
+        }
+                    
 
         private void SelectionClick(object sender, RoutedEventArgs e)
-            => DrawCon.CurrentTool = new SelectionTool();
+        => DrawCon.Selection.isSelecting = true;
 
         private void ProjectCanvasClick(object sender, RoutedEventArgs e)
         {
@@ -147,6 +165,6 @@ namespace ProjectorInterface
         }
 
         private void LoadImageClick(object sender, RoutedEventArgs e)
-            => DrawCon.ChooseBackgroundImg();
+            => DrawCon.BackgroundImg.ChooseImg();
     }
 }

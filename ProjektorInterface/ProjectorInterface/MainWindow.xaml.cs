@@ -105,7 +105,6 @@ namespace ProjectorInterface
         {
             DrawCon.CurrentTool = new LineTool();
             RemoveSelection();
-
         }
 
         private void SelectRectangleClick(object sender, RoutedEventArgs e)
@@ -135,7 +134,7 @@ namespace ProjectorInterface
                     
 
         private void SelectionClick(object sender, RoutedEventArgs e)
-        => DrawCon.Selection.isSelecting = true;
+            => DrawCon.Selection.isSelecting = true;
 
         private void ProjectCanvasClick(object sender, RoutedEventArgs e)
         {

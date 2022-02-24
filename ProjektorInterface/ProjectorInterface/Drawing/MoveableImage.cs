@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static ProjectorInterface.Helper.Settings;
 
@@ -20,31 +21,22 @@ namespace ProjectorInterface
         Point StartPos;
         Point LastPos;
 
-        double Top
+        private double Y
         {
             get => _Top;
             set => Canvas.SetTop(this, _Top = value);
         }
 
-        double Left
+        double X
         {
             get => _Left;
             set => Canvas.SetLeft(this, _Left = value);
         }
 
         public MoveableImage()
-            => Opacity = 180;
-
-        // The width and height gets altered for the illusion of zooming in and out 
-        public void ZoomIn()
         {
-            Width += ZOOM_IMG_SPEED;
-            Height += ZOOM_IMG_SPEED;
-        }
-        public void ZoomOut()
-        {
-            Width = Math.Max(0, Width - ZOOM_IMG_SPEED);
-            Height = Math.Max(0, Height - ZOOM_IMG_SPEED);
+            Opacity = 255;
+            RenderTransform = new ScaleTransform(1, 1);
         }
 
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
@@ -63,8 +55,8 @@ namespace ProjectorInterface
                 Vector diff = Point.Subtract(LastPos, currentPos);
                 LastPos = currentPos;
 
-                Left -= diff.X;
-                Top -= diff.Y;
+                X -= diff.X;
+                Y -= diff.Y;
 
                 e.Handled = true;
             }
@@ -81,21 +73,33 @@ namespace ProjectorInterface
             }
         }
 
+        // Modified from https://stackoverflow.com/a/6782715/9241163
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            double zoom = e.Delta > 0 ? 40 : -40;
+            var st = (ScaleTransform)RenderTransform;
 
-            // Some arbitrary values to limit the how small / big the image can get
-            if (Width + zoom < 300 || Width + zoom > ((FrameworkElement)Parent).ActualWidth * 2)
+            double zoom = e.Delta > 0 ? .1 : -.1;
+            if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
                 return;
 
-            Width += zoom;
-            Height += zoom;
+            Point relative = e.GetPosition(this);
+            double absoluteX;
+            double absoluteY;
+
+            absoluteX = relative.X * st.ScaleX + X;
+            absoluteY = relative.Y * st.ScaleY + Y;
+
+            double zoomCorrected = zoom * st.ScaleX; 
+            st.ScaleX += zoomCorrected; 
+            st.ScaleY += zoomCorrected;
+
+            X = absoluteX - relative.X * st.ScaleX;
+            Y = absoluteY - relative.Y * st.ScaleY;
         }
 
         // Disables and shows the image again
         public void ToggleOpacity()
-            => Opacity = Opacity == 255 ? 0 : 255;
+            => Opacity = Opacity != 0 ? 0 : 255;
 
         public void ChooseImg()
         {
@@ -119,11 +123,11 @@ namespace ProjectorInterface
         // Resets the image to the width and height of the canvas and to the top left position
         public void Reset()
         {
-            Canvas.SetLeft(this, 0);
-            Canvas.SetTop(this, 0);
-
-            Width = ((FrameworkElement)Parent).ActualWidth;
-            Height = ((FrameworkElement)Parent).ActualHeight;
+            X = 0;
+            Y = 0;
+            StartPos.X = 0;
+            StartPos.Y = 0;
+            RenderTransform = new ScaleTransform(1, 1);
         }
     }
 }

@@ -184,18 +184,10 @@ namespace ProjectorInterface
             // Operations for the background image
             if (e.Key == Key.Delete)
                 BackgroundImg.ToggleOpacity();
-            else if (e.Key == Key.PageUp)
-                BackgroundImg.ZoomIn();
-            else if (e.Key == Key.PageDown)
-                BackgroundImg.ZoomOut();
             else if (e.Key == Key.Enter)
                 BackgroundImg.ChooseImg();
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();
         }
-
-        // Clears the content of the canvas (only the lines etc.)
-        public void Clear()
-            => Children.RemoveRange(3, Children.Count - 1);
     }
 }

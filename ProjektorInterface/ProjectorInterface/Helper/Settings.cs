@@ -30,9 +30,6 @@ namespace ProjectorInterface.Helper
         public static short IMG_SECTION_SIZE = (short)(MAX_VOLTAGE * IMG_SECTION_CACHED);
         // The offset which needs to be added to any coord, otherwise it won't be centered
         public static short IMG_OFFSET = (short)(MAX_VOLTAGE - IMG_SECTION_SIZE);
-
-        public static readonly int ZOOM_IMG_SPEED = 15;
-        public static readonly int MOVE_IMG_SPEED = 15;
         
         public static readonly int SHAPE_THICKNESS = 5;
         public static readonly Brush SHAPE_COLOR = new SolidColorBrush(Colors.Red);

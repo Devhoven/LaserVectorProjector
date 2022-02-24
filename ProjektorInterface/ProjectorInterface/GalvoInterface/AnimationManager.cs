@@ -116,8 +116,10 @@ namespace ProjectorInterface.GalvoInterface
                         currentFrame = currentImg[i];
                         for (int replayIndex = 0; replayIndex < currentFrame.ReplayCount; replayIndex++)
                         {
+                            // For measuring how long it takes to send a frame
                             stopwatch.Restart();
 
+                            // Sending the frame
                             SerialManager.SendFrame(currentFrame);
                            
                             // If the was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time

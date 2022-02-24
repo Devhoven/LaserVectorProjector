@@ -21,7 +21,7 @@ namespace ProjectorInterface.GalvoInterface
         public VectorizedFrame(params Line[] lines)
             => Lines = InterpolateLines(lines);
 
-        Line[] InterpolateLines(Line[] lines)
+        static Line[] InterpolateLines(Line[] lines)
         {
             List<Line> interpolatedLines = new List<Line>();
             short x, y;
@@ -109,6 +109,15 @@ namespace ProjectorInterface.GalvoInterface
             result.On = on;
             return result;
         }
+
+        public static bool operator==(Line v1, Line v2)
+            => v1.X == v2.X && v1.Y == v2.Y;
+
+        public static bool operator !=(Line v1, Line v2)
+            => !(v1 == v2);
+     
+        public override bool Equals(object? obj)
+            => obj is Line v && v == this;
 
         public override int GetHashCode()
             => base.GetHashCode();

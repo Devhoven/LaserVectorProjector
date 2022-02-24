@@ -162,6 +162,8 @@ namespace ProjectorInterface
                 CurrentTool = new PathTool();
             else if (e.Key == Key.D5)
                 Selection.isSelecting = true;
+            else if(e.Key == Key.Delete && Selection.isSelecting && Selection.selectedShapes.Count != 0)
+                Commands.Execute(new EraseSelectionCommand(Selection));
 
             else if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
@@ -171,10 +173,10 @@ namespace ProjectorInterface
                 // CTRL + Y = Redo
                 else if (Keyboard.IsKeyDown(Key.Y))
                     Commands.Redo();
-                else if(Keyboard.IsKeyDown(Key.A))
+                else if (Keyboard.IsKeyDown(Key.A) && Selection.isSelecting)
                 {
-                    Selection.Width = 500;
-                    Selection.Height = 500;
+                    Selection.Width = ActualWidth;
+                    Selection.Height = ActualHeight;
                     SetLeft(Selection, 0);
                     SetTop(Selection, 0);
                     Selection.ApplySelection();
@@ -182,7 +184,7 @@ namespace ProjectorInterface
             }
 
             // Operations for the background image
-            if (e.Key == Key.Delete)
+            if (e.Key == Key.Insert)
                 BackgroundImg.ToggleOpacity();
             else if (e.Key == Key.Enter)
                 BackgroundImg.ChooseImg();

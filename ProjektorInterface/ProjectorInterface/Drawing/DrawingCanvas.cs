@@ -74,8 +74,7 @@ namespace ProjectorInterface
                 // Drawing Shapes
                 else
                 {
-                    Selection.Width = 0;
-                    Selection.Height = 0;
+                    Selection.DeselectAll();
                     StartMousePos = e.GetPosition(this);
                     Children.Add(CurrentTool);
                     CurrentTool.Render(StartMousePos, StartMousePos);
@@ -123,10 +122,11 @@ namespace ProjectorInterface
             {
                 if (Selection.StartPos == e.GetPosition(this))
                 {
-                    Selection.DeselectAll();
                     Selection.Width = 0;
                     Selection.Height = 0;
+                    Selection.DeselectAll();
                 }
+                Selection.ApplySelection();
             }
             Keyboard.Focus(this);
 
@@ -171,6 +171,14 @@ namespace ProjectorInterface
                 // CTRL + Y = Redo
                 else if (Keyboard.IsKeyDown(Key.Y))
                     Commands.Redo();
+                else if(Keyboard.IsKeyDown(Key.A))
+                {
+                    Selection.Width = 500;
+                    Selection.Height = 500;
+                    SetLeft(Selection, 0);
+                    SetTop(Selection, 0);
+                    Selection.ApplySelection();
+                }
             }
 
             // Operations for the background image

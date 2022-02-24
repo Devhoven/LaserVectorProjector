@@ -18,7 +18,7 @@ namespace ProjectorInterface.DrawingCommands
     {
         Shape Shape;
         double width, height;
-        List<Shape> elements;
+        HashSet<Shape> elements;
 
         public EraseSelectionCommand(Shape selection) : base(selection.StrRep() + "Erase.png")
         {

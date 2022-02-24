@@ -11,7 +11,7 @@ namespace ProjectorInterface.GalvoInterface
 {
     static class SerialManager
     {
-        // Defines the baud rate at which the pc is going to communicate with the arduino
+        // Defines the baud rate at which the pc is going to communicate with the arduino (irrelevant for the DUO)
         const int BAUD_RATE = 2_000_000;
         // How many bytes a single point takes up
         // The first two bytes are for the position (between 0 and 4100, normally) 
@@ -40,6 +40,14 @@ namespace ProjectorInterface.GalvoInterface
                 Initialize(portName);
 
             Buffer = new byte[BUFFER_SIZE];
+
+            // Since static desctructors don't exist, I have to do this
+            AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
+            {
+                // Closes the port if it was open at the end of the app
+                if (Port != null && Port.IsOpen)
+                    Port.Close();
+            };
         }
 
         // Initializes the port 
@@ -78,8 +86,11 @@ namespace ProjectorInterface.GalvoInterface
                         // Gets either the current line, or the last line a few times
                         currentLine = frame.Lines[Math.Min(i, frame.LineCount - 1)];
 
-                        SendLine(bufIndex, ref currentLine);
+                        FillBuffer(bufIndex, ref currentLine);
                     }
+
+                    // Sending the data
+                    Port.Write(Buffer, 0, BUFFER_SIZE);
                 }
                 LastLine = currentLine;
             }
@@ -113,13 +124,13 @@ namespace ProjectorInterface.GalvoInterface
                 LastLine.X += (short)(Settings.MAX_STEP_SIZE * xRatio);
                 LastLine.Y += (short)(Settings.MAX_STEP_SIZE * yRatio);
 
-                SendLine(bufIndex, ref LastLine);
+                FillBuffer(bufIndex, ref LastLine);
                 bufIndex = (bufIndex + SIZE_PER_POINT) % BUFFER_SIZE;
             }
         }
 
         // Converts the coordinates and sends them to the arduino
-        static void SendLine(int bufIndex, ref Line line)
+        static void FillBuffer(int bufIndex, ref Line line)
         {
             // Maps the coordinates from 0 to 4095 to the correct image section
             short correctedX = (short)((line.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
@@ -133,9 +144,6 @@ namespace ProjectorInterface.GalvoInterface
 
             if (line.On)
                 Buffer[bufIndex + 3] |= 0x80;
-
-            // Sending the data
-            Port.Write(Buffer, 0, BUFFER_SIZE);
         }
     }
 }

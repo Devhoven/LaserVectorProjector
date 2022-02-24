@@ -121,8 +121,10 @@ namespace ProjectorInterface.GalvoInterface
 
                             // Sending the frame
                             SerialManager.SendFrame(currentFrame);
-                           
-                            // If the was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
+
+                            stopwatch.Stop();
+
+                            // If the frame was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
                             if (stopwatch.ElapsedMilliseconds < 41)
                                 Thread.Sleep(41 - (int)stopwatch.ElapsedMilliseconds);
 

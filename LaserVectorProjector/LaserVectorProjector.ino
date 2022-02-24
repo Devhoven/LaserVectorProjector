@@ -1,6 +1,7 @@
 #define TTL_SWITCH 8
 #define BUFFER_SIZE 8
 
+bool On { false };
 uint16_t PosX { 0 }, PosY { 0 };
 
 byte Buffer[BUFFER_SIZE];
@@ -32,18 +33,11 @@ void readBuffer(uint16_t offset)
 
     PosY = Buffer[offset++] | (Buffer[offset] << 8);
 
-    if ((PosY & 0x8000) == 0x8000)
-        digitalWrite(TTL_SWITCH, HIGH);
-    else
-        digitalWrite(TTL_SWITCH, LOW);
+    On = (PosY & 0x8000) == 0x8000;
 
     PosY &= 0x7FFF;
  
-    updateDAC(PosX, PosY);
-}
-
-void updateDAC(uint16_t x, uint16_t y)
-{
-    analogWrite(DAC0, x);
-    analogWrite(DAC1, y);
+    analogWrite(DAC0, PosX);
+    analogWrite(DAC1, PosY);
+    digitalWrite(TTL_SWITCH, On ? HIGH : LOW);
 }

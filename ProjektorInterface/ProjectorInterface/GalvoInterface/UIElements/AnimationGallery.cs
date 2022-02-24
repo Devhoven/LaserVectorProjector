@@ -10,7 +10,7 @@ namespace ProjectorInterface.GalvoInterface.UIElements
     class AnimationGalleryPanel : StackPanel
     {
         public AnimationGalleryPanel()
-            => SerialManager.OnImgIndexChanged += OnImgIndexChanged;
+            => AnimationManager.OnImgIndexChanged += OnImgIndexChanged;
         
         public void Clear()
             => Children.Clear();

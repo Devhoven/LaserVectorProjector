@@ -129,7 +129,6 @@ namespace ProjectorInterface
                 Selection.ApplySelection();
             }
             Keyboard.Focus(this);
-
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)

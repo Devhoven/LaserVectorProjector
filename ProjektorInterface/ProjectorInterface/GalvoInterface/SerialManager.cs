@@ -23,26 +23,8 @@ namespace ProjectorInterface.GalvoInterface
 
         public static string PortName => Port == null ? "" : Port.PortName;
 
-        // List of all images which are going to be displayed one after another
-        public static List<VectorizedImage> Images;
+        public static bool IsConnected => Port != null && Port.IsOpen;
 
-        // Seperate thread for sending the image data to the arduino
-        static Thread SendImgThread;
-        static bool Running = false;
-        static bool StopCurrentImg = false;
-
-        public delegate void IndexChangedHandler(int oldVal, int newVal);
-        public static event IndexChangedHandler? OnImgIndexChanged;
-        static int CurrentImgIndex
-        {
-            get => _CurrentImgIndex;
-            set
-            {
-                OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
-                _CurrentImgIndex = value;
-            }
-        }
-        static int _CurrentImgIndex;
         static byte[] Buffer;
 
         static SerialManager()
@@ -52,9 +34,6 @@ namespace ProjectorInterface.GalvoInterface
             if (portName != string.Empty)
                 Initialize(portName);
 
-            SendImgThread = null!;
-
-            Images = new List<VectorizedImage>();
             Buffer = new byte[BUFFER_SIZE];
         }
 
@@ -73,132 +52,33 @@ namespace ProjectorInterface.GalvoInterface
             }
             catch { }
         }
-         
-        // Starts the thread if it isn't already running and some images were loaded in
-        public static void Start()
-        {
-            if (Running || Images.Count == 0 || Port == null || !Port.IsOpen)
-                return;
 
-            Running = true;
-            SendImgThread = new Thread(new ThreadStart(SendImgLoop));
-            SendImgThread.Start();
-        }
-
-        // Stops the thread if it's running and joins it to the main thread
-        public static void Stop()
+        public static void SendFrame(VectorizedFrame frame)
         {
-            if (Running)
+            lock (frame)
             {
-                Running = false;
-                StopCurrentImg = true;
-                SendImgThread.Join();
-            }
-        }
-
-        // Loads all the .ild files from the selected folder into the Images - list
-        public static void LoadImagesFromFolder(string path)
-        {
-            CurrentImgIndex = 0;
-
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
-            lock (Images)
-            {
-                foreach (var dir in dirInfo.GetFiles())
+                Line currentLine;
+                // Looping through all of the lines contained in the current image
+                for (int j = 0; j < frame.LineCount; j++)
                 {
-                    if (dir.Name.EndsWith(".ild"))
-                        ILDParser.LoadFromPath(dir.FullName, ref Images);
+                    currentLine = frame.Lines[j];
+
+                    // Maps the coordinates from 0 to 4096 to the correct image section
+                    short correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
+                    short correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
+
+                    // Writing the x and y coordinates into the buffer 
+                    Buffer[0] = (byte)correctedX;
+                    Buffer[1] = (byte)(correctedX >> 8);
+                    Buffer[2] = (byte)correctedY;
+                    Buffer[3] = (byte)(correctedY >> 8);
+
+                    if (currentLine.On)
+                        Buffer[3] |= 0x80;
+
+                    // Sending the data
+                    Port.Write(Buffer, 0, BUFFER_SIZE);
                 }
-            }
-
-            Start();
-        }
-
-        public static void AddImage(VectorizedImage img)
-        {
-            lock (Images)
-                Images.Add(img);
-        }
-
-        // Removes the given image from the list and sets the the CurrenImgIndex to 0, in order to prevent errors
-        public static void RemoveImg(VectorizedImage img)
-        {
-            CurrentImgIndex = 0;
-            lock (Images)
-                Images.Remove(img);
-            StopCurrentImg = true;
-        }
-
-        // Clears all of the loaded images
-        public static void ClearImages()
-        {
-            CurrentImgIndex = 0;
-            lock (Images)
-                Images.Clear();
-            StopCurrentImg = true;
-        }
-
-        static void SendImgLoop()
-        {
-            // This stopwatch ensures, that 24 frames are diplayed and not any more
-            Stopwatch stopwatch = new Stopwatch();
-            VectorizedImage currentImg;
-            VectorizedFrame currentFrame;
-            Line currentLine;
-            // Contain the coordinates which are going to be sent to the arduino
-            short correctedX, correctedY;
-            while (Running)
-            {
-                // Setting it to false here, so not every frame after a delete call gets skipped
-                StopCurrentImg = false;
-
-                currentImg = Images[CurrentImgIndex];
-                // Locking the image, since this method runs in a different thread and delete functionality is going to be implemented
-                lock (currentImg)
-                {
-                    for (int i = 0; i < currentImg.FrameCount; i++)
-                    {
-                        currentFrame = currentImg[i];
-                        for (int replayIndex = 0; replayIndex < currentFrame.ReplayCount; replayIndex++)
-                        {
-                            stopwatch.Restart();
-                            // Looping through all of the lines contained in the current image
-                            for (int j = 0; j < currentFrame.LineCount; j++)
-                            {
-                                currentLine = currentFrame.Lines[j];
-
-                                // Maps the coordinates from 0 to 4096 to the correct image section
-                                correctedX = (short)((currentLine.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
-                                correctedY = (short)((currentLine.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
-
-                                // Writing the x and y coordinates into the buffer 
-                                Buffer[0] = (byte)correctedX;
-                                Buffer[1] = (byte)(correctedX >> 8);
-                                Buffer[2] = (byte)correctedY;
-                                Buffer[3] = (byte)(correctedY >> 8);
-
-                                if (currentLine.On)
-                                    Buffer[3] |= 0x80;
-
-                                // Sending the data
-                                Port.Write(Buffer, 0, BUFFER_SIZE);
-                            }
-
-                            // If the was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
-                            if (stopwatch.ElapsedMilliseconds < 41)
-                                Thread.Sleep(41 - (int)stopwatch.ElapsedMilliseconds);
-
-                            // If this bool is set, the current animation got deleted or swapped
-                            if (StopCurrentImg)
-                                break;
-                        }
-                    }
-                }
-                // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again
-                while (Images.Count == 0) ;
-                // Moving on to the next image, or looping to the beginning
-                if (!StopCurrentImg)
-                    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
             }
         }
     }

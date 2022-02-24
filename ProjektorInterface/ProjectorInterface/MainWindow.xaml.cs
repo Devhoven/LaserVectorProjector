@@ -40,7 +40,7 @@ namespace ProjectorInterface
 
         // Stopping the thread if it still runs
         protected override void OnClosed(EventArgs e)
-            => SerialManager.Stop();
+            => AnimationManager.Stop();
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -82,24 +82,24 @@ namespace ProjectorInterface
             if (dialog.ShowDialog() == true)
             {
                 // Clearing the old images from the queue
-                SerialManager.ClearImages();
+                AnimationManager.ClearImages();
                 // Loading the new ones in
-                SerialManager.LoadImagesFromFolder(dialog.SelectedPath);
+                AnimationManager.LoadImagesFromFolder(dialog.SelectedPath);
 
                 // Clearing all of the old animations and adding the new ones
                 AnimationGallery.Clear();
-                foreach (VectorizedImage img in SerialManager.Images)
+                foreach (VectorizedImage img in AnimationManager.Images)
                     AnimationGallery.AddBorder(new RenderedItemBorder(new RenderedImage(img)));
             }
         }
 
         // Starts the show
         private void StartShowClick(object sender, RoutedEventArgs e)
-            => SerialManager.Start();
+            => AnimationManager.Start();
 
         // Stops it
         private void StopShowClick(object sender, RoutedEventArgs e)
-            => SerialManager.Stop();
+            => AnimationManager.Stop();
 
         private void SelectLineClick(object sender, RoutedEventArgs e)
         {
@@ -140,9 +140,9 @@ namespace ProjectorInterface
         {
             if (ShapesToPoints.DrawnImage.FrameCount > 0)
             {
-                SerialManager.ClearImages();
-                SerialManager.AddImage(ShapesToPoints.DrawnImage);
-                SerialManager.Start();
+                AnimationManager.ClearImages();
+                AnimationManager.AddImage(ShapesToPoints.DrawnImage);
+                AnimationManager.Start();
             }
         }
 

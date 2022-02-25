@@ -57,6 +57,19 @@ namespace ProjectorInterface.DrawingTools
             selectedShapes.Clear();
         }
 
+        // Selects all Shapes in the current Canvas
+        public void SelectAll()
+        {
+            isSelecting = true;
+            Width = ((Canvas)Parent).ActualWidth;
+            Height = ((Canvas)Parent).ActualHeight;
+            Canvas.SetLeft(this, 0);
+            Canvas.SetTop(this, 0);
+            RectPos.X = 0;
+            RectPos.Y = 0;
+            ApplySelection();
+        }
+
         // Ctrl + LeftClick Method to select/deselect single Shapes
         public void SelectShape(Shape s)
         {
@@ -200,7 +213,7 @@ namespace ProjectorInterface.DrawingTools
                     else if (s is Path path)
                     {
                         lineSegments = ((GeometryGroup)path.Data).Children;
-                       
+
                         foreach (LineGeometry lg in lineSegments)
                         {
                             lg.StartPoint = new Point(lg.StartPoint.X - diff.X, lg.StartPoint.Y - diff.Y);
@@ -214,6 +227,6 @@ namespace ProjectorInterface.DrawingTools
 
         }
 
-        
+
     }
 }

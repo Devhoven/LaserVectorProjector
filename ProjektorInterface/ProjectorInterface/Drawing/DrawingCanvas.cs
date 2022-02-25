@@ -66,15 +66,14 @@ namespace ProjectorInterface
                         Selection.SelectShape(shape);
                     else // Select multiple Shapes with SelectionRectangle
                     {
-                        Selection.StartPos = e.GetPosition(this);
-                        Selection.LastPos = Selection.StartPos;
-                        Selection.DeselectAll();
+                        Selection.GetStartPosition(e.GetPosition(this));
                     }
                 }
                 // Drawing Shapes
                 else
                 {
                     Selection.DeselectAll();
+
                     StartMousePos = e.GetPosition(this);
                     Children.Add(CurrentTool);
                     CurrentTool.Render(StartMousePos, StartMousePos);
@@ -121,14 +120,19 @@ namespace ProjectorInterface
             else if (e.ChangedButton == MouseButton.Left && Selection.isSelecting)
             {
                 if (Selection.StartPos == e.GetPosition(this))
-                {
-                    Selection.Width = 0;
-                    Selection.Height = 0;
                     Selection.DeselectAll();
-                }
-                Selection.ApplySelection();
+                
+                if (!Keyboard.IsKeyDown(Key.LeftCtrl))
+                    Selection.ApplySelection();
             }
             Keyboard.Focus(this);
+        }
+
+        public void UpdateTool(DrawingTool tool)
+        {
+            CurrentTool = tool;
+            Selection.isSelecting = false;
+            Selection.DeselectAll();
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -161,8 +165,10 @@ namespace ProjectorInterface
                 CurrentTool = new PathTool();
             else if (e.Key == Key.D5)
                 Selection.isSelecting = true;
-            else if(e.Key == Key.Delete && Selection.isSelecting && Selection.selectedShapes.Count != 0)
+            else if (e.Key == Key.Delete && Selection.isSelecting && Selection.selectedShapes.Count != 0)
                 Commands.Execute(new EraseSelectionCommand(Selection));
+            else if (e.Key == Key.Escape)
+                Selection.DeselectAll();
 
             else if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
@@ -172,14 +178,8 @@ namespace ProjectorInterface
                 // CTRL + Y = Redo
                 else if (Keyboard.IsKeyDown(Key.Y))
                     Commands.Redo();
-                else if (Keyboard.IsKeyDown(Key.A) && Selection.isSelecting)
-                {
-                    Selection.Width = ActualWidth;
-                    Selection.Height = ActualHeight;
-                    SetLeft(Selection, 0);
-                    SetTop(Selection, 0);
-                    Selection.ApplySelection();
-                }
+                else if (Keyboard.IsKeyDown(Key.A))
+                    Selection.SelectAll();
             }
 
             // Operations for the background image

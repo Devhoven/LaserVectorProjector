@@ -102,36 +102,20 @@ namespace ProjectorInterface
             => AnimationManager.Stop();
 
         private void SelectLineClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new LineTool();
-            RemoveSelection();
-        }
+            => DrawCon.UpdateTool(new LineTool());
+        
 
         private void SelectRectangleClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new RectTool();
-            RemoveSelection();
-        }
+            => DrawCon.UpdateTool(new RectTool());
+        
 
         private void SelectCircleClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new CircleTool();
-            RemoveSelection();
-        }
+            => DrawCon.UpdateTool(new CircleTool());
+        
 
         private void SelectPathClick(object sender, RoutedEventArgs e)
-        {
-            DrawCon.CurrentTool = new PathTool();
-            RemoveSelection();
-        }
-
-        private void RemoveSelection() {
-            DrawCon.Selection.isSelecting = false;
-            DrawCon.Selection.Width = 0;
-            DrawCon.Selection.Height = 0;
-            DrawCon.Selection.DeselectAll();
-        }
-                    
+            => DrawCon.UpdateTool(new PathTool());
+        
 
         private void SelectionClick(object sender, RoutedEventArgs e)
             => DrawCon.Selection.isSelecting = true;

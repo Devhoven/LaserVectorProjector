@@ -19,6 +19,8 @@ namespace ProjectorInterface
         // Gets set when the user clicks on the canvas
         Point StartMousePos;
 
+        bool leftCanvas = false;
+
         // Holds all of the actions the user did, like drawing or deleting something
         public CommandHistory Commands { get; set; }
         CommandDisplay CommandDisplay;
@@ -77,6 +79,7 @@ namespace ProjectorInterface
             // Left click, either drawing or selecting
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                leftCanvas = false;
                 // Selecting Shapes
                 if (Selection.isSelecting)
                 {
@@ -119,15 +122,18 @@ namespace ProjectorInterface
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            // Drawing with left Mouse Button
-            if (e.LeftButton == MouseButtonState.Pressed && !Selection.isSelecting)
+            if (!leftCanvas)
             {
-                CurrentTool.Render(StartMousePos, e.GetPosition(this));
-            }
-            // Selecting with left Mouse Button
-            else if (e.LeftButton == MouseButtonState.Pressed && Selection.isSelecting)
-            {
-                Selection.Render(Selection.StartPos, e.GetPosition(this));
+                // Drawing with left Mouse Button
+                if (e.LeftButton == MouseButtonState.Pressed && !Selection.isSelecting)
+                {
+                    CurrentTool.Render(StartMousePos, e.GetPosition(this));
+                }
+                // Selecting with left Mouse Button
+                else if (e.LeftButton == MouseButtonState.Pressed && Selection.isSelecting)
+                {
+                    Selection.Render(Selection.StartPos, e.GetPosition(this));
+                }
             }
         }
 
@@ -135,35 +141,46 @@ namespace ProjectorInterface
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left && !Selection.isSelecting)
-                RemoveToolAndCopy(e.GetPosition(this));
-            else if (e.ChangedButton == MouseButton.Left && Selection.isSelecting)
+            if (!leftCanvas)
             {
-                if (Selection.StartPos == e.GetPosition(this))
+                if (e.ChangedButton == MouseButton.Left && !Selection.isSelecting)
+                    RemoveToolAndCopy(e.GetPosition(this));
+                else if (e.ChangedButton == MouseButton.Left && Selection.isSelecting)
                 {
-                    Selection.Width = 0;
-                    Selection.Height = 0;
-                    Selection.DeselectAll();
+                    if (Selection.StartPos == e.GetPosition(this))
+                    {
+                        Selection.Width = 0;
+                        Selection.Height = 0;
+                        Selection.DeselectAll();
+                    }
+                    if (!Keyboard.IsKeyDown(Key.LeftCtrl))
+                        Selection.ApplySelection();
                 }
-                if (!Keyboard.IsKeyDown(Key.LeftCtrl))
-                    Selection.ApplySelection();
+                Keyboard.Focus(this);
             }
-            Keyboard.Focus(this);
-        }
-
-        public void UpdateTool(DrawingTool tool)
-        {
-            CurrentTool = tool;
-            Selection.isSelecting = false;
-            Selection.DeselectAll();
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             // If the mouse leaves the canvas, and the left mouse button was still pressed the operation is going to cancel
             // Doesn't work for some reason if you move onto the windows taskbar
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && !leftCanvas){
                 RemoveToolAndCopy(e.GetPosition(this));
+                leftCanvas = true;
+            }
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            //leftCanvas = false;
+        }
+
+        // Updates the CurrentTool and deselects all potentially selected shapes
+        public void UpdateTool(DrawingTool tool)
+        {
+            CurrentTool = tool;
+            Selection.isSelecting = false;
+            Selection.DeselectAll();
         }
 
         // Removes the visuals of the currently used tool from the canvas and adds the drawn shape onto it

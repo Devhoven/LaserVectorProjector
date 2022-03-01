@@ -30,6 +30,9 @@ namespace ProjectorInterface
 
             // You somehow can't override this event
             Loaded += OnLoaded;
+
+            DrawCon.CurrentToolChanged += new EventHandler(CurrentTool_CurrentToolChanged);
+            DrawCon.Selection.SelectionChanged += new EventHandler(IsSelecting_SelectionChanged);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -73,6 +76,12 @@ namespace ProjectorInterface
             }
             Keyboard.Focus(DrawCon);
         }
+
+        // Handler for changed drawingTool currentTool
+        private void CurrentTool_CurrentToolChanged(object sender, EventArgs e)
+            => BtnPanel.ToolChanged((DrawingCanvas)sender);
+        private void IsSelecting_SelectionChanged(object sender, EventArgs e)
+            => BtnPanel.SelectButton((Button)BtnPanel.Children[4]);
 
 
         // Opens a folder dialog for selecting a folder with .ild files

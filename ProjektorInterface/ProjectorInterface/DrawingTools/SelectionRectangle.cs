@@ -13,11 +13,27 @@ namespace ProjectorInterface.DrawingTools
     // Allows the user to select Shapes
     public class SelectionRectangle : Shape
     {
-
+        public event EventHandler SelectionChanged;
         public Point RectPos, StartPos, LastPos, MovePos;
         public HashSet<Shape> selectedShapes = new HashSet<Shape>();
         public double _Top, _Left;
-        public bool isSelecting = false;
+        public bool _selecting = false;
+        public bool isSelecting
+        {
+            get => _selecting;
+            set
+            {
+                _selecting = value;
+                OnSelectionChanged();
+            }
+        }
+
+        private void OnSelectionChanged()
+        {
+            EventHandler eh = SelectionChanged;
+            if (isSelecting && eh != null)
+                SelectionChanged(this, EventArgs.Empty);
+        }
 
 
         protected override Geometry DefiningGeometry

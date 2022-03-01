@@ -1,6 +1,7 @@
 ﻿using ProjectorInterface.DrawingCommands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.Helper;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,8 @@ namespace ProjectorInterface
     // A canvas the user is able to draw on
     public class DrawingCanvas : Canvas
     {
+        public event EventHandler CurrentToolChanged;
+
         // Gets set when the user clicks on the canvas
         Point StartMousePos;
 
@@ -21,7 +24,23 @@ namespace ProjectorInterface
         CommandDisplay CommandDisplay;
 
         // Holds the current tool one is drawing with
-        public DrawingTool CurrentTool;
+        public DrawingTool _drawTool;
+        public DrawingTool CurrentTool
+        {
+            get => _drawTool;
+            set
+            {
+                _drawTool = value;
+                OnCurrentToolChanged();
+            }
+        }
+
+        private void OnCurrentToolChanged()
+        {
+            EventHandler eh = CurrentToolChanged;
+            if (eh != null)
+                CurrentToolChanged(this, EventArgs.Empty);
+        }
 
         // Background image of the canvas
         // Can be controlled, so the user is able to trace the outlines
@@ -66,14 +85,15 @@ namespace ProjectorInterface
                         Selection.SelectShape(shape);
                     else // Select multiple Shapes with SelectionRectangle
                     {
-                        Selection.GetStartPosition(e.GetPosition(this));
+                        Selection.StartPos = e.GetPosition(this);
+                        Selection.LastPos = Selection.StartPos;
+                        Selection.DeselectAll();
                     }
                 }
                 // Drawing Shapes
                 else
                 {
                     Selection.DeselectAll();
-
                     StartMousePos = e.GetPosition(this);
                     Children.Add(CurrentTool);
                     CurrentTool.Render(StartMousePos, StartMousePos);
@@ -120,8 +140,11 @@ namespace ProjectorInterface
             else if (e.ChangedButton == MouseButton.Left && Selection.isSelecting)
             {
                 if (Selection.StartPos == e.GetPosition(this))
+                {
+                    Selection.Width = 0;
+                    Selection.Height = 0;
                     Selection.DeselectAll();
-                
+                }
                 if (!Keyboard.IsKeyDown(Key.LeftCtrl))
                     Selection.ApplySelection();
             }
@@ -156,13 +179,13 @@ namespace ProjectorInterface
         {
             // The user can select a drawing mode with the keys 1 - 4
             if (e.Key == Key.D1)
-                CurrentTool = new LineTool();
+                UpdateTool(new LineTool());
             else if (e.Key == Key.D2)
-                CurrentTool = new RectTool();
+                UpdateTool(new RectTool());
             else if (e.Key == Key.D3)
-                CurrentTool = new CircleTool();
+                UpdateTool(new CircleTool());
             else if (e.Key == Key.D4)
-                CurrentTool = new PathTool();
+                UpdateTool(new PathTool());
             else if (e.Key == Key.D5)
                 Selection.isSelecting = true;
             else if (e.Key == Key.Delete && Selection.isSelecting && Selection.selectedShapes.Count != 0)

@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectorInterface"
-        xmlns:uc="clr-namespace:ProjectorInterface.DrawingCommands" xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements"
+        xmlns:uc="clr-namespace:ProjectorInterface.DrawingCommands" 
+        xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements" 
+        xmlns:helper="clr-namespace:ProjectorInterface.Helper"
         mc:Ignorable="d"
         x:Name="Window" Icon= "Assets/LaserPointer.ico" Title="Lasershow" WindowState="Maximized" Background="{StaticResource BackgroundColor}"
         Width="1920" Height="1080">
@@ -66,35 +68,35 @@
             </Border>
             
             <!-- Buttons for drawing tools -->
-            <WrapPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center">
-                <Button Grid.Column="0" Click="SelectLineClick" ToolTip="Select Line Tool">
+            <helper:ButtonPanel x:Name="BtnPanel" Grid.Column="1" >
+                <Button x:Name="LineBtn" Grid.Column="0" Click="SelectLineClick" ToolTip="Select Line Tool">
                     <Button.Content>
                         <Image Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
                     </Button.Content>
                 </Button>
 
-                <Button Click="SelectRectangleClick" ToolTip="Select Rectangle Tool">
+                <Button x:Name="RectangleBtn" Click="SelectRectangleClick" ToolTip="Select Rectangle Tool">
                     <Button.Content>
                         <Image Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
                     </Button.Content>
                 </Button>
 
-                <Button Click="SelectCircleClick" ToolTip="Select Circle Tool">
+                <Button x:Name="EllipseBtn" Click="SelectCircleClick" ToolTip="Select Circle Tool">
                     <Button.Content>
                         <Image Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
                     </Button.Content>
                 </Button>
 
-                <Button Click="SelectPathClick" ToolTip="Select Path Tool">
+                <Button x:Name="PathBtn" Click="SelectPathClick" ToolTip="Select Path Tool">
                     <Button.Content>
                         <Image Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
                     </Button.Content>
                 </Button>
 
-                <Button Click="SelectionClick" ToolTip="Select Tools">
+                <Button x:Name="SelectBtn" Click="SelectionClick" ToolTip="Select Tools">
                     <Image Source="pack://application:,,,/Assets/CommandImages/Selection.png"/>
                 </Button>
-            </WrapPanel>
+            </helper:ButtonPanel>
         </Grid>
 
         <!-- Drawing Canvas -->
@@ -118,7 +120,7 @@
 
             <!-- Pause and start buttons -->
             <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
-                <Button Click="StartShowClick">
+                <Button x:Name="AnimationButton" Click="StartShowClick">
                     <Button.Content>
                         <Image Source="pack://application:,,,/Assets/StartButton.png" Margin="3" ToolTip="Start Lasershow"/>
                     </Button.Content>

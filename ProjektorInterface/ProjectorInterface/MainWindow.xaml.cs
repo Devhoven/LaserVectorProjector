@@ -51,20 +51,12 @@ namespace ProjectorInterface
             {
                 // CTRL + SHIFT + S = Save your drawing as an .ild file 
                 if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
-                {
                     SaveCanvasDialog();
-                }
                 else
-                {
-                    // Converts the shapes from the canvas into a frame and writes appends it to ShapesToPoints.DrawImage
-                    ShapesToPoints.CalcFrameFromCanvas();
-                    FramePanel.Children.Add(new RenderedItemBorder(
-                        new RenderedFrame(
-                            ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
-                }
+                    AddDrawnFrame();
             }
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
-                SelectShowClick(null!, null!);
+                SelectShowFolderDialog();
             else if (e.Key == Key.C)
                 new PortSelectWindow(this).ShowDialog();
 
@@ -79,6 +71,55 @@ namespace ProjectorInterface
 
         // Opens a folder dialog for selecting a folder with .ild files
         private void SelectShowClick(object sender, RoutedEventArgs e)
+            => SelectShowFolderDialog();
+
+        // Starts the show
+        private void StartShowClick(object sender, RoutedEventArgs e)
+            => AnimationManager.Start();
+
+        // Stops it
+        private void StopShowClick(object sender, RoutedEventArgs e)
+            => AnimationManager.Stop();
+
+        private void SelectLineClick(object sender, RoutedEventArgs e)
+            => DrawCon.UpdateTool(new LineTool());
+        
+        private void SelectRectangleClick(object sender, RoutedEventArgs e)
+            => DrawCon.UpdateTool(new RectTool());
+
+        private void SelectCircleClick(object sender, RoutedEventArgs e)
+            => DrawCon.UpdateTool(new CircleTool());
+        
+        private void SelectPathClick(object sender, RoutedEventArgs e)
+            => DrawCon.UpdateTool(new PathTool());
+
+        private void SelectionClick(object sender, RoutedEventArgs e)
+            => DrawCon.Selection.isSelecting = true;
+
+        private void ProjectCanvasClick(object sender, RoutedEventArgs e)
+            => ProjectCanvas();
+
+        private void SaveCanvasClick(object sender, RoutedEventArgs e)
+            => SaveCanvasDialog();
+
+        private void LoadImageClick(object sender, RoutedEventArgs e)
+            => DrawCon.BackgroundImg.ChooseImg();
+
+        private void SaveCanvasDialog()
+        {
+            VistaSaveFileDialog dialog = new VistaSaveFileDialog()
+            {
+                Title = "Save your drawing",
+                DefaultExt = ".ild",
+                AddExtension = true,
+                CheckPathExists = true,
+                Filter = "ILDA File | *.ild"
+            };
+            if (dialog.ShowDialog() == true)
+                ILDEncoder.EncodeImg(dialog.FileName, ShapesToPoints.DrawnImage);
+        }
+
+        private void SelectShowFolderDialog()
         {
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog() == true)
@@ -95,34 +136,7 @@ namespace ProjectorInterface
             }
         }
 
-        // Starts the show
-        private void StartShowClick(object sender, RoutedEventArgs e)
-            => AnimationManager.Start();
-
-        // Stops it
-        private void StopShowClick(object sender, RoutedEventArgs e)
-            => AnimationManager.Stop();
-
-        private void SelectLineClick(object sender, RoutedEventArgs e)
-            => DrawCon.UpdateTool(new LineTool());
-        
-
-        private void SelectRectangleClick(object sender, RoutedEventArgs e)
-            => DrawCon.UpdateTool(new RectTool());
-        
-
-        private void SelectCircleClick(object sender, RoutedEventArgs e)
-            => DrawCon.UpdateTool(new CircleTool());
-        
-
-        private void SelectPathClick(object sender, RoutedEventArgs e)
-            => DrawCon.UpdateTool(new PathTool());
-        
-
-        private void SelectionClick(object sender, RoutedEventArgs e)
-            => DrawCon.Selection.isSelecting = true;
-
-        private void ProjectCanvasClick(object sender, RoutedEventArgs e)
+        private void ProjectCanvas()
         {
             if (ShapesToPoints.DrawnImage.FrameCount > 0)
             {
@@ -132,24 +146,13 @@ namespace ProjectorInterface
             }
         }
 
-        private void SaveCanvasClick(object sender, RoutedEventArgs e)
-            => SaveCanvasDialog();
-
-        private void SaveCanvasDialog()
+        private void AddDrawnFrame()
         {
-            VistaSaveFileDialog dialog = new VistaSaveFileDialog()
-            {
-                Title = "Save your drawing",
-                DefaultExt = ".ild",
-                AddExtension = true,
-                CheckPathExists = true,
-                Filter = "ILDA File | *.ild"
-            };
-            if (dialog.ShowDialog() == true)
-                ILDEncoder.EncodeImg(dialog.FileName, ShapesToPoints.DrawnImage);
+            // Converts the shapes from the canvas into a frame and writes appends it to ShapesToPoints.DrawImage
+            ShapesToPoints.CalcFrameFromCanvas();
+            FramePanel.Children.Add(new RenderedItemBorder(
+                new RenderedFrame(
+                    ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
         }
-
-        private void LoadImageClick(object sender, RoutedEventArgs e)
-            => DrawCon.BackgroundImg.ChooseImg();
     }
 }

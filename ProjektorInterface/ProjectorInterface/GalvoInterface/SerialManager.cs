@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
+using System.Text;
 using System.Threading;
 
 namespace ProjectorInterface.GalvoInterface
@@ -70,6 +71,9 @@ namespace ProjectorInterface.GalvoInterface
         {
             lock (frame)
             {
+                if (frame.LineCount == 0)
+                    return;
+
                 Line currentLine = frame.Lines[0];
 
                 if (Math.Abs(LastLine.X - currentLine.X) > Settings.MAX_STEP_SIZE ||
@@ -92,6 +96,7 @@ namespace ProjectorInterface.GalvoInterface
                     // Sending the data
                     Port.Write(Buffer, 0, BUFFER_SIZE);
                 }
+
                 LastLine = currentLine;
             }
         }

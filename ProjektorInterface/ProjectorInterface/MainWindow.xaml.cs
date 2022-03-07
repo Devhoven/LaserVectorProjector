@@ -27,18 +27,18 @@ namespace ProjectorInterface
             Instance = this;
 
             InitializeComponent();
-
+			
             // You somehow can't override this event
             Loaded += OnLoaded;
 
-            DrawCon.CurrentToolChanged += new EventHandler(CurrentTool_CurrentToolChanged);
-            DrawCon.Selection.SelectionChanged += new EventHandler(IsSelecting_SelectionChanged);
+            DrawCon.CurrentToolChanged += CurrentTool_CurrentToolChanged;
+            DrawCon.Selection.SelectionChanged += IsSelecting_SelectionChanged;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             // Did this, so the canvas would get the focus of the keyboard
-            Keyboard.Focus(DrawCon);
+            Keyboard.Focus(DrawCon); 
         }
 
         // Stopping the thread if it still runs
@@ -66,23 +66,16 @@ namespace ProjectorInterface
             else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
                 SelectShowClick(null!, null!);
             else if (e.Key == Key.C)
-            {
-                PortSelectWindow test = new PortSelectWindow()
-                {
-                    Owner = this,
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner
-                };
-                test.ShowDialog();
-            }
+                new PortSelectWindow(this).ShowDialog();
+
             Keyboard.Focus(DrawCon);
         }
 
         // Handler for changed drawingTool currentTool
-        private void CurrentTool_CurrentToolChanged(object sender, EventArgs e)
-            => BtnPanel.ToolChanged((DrawingCanvas)sender);
-        private void IsSelecting_SelectionChanged(object sender, EventArgs e)
+        private void CurrentTool_CurrentToolChanged(object? sender, EventArgs e)
+            => BtnPanel.ToolChanged(DrawCon);
+        private void IsSelecting_SelectionChanged(object? sender, EventArgs e)
             => BtnPanel.SelectButton((Button)BtnPanel.Children[4]);
-
 
         // Opens a folder dialog for selecting a folder with .ild files
         private void SelectShowClick(object sender, RoutedEventArgs e)

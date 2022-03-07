@@ -154,9 +154,9 @@
                     </DockPanel>
 
                     <!-- Stackpanel for the animations -->
-                    <uc:AutoScrollViewer Grid.Row="1">
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
                         <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
-                    </uc:AutoScrollViewer>
+                    </ScrollViewer>
                 </Grid>
             </Border>
         </Grid>

@@ -71,10 +71,12 @@ namespace ProjectorInterface.GalvoInterface
             DirectoryInfo dirInfo = new DirectoryInfo(path);
             lock (Images)
             {
-                foreach (var dir in dirInfo.GetFiles())
+                FileInfo[] files = dirInfo.GetFiles();
+                // Reads 100 files max
+                for (int i = 0; i < files.Length && i < 100; i++)
                 {
-                    if (dir.Name.EndsWith(".ild"))
-                        ILDParser.LoadFromPath(dir.FullName, ref Images);
+                    if (files[i].Name.EndsWith(".ild"))
+                        ILDParser.LoadFromPath(files[i].FullName, ref Images);
                 }
             }
 
@@ -127,11 +129,10 @@ namespace ProjectorInterface.GalvoInterface
                             // If the frame was sent faster than ~41ms (1/24s) the thread will sleep the rest of the time
                             if (stopwatch.ElapsedMilliseconds < 41)
                                 Thread.Sleep(41 - (int)stopwatch.ElapsedMilliseconds);
-
-                            // If this bool is set, the current animation got deleted or swapped
-                            if (StopCurrentImg)
-                                break;
                         }
+                        // If this bool is set, the current animation got deleted or swapped
+                        if (StopCurrentImg)
+                            break;
                     }
                 }
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again

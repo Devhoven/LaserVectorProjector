@@ -20,9 +20,12 @@ namespace ProjectorInterface
 {
     public partial class PortSelectWindow : Window
     {
-        public PortSelectWindow()
+        public PortSelectWindow(Window owner)
         {
             InitializeComponent();
+
+            Owner = owner;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             // Got this from https://stackoverflow.com/a/2876126/9241163
             // Retreives all of the port names and their caption and appends them to the PortPanel

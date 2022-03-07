@@ -1,5 +1,13 @@
+#include "SPI.h"
+
 #define TTL_SWITCH 8
-#define BUFFER_SIZE 8
+#define SIZE_PER_POINT 4
+#define BUFFER_SIZE SIZE_PER_POINT * 2
+
+#define SS 10
+
+uint16_t ConfigA = 0b0001000000000000;
+uint16_t ConfigB = 0b1001000000000000;
 
 bool On { false };
 uint16_t PosX { 0 }, PosY { 0 };
@@ -10,9 +18,9 @@ void setup()
 {
     SerialUSB.begin(2000000);
 
-    analogWriteResolution(12);
-    pinMode(DAC0, OUTPUT);
-    pinMode(DAC1, OUTPUT);
+    SPI.begin(SS);
+    SPI.setClockDivider(SS, 4);
+
     pinMode(TTL_SWITCH, OUTPUT);
 }
 
@@ -23,8 +31,8 @@ void loop()
 
     SerialUSB.readBytes(Buffer, BUFFER_SIZE);
 
-    readBuffer(0);
-    readBuffer(4);
+    for (uint16_t i = 0; i < BUFFER_SIZE; i += SIZE_PER_POINT)
+        readBuffer(i);
 }
 
 void readBuffer(uint16_t offset)
@@ -37,7 +45,7 @@ void readBuffer(uint16_t offset)
 
     PosY &= 0x7FFF;
  
-    analogWrite(DAC0, PosX);
-    analogWrite(DAC1, PosY);
+    SPI.transfer16(SS, ConfigA | PosX, SPI_LAST);
+    SPI.transfer16(SS, ConfigB | PosY, SPI_LAST);
     digitalWrite(TTL_SWITCH, On ? HIGH : LOW);
 }

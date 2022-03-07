@@ -13,7 +13,7 @@ namespace ProjectorInterface.Helper
         // Holds the maximum voltage (in mV) 
         public static readonly short MAX_VOLTAGE = 4095;
         // You can't give the galvos too much change in voltage per command, this limits it to 100mV per command
-        public static readonly short MAX_STEP_SIZE = 500;
+        public static readonly short MAX_STEP_SIZE = 200;
         public static float IMG_SECTION 
         {
             get => IMG_SECTION_CACHED;
@@ -25,7 +25,7 @@ namespace ProjectorInterface.Helper
             }
         }
         // Holds how much the full image section is going to be reduced to
-        static float IMG_SECTION_CACHED = 4 / 4f;
+        static float IMG_SECTION_CACHED = 3 / 4f;
         // The new maximum size of the image section (in mV)
         public static short IMG_SECTION_SIZE = (short)(MAX_VOLTAGE * IMG_SECTION_CACHED);
         // The offset which needs to be added to any coord, otherwise it won't be centered

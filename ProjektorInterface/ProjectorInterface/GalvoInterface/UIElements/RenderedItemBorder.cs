@@ -33,6 +33,7 @@ namespace ProjectorInterface.GalvoInterface.UIElements
         {
             BorderBrush = SELECTED_BORDER_BRUSH;
             BorderThickness = SELECTED_BORDER_THICKNESS;
+            BringIntoView();
         }
 
         public void Deselect()

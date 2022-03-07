@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\ButtonImages\Revert.png" />
+    <None Remove="Assets\ButtonImages\Skip.png" />
     <None Remove="Assets\CommandImages\Ellipse.png" />
     <None Remove="Assets\CommandImages\EllipseErase.png" />
     <None Remove="Assets\CommandImages\Erase.png" />
@@ -35,12 +37,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\ButtonImages\Revert.png" />
+    <Resource Include="Assets\ButtonImages\Skip.png" />
     <Resource Include="Assets\CommandImages\Erase.png" />
     <Resource Include="Assets\CommandImages\SelectionErase.png" />
     <Resource Include="Assets\LaserPointer.ico" />
     <Resource Include="Assets\LaserShowIcon.ico" />
-    <Resource Include="Assets\LoadImage.png" />
-    <Resource Include="Assets\Settings.png" />
+    <Resource Include="Assets\ButtonImages\LoadImage.png" />
+    <Resource Include="Assets\ButtonImages\Settings.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,12 +75,12 @@
     <Resource Include="Assets\CommandImages\RedoIcon.png" />
     <Resource Include="Assets\CommandImages\Selection.png" />
     <Resource Include="Assets\CommandImages\UndoIcon.png" />
-    <Resource Include="Assets\Delete.png" />
-    <Resource Include="Assets\Folder.png" />
-    <Resource Include="Assets\PauseButton.png" />
-    <Resource Include="Assets\Save.png" />
-    <Resource Include="Assets\StartButton.png" />
-    <Resource Include="Assets\Upload.png" />
+    <Resource Include="Assets\ButtonImages\Delete.png" />
+    <Resource Include="Assets\ButtonImages\Folder.png" />
+    <Resource Include="Assets\ButtonImages\Pause.png" />
+    <Resource Include="Assets\ButtonImages\Save.png" />
+    <Resource Include="Assets\ButtonImages\Start.png" />
+    <Resource Include="Assets\ButtonImages\Upload.png" />
   </ItemGroup>
 
   <ItemGroup>

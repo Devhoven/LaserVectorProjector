@@ -44,18 +44,18 @@
                         <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="ProjectCanvasClick" ToolTip="Project current Image">
                                 <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/Upload.png" Margin="3"/>
+                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Upload.png" Margin="3"/>
                                 </Button.Content>
                             </Button>
 
                             <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="SaveCanvasClick" ToolTip="Save your drawing" >
                                 <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/Save.png" Margin="3"/>
+                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Save.png" Margin="3"/>
                                 </Button.Content>
                             </Button>
 
                             <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="LoadImageClick" ToolTip="Load an background image">
-                                <Image Source="pack://application:,,,/Assets/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
+                                <Image Source="pack://application:,,,/Assets/ButtonImages/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
                             </Button>
                         </StackPanel>
                     </DockPanel>
@@ -120,15 +120,27 @@
 
             <!-- Pause and start buttons -->
             <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
-                <Button x:Name="AnimationButton" Click="StartShowClick">
+                <Button Click="StartShowClick" ToolTip="Start Lasershow">
                     <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/StartButton.png" Margin="3" ToolTip="Start Lasershow"/>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Start.png" Margin="3"/>
                     </Button.Content>
                 </Button>
 
-                <Button Click="StopShowClick">
+                <Button Click="StopShowClick" ToolTip="Stop Lasershow">
                     <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/PauseButton.png" Margin="3" ToolTip="Stop Lasershow"/>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Pause.png" Margin="3"/>
+                    </Button.Content>
+                </Button>
+
+                <Button Click="SkipAnimationClick" ToolTip="Skip current animation">
+                    <Button.Content>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Skip.png" Margin="3"/>
+                    </Button.Content>
+                </Button>
+
+                <Button Click="RevertAnimationClick" ToolTip="Revert to the animation before">
+                    <Button.Content>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Revert.png" Margin="3"/>
                     </Button.Content>
                 </Button>
             </WrapPanel>
@@ -148,7 +160,7 @@
                         <Button Style="{StaticResource SmallButton}" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right"
                                     Click="SelectShowClick" ToolTip="Open Animation Folder">
                             <Button.Content>
-                                <Image Source="pack://application:,,,/Assets/Folder.png"/>
+                                <Image Source="pack://application:,,,/Assets/ButtonImages/Folder.png"/>
                             </Button.Content>
                         </Button>
                     </DockPanel>

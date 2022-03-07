@@ -81,6 +81,12 @@ namespace ProjectorInterface
         private void StopShowClick(object sender, RoutedEventArgs e)
             => AnimationManager.Stop();
 
+        private void SkipAnimationClick(object sender, RoutedEventArgs e)
+            => AnimationManager.SkipAnimation();
+
+        private void RevertAnimationClick(object sender, RoutedEventArgs e)
+            => AnimationManager.RevertAnimation();
+
         private void SelectLineClick(object sender, RoutedEventArgs e)
             => DrawCon.UpdateTool(new LineTool());
         

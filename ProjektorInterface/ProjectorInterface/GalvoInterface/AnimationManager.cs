@@ -63,6 +63,26 @@ namespace ProjectorInterface.GalvoInterface
             }
         }
 
+        // Skips the current animation
+        public static void SkipAnimation()
+        {
+            if (Running && CurrentImgIndex < Images.Count - 1)
+            {
+                CurrentImgIndex++;
+                StopCurrentImg = true;
+            }
+        }
+
+        // Reverts to the last animation
+        public static void RevertAnimation()
+        {
+            if (Running && Images.Count > 0 && CurrentImgIndex > 0)
+            {
+                CurrentImgIndex--;
+                StopCurrentImg = true;
+            }
+        }
+
         // Loads all the .ild files from the selected folder into the Images - list
         public static void LoadImagesFromFolder(string path)
         {
@@ -74,7 +94,7 @@ namespace ProjectorInterface.GalvoInterface
                 FileInfo[] files = dirInfo.GetFiles();
                 FileInfo currentFile;
                 // Reads 100 files max
-                for (int i = 0; i < files.Length && i < 100; i++)
+                for (int i = 0; i < files.Length && i < 200; i++)
                 {
                     currentFile = files[i];
                     if (currentFile.Name.EndsWith(".ild"))

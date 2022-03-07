@@ -16,17 +16,20 @@ namespace ProjectorInterface.GalvoInterface
     
     class VectorizedImage
     {
+        public string FileName = null!;
+
         public List<VectorizedFrame> Frames;
 
-        public VectorizedFrame this[int i]
-        { 
-            get => Frames[i]; 
-        }
+        public VectorizedFrame this[int i] 
+            => Frames[i]; 
 
         public ushort FrameCount => (ushort)Frames.Count;
 
         public VectorizedImage()
             => Frames = new List<VectorizedFrame>();
+
+        public VectorizedImage(string fileName) : this()
+            => FileName = fileName;
 
         public void AddFrame(VectorizedFrame frame)
             => Frames.Add(frame);

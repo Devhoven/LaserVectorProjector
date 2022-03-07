@@ -16,13 +16,14 @@ namespace ProjectorInterface.GalvoInterface.UiElements
 {
     class RenderedImage : Image
     {
-        VectorizedImage Image;
-
         public RenderedImage(VectorizedImage image)
         {
-            Image = image;
-            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.Fant);
+            ToolTip = new ToolTip()
+            {
+                Content = image.FileName
+            };
             Source = image[0].GetRenderedFrame();
+            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.Fant);
         }
     }
 }

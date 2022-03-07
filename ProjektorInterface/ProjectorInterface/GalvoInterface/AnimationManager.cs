@@ -72,11 +72,13 @@ namespace ProjectorInterface.GalvoInterface
             lock (Images)
             {
                 FileInfo[] files = dirInfo.GetFiles();
+                FileInfo currentFile;
                 // Reads 100 files max
                 for (int i = 0; i < files.Length && i < 100; i++)
                 {
-                    if (files[i].Name.EndsWith(".ild"))
-                        ILDParser.LoadFromPath(files[i].FullName, ref Images);
+                    currentFile = files[i];
+                    if (currentFile.Name.EndsWith(".ild"))
+                        ILDParser.LoadFromPath(currentFile.FullName, currentFile.Name, ref Images);
                 }
             }
 

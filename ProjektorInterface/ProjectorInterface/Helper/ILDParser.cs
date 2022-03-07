@@ -25,13 +25,13 @@ namespace ProjectorInterface.Helper
         static HeaderInfo CurrentHeader;
 
         // Loads the frames from the selected file into the given images list
-        public static void LoadFromPath(string path, ref List<VectorizedImage> images)
+        public static void LoadFromPath(string fullPath, string fileName, ref List<VectorizedImage> images)
         {
-            using BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open));
+            using BinaryReader reader = new BinaryReader(new FileStream(fullPath, FileMode.Open));
 
             CurrentHeader = ReadHeader(reader);
 
-            VectorizedImage newImg = new VectorizedImage();
+            VectorizedImage newImg = new VectorizedImage(fileName.Substring(0, fileName.IndexOf('.')));
 
             for (int i = 0; i < CurrentHeader.FrameCount; i++)
             {

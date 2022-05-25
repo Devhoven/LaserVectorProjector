@@ -397,3 +397,5 @@ FodyWeavers.xsd
 __vm/
 Hardware/BipolarCircuit-cache.lib
 Hardware/BipolarCircuit.sch-bak
+
+Software/HardwareInterface/.theia

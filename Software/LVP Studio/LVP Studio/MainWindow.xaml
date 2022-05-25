@@ -8,7 +8,7 @@
         xmlns:uielements="clr-namespace:ProjectorInterface.GalvoInterface.UIElements" 
         xmlns:helper="clr-namespace:ProjectorInterface.Helper"
         mc:Ignorable="d"
-        x:Name="Window" Icon= "Assets/LaserPointer.ico" Title="Lasershow" WindowState="Maximized" Background="{StaticResource BackgroundColor}"
+        x:Name="Window" Icon= "Assets/LaserPointer.ico" Title="LVP Studio" WindowState="Maximized" Background="{StaticResource BackgroundColor}"
         Width="1920" Height="1080">
     
     <Grid Margin="10">

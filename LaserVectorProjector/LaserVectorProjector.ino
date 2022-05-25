@@ -1,5 +1,7 @@
 #include "SPI.h"
 
+#define RENDER_CIRCLE
+
 #define TTL_SWITCH 8
 #define SIZE_PER_POINT 4
 #define BUFFER_SIZE SIZE_PER_POINT * 2
@@ -9,10 +11,18 @@
 uint16_t ConfigA = 0b0001000000000000;
 uint16_t ConfigB = 0b1001000000000000;
 
-bool On { false };
+bool On { true };
+
+#ifdef RENDER_BUFFER
 uint16_t PosX { 0 }, PosY { 0 };
+#endif
+
+#ifdef RENDER_CIRCLE
+double PosX{ 0 }, PosY{ 0 };
+#endif
 
 byte Buffer[BUFFER_SIZE];
+
 
 void setup() 
 {
@@ -23,6 +33,8 @@ void setup()
 
     pinMode(TTL_SWITCH, OUTPUT);
 }
+
+#ifdef RENDER_BUFFER
 
 void loop() 
 {
@@ -49,3 +61,30 @@ void readBuffer(uint16_t offset)
     SPI.transfer16(SS, ConfigB | PosY, SPI_LAST);
     digitalWrite(TTL_SWITCH, On ? HIGH : LOW);
 }
+
+#endif
+
+#ifdef RENDER_CIRCLE
+
+void loop()
+{
+    PosX += 0.0174533 * 15;
+    if (PosX > M_PI * 2)
+        PosX = 0;
+    UpdateDAC(sin(PosX) * 4095, cos(PosX) * 4095);
+}
+
+void UpdateDAC(float x, float y)
+{
+    x = x / 2.1 + 4095.0 / 2;
+    y = y / 2.1 + 4095.0 / 2;
+
+    uint16_t posX = (uint16_t)x;
+    uint16_t posY = (uint16_t)y;
+
+    SPI.transfer16(SS, ConfigA | posX, SPI_LAST);
+    SPI.transfer16(SS, ConfigB | posY, SPI_LAST);
+    digitalWrite(TTL_SWITCH, On ? HIGH : LOW);
+}
+
+#endif

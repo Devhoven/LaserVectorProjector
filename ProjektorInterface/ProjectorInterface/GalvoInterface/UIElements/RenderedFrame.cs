@@ -53,7 +53,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             {
                 Content = new Image()
                 {
-                    Source = AssetManager.GetBmpFrame("Delete.png"),
+                    Source = AssetManager.GetBmpFrame("ButtonImages/Delete.png"),
                     Margin = new Thickness(3)
                 },
                 BorderBrush = Brushes.Transparent,
@@ -74,7 +74,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             {
                 Content = new Image()
                 {
-                    Source = AssetManager.GetBmpFrame("Settings.png"),
+                    Source = AssetManager.GetBmpFrame("ButtonImages/Settings.png"),
                     Margin = new Thickness(3)
                 },
                 BorderBrush = Brushes.Transparent,
@@ -134,6 +134,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
         static readonly List<(string, ushort)> SPEED_BTNS = new List<(string, ushort)>()
         {
             ("1f", 1),
+            ("6f", 6),
             ("12f", 12),
             ("24f", 24)
         };

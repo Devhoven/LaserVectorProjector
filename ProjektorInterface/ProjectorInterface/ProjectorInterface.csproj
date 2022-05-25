@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>LaserPointer.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +35,10 @@
     <None Remove="Assets\Settings.png" />
     <None Remove="Assets\StartButton.png" />
     <None Remove="Assets\Upload.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="LaserPointer.ico" />
   </ItemGroup>
 
   <ItemGroup>

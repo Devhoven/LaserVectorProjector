@@ -18,60 +18,86 @@ namespace ProjectorInterface.GalvoInterface
         // Array of all the finished lines
         public readonly Line[] Lines;
 
-        public VectorizedFrame(params Line[] lines)
-            => Lines = InterpolateLines(lines);
+        public VectorizedFrame(Line[] lines)
+            => Lines = lines;
+
+        public static VectorizedFrame InterpolatedFrame(Line[] lines)
+            => new VectorizedFrame(InterpolateLines(lines));
 
         static Line[] InterpolateLines(Line[] lines)
         {
             List<Line> interpolatedLines = new List<Line>();
-            short x, y;
+            double x, y;
             short newX, newY;
-            short diffX, diffY;
-            float dist;
-            float xRatio, yRatio;
-            float mult;
+            double diffX, diffY;
+            double oldDiffX = 0, oldDiffY = 0;
+            double oldOldDiffX = 0, oldOldDiffY = 0;
+            double dist;
+            double xRatio, yRatio;
+            double mult;
             for (int i = 0; i < lines.Length - 1; i++)
             {
                 // Retreiving the start points
                 x = lines[i].X;
                 y = lines[i].Y;
                 // Retreiving the end points of this line segment
-                // Loops around, so that the last points are connected to the first
                 newX = lines[i + 1].X;
                 newY = lines[i + 1].Y;
 
                 // Calculating the difference between the old and new coordinates
-                diffX = (short)(newX - x);
-                diffY = (short)(newY - y);
+                diffX = newX - x;
+                diffY = newY - y;
 
                 // Calculating the manhattan distance
-                dist = MathF.Abs(diffX) + Math.Abs(diffY);
+                dist = Math.Abs(diffX) + Math.Abs(diffY);
 
                 // Ratio between the difference and the manhattan distance
                 xRatio = diffX / dist;
                 yRatio = diffY / dist;
 
                 // Scaling one of the ratios up to 1, (the other one accordingly) so that the galvos move the fastest they possibly can per step
-                mult = 1 / MathF.Abs(MathF.Abs(xRatio) > MathF.Abs(yRatio) ? xRatio : yRatio);
+                mult = 1 / Math.Abs(Math.Abs(xRatio) > Math.Abs(yRatio) ? xRatio : yRatio);
                 xRatio *= mult;
                 yRatio *= mult;
 
                 // Otherwise the first point won't be added
                 if (i == 0)
-                    interpolatedLines.Add(new Line(x, y, false));
+                {
+                    interpolatedLines.Add(new Line((short)x, (short)y, false));
+                    interpolatedLines.Add(new Line((short)x, (short)y, false));
+                }
+
+                double angle = GetAngle(diffX, diffY, oldOldDiffX, oldOldDiffY);
+
+                oldOldDiffX = oldDiffX;
+                oldOldDiffY = oldDiffY;
+
+                oldDiffX = diffX;
+                oldDiffY = diffY;
+
+                // 0.785398 = 45 degrees in radians
+                if (angle > 0.785398)
+                {
+                    interpolatedLines.Add(new Line((short)x, (short)y, lines[i + 1].On));
+                    oldOldDiffX = diffX;
+                    oldOldDiffY = diffY;
+                }
 
                 // Traverses from one point to another until the distance is too short and adds the points on the way
                 while (true)
                 {
-                    x += (short)(MAX_STEP_SIZE * xRatio);
-                    y += (short)(MAX_STEP_SIZE * yRatio);
                     if (Math.Abs(x - newX) <= MAX_STEP_SIZE && Math.Abs(y - newY) <= MAX_STEP_SIZE)
                     {
                         interpolatedLines.Add(new Line(newX, newY, lines[i + 1].On));
                         break;
                     }
-                    interpolatedLines.Add(new Line(x, y, lines[i + 1].On));
+                    x += MAX_STEP_SIZE * xRatio;
+                    y += MAX_STEP_SIZE * yRatio;
+                    interpolatedLines.Add(new Line((short)x, (short)y, lines[i + 1].On));
                 }
+                
+                double GetAngle(double x1, double y1, double x2, double y2)
+                    => Math.Acos((x1 * x2 + y1 * y2) / (Math.Sqrt(x1 * x1 + y1 * y1) * Math.Sqrt(x2 * x2 + y2 * y2)));
             }
             return interpolatedLines.ToArray();
         }

@@ -28,12 +28,15 @@ namespace ProjectorInterface.GalvoInterface
 
         public static void CalcFrameFromCanvas()
         {
-            foreach (UIElement child in Parent.Children)    
+            foreach (UIElement child in Parent.Children)
             {
                 CurrentLine.On = false;
 
                 if (child is WPFLine line)
                 {
+                    if (Math.Abs(CurrentLine.X - line.X1) + Math.Abs(CurrentLine.Y - line.Y1) < 10)
+                        CalcCoord(true, line.X1, line.Y1);
+                    else
                     // moving to (X1, Y1) with laser OFF
                     CalcCoord(false, line.X1, line.Y1);
 
@@ -104,46 +107,24 @@ namespace ProjectorInterface.GalvoInterface
                     GeometryCollection lineSegments = ((GeometryGroup)path.Data).Children;
                     LineGeometry currentLine = (LineGeometry)lineSegments[0];
                     CalcCoord(false, currentLine.StartPoint.X, currentLine.StartPoint.Y);
-                    CalcCoord(true, currentLine.EndPoint.X, currentLine.EndPoint.Y);
                     for (int i = 1; i < lineSegments.Count; i++)
                     {
                         currentLine = (LineGeometry)lineSegments[i];
-
-                        // moving to (X1, Y1) with laser OFF
-                        CalcCoord(true, currentLine.StartPoint.X, currentLine.StartPoint.Y);
 
                         // moving to (X2, Y2) with laser ON
                         CalcCoord(true, currentLine.EndPoint.X, currentLine.EndPoint.Y);
                     }
                 }
-                // Bugfix: No more connecting lines between shapes
-                //CalcCoord(false, currentp.X * CanvasResolution, currentp.Y * CanvasResolution);
-                //currentp.On = false;
             }
 
-            // testpoints();
-
-            Line[] tmp = Lines.ToArray();
-            Lines.Clear();
-            DrawnImage.AddFrame(new VectorizedFrame(tmp));
-        }
-
-        // Testing conversion to Points
-        static void testPoints()
-        {
-            foreach (Line p in Lines)
+            if (Lines.Count > 0)
             {
-                Ellipse tmp = new Ellipse()
-                {
-                    StrokeThickness = 4,
-                    Stroke = new SolidColorBrush(Colors.Blue),
-                    Width = 10,
-                    Height = 10
-                };
-                Canvas.SetLeft(tmp, p.X * CanvasResolution);
-                Canvas.SetTop(tmp, p.Y * CanvasResolution);
-                Parent.Children.Add(tmp);
+                Lines.Add(new Line(Lines[Lines.Count - 1].X, Lines[Lines.Count - 1].Y, false));
+                Lines.Add(new Line(Lines[0].X, Lines[0].Y, false));
             }
+            
+            DrawnImage.AddFrame(VectorizedFrame.InterpolatedFrame(Lines.ToArray()));
+            Lines.Clear();
         }
 
         // Calculates the curcumference of a given Ellipse 
@@ -207,8 +188,7 @@ namespace ProjectorInterface.GalvoInterface
             CurrentLine.X = (short)x;
             CurrentLine.Y = (short)y;
             CurrentLine.On = stroke;
-            Line l = Line.NormalizedLine(CurrentLine.X, CurrentLine.Y, CurrentLine.On, CanvasResolution, IMG_SECTION_SIZE);
-            Lines.Add(l);
+            Lines.Add(Line.NormalizedLine(CurrentLine.X, CurrentLine.Y, CurrentLine.On, CanvasResolution, IMG_SECTION_SIZE));
         }
     }
 }

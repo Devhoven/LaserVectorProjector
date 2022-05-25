@@ -13,7 +13,7 @@ namespace ProjectorInterface.Helper
         // Holds the maximum voltage (in mV) 
         public static readonly short MAX_VOLTAGE = 4095;
         // You can't give the galvos too much change in voltage per command, this limits it to 100mV per command
-        public static readonly short MAX_STEP_SIZE = 200;
+        public static readonly short MAX_STEP_SIZE = 100;
         public static float IMG_SECTION 
         {
             get => IMG_SECTION_CACHED;
@@ -35,6 +35,5 @@ namespace ProjectorInterface.Helper
         public static readonly Brush SHAPE_COLOR = new SolidColorBrush(Colors.Red);
 
         public static readonly int RENDERED_IMG_BMP_SIZE = 500;
-
     }
 }

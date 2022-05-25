@@ -33,33 +33,47 @@ namespace ProjectorInterface.Helper
         {
             Bitmap bmp = new Bitmap(Settings.RENDERED_IMG_BMP_SIZE, Settings.RENDERED_IMG_BMP_SIZE);
 
-            float maxVolF = Settings.IMG_SECTION_SIZE;
+            double maxVolF = Settings.IMG_SECTION_SIZE;
 
             using (Graphics graph = Graphics.FromImage(bmp))
             {
                 graph.Clear(Color.White);
                 Pen linePen = new Pen(Brushes.Red, 5f);
 
+                int count = 0;
+
+                int pointSize = 8;
+
+                //graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
                 for (int i = 1; i < frame.Lines.Length; i++)
                 {
                     if (frame.Lines[i].On)
+                    {
                         graph.DrawLine(linePen, TransformX(i - 1), TransformY(i - 1), TransformX(i), TransformY(i));
+                        //graph.FillEllipse(Brushes.Green, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+                    }
+                    //else
+                    //    graph.FillEllipse(Brushes.Blue, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+
+                    //if (frame.Lines[i] == frame.Lines[i - 1])
+                    //    count += 3;
+                    //else
+                    //{
+                    //    if (count > 0)
+                    //    {
+                    //        graph.FillEllipse(Brushes.Yellow, TransformX(i - 1) - pointSize / 2, TransformY(i - 1) - pointSize / 2, pointSize, pointSize);
+                    //        count = 0;
+                    //    }
+                    //}
                 }
 
                 int TransformX(int i)
-                {
-                    int res = (int)(frame.Lines[i].X / maxVolF * bmp.Width);
-                    return res;
-                }
+                    => (int)(frame.Lines[i].X / maxVolF * bmp.Width);
 
                 int TransformY(int i)
-                {
-                    int res = (int)(frame.Lines[i].Y / maxVolF * bmp.Height);
-                    return res;
-                }
+                    => (int)(frame.Lines[i].Y / maxVolF * bmp.Height);
             }
 
-            // Possible "Memory Leak"
             MemoryStream ms = new MemoryStream();
             bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
             BitmapImage bmpImage = new BitmapImage();

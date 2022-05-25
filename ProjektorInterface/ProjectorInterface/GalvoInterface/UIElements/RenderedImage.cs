@@ -22,7 +22,17 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             {
                 Content = image.FileName
             };
-            Source = image[0].GetRenderedFrame();
+            int maxLines = 0;
+            int maxLinesIndex = 0;
+            for (int i = 0; i < image.FrameCount; i++)
+            {
+                if (maxLines < image[i].LineCount)
+                {
+                    maxLines = image[i].LineCount;
+                    maxLinesIndex = i;
+                }
+            }
+            Source = image[maxLinesIndex].GetRenderedFrame();
             RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.Fant);
         }
     }

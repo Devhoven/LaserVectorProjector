@@ -29,15 +29,27 @@ namespace ProjectorInterface
 
             // Got this from https://stackoverflow.com/a/2876126/9241163
             // Retreives all of the port names and their caption and appends them to the PortPanel
-            using (var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
+            //using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
+            //{
+            //    var portnames = SerialPort.GetPortNames();
+            //    var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+
+            //    var portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+
+            //    for (int i = 0; i < portnames.Length; i++)
+            //        PortPanel.Children.Add(new ComRecord(portnames[i], (string)portnames[i]));
+            //}
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
             {
-                string[] portNames = SerialPort.GetPortNames();
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
-                var captions = (from n in portNames
-                                join p in ports on n equals p["DeviceID"].ToString()
-                                select p["Caption"]).ToList();
-                for (int i = 0; i < portNames.Length; i++)
-                    PortPanel.Children.Add(new ComRecord(portNames[i], (string)captions[i]));
+                var portnames = SerialPort.GetPortNames();
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+
+                var portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+
+                foreach (string s in portList)
+                {
+                    PortPanel.Children.Add(new ComRecord(s.Substring(0, s.IndexOf(' ')), s.Substring(s.IndexOf(' '))));
+                }
             }
         }
 
@@ -59,7 +71,7 @@ namespace ProjectorInterface
             Caption = caption;
 
             BorderBrush = PortName == SerialManager.PortName ? Brushes.LightBlue : Brushes.Black;
-            Content = PortName + " - " + Caption;
+            Content = PortName + Caption;
             FontSize = 20;
             HorizontalContentAlignment = HorizontalAlignment.Left;
             Margin = new Thickness(0, 5, 0, 5);

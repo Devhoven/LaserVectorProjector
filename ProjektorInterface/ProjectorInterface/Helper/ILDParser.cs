@@ -45,7 +45,8 @@ namespace ProjectorInterface.Helper
                     CurrentHeader = ReadHeader(reader);
             }
 
-            images.Add(newImg);
+            if (newImg.FrameCount > 0)
+                images.Add(newImg);
         }
 
         // Reads the next header
@@ -88,7 +89,7 @@ namespace ProjectorInterface.Helper
             for (int i = 0; i < CurrentHeader.EntryCount; i++)
                 result.Add(readFunc(reader));
 
-            return new VectorizedFrame(result.ToArray());
+            return VectorizedFrame.InterpolatedFrame(result.ToArray());
         }
 
         // Is able to read a data record of any frame

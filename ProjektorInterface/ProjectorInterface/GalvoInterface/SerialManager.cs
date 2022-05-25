@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
+using static ProjectorInterface.Helper.Settings;
 
 namespace ProjectorInterface.GalvoInterface
 {
@@ -74,14 +75,16 @@ namespace ProjectorInterface.GalvoInterface
                 if (frame.LineCount == 0)
                     return;
 
+                count = 0;
+
                 Line currentLine = frame.Lines[0];
 
-                if (Math.Abs(LastLine.X - currentLine.X) > Settings.MAX_STEP_SIZE ||
-                    Math.Abs(LastLine.Y - currentLine.Y) > Settings.MAX_STEP_SIZE)
-                    SmoothTransition(ref currentLine);
+                //if (Math.Abs(LastLine.X - currentLine.X) > MAX_STEP_SIZE ||
+                //    Math.Abs(LastLine.Y - currentLine.Y) > MAX_STEP_SIZE)
+                //    SmoothTransition(ref currentLine);
 
                 // Looping through all of the lines contained in the current image
-                for (int i = 0; i < frame.LineCount; )
+                for (int i = 1; i < frame.LineCount; )
                 {
                     // Completely fills the buffer with points
                     // This is done, so we can send multiple points per write, which is faster
@@ -104,42 +107,72 @@ namespace ProjectorInterface.GalvoInterface
         // Smoothes the transition from the last line of the last frame to the first line of the new frame
         static void SmoothTransition(ref Line firstLine)
         {
+            // Retreiving the start points
+            double x = LastLine.X;
+            double y = LastLine.Y;
+
             // Calculating the difference between the old and new coordinates
-            short diffX = (short)(firstLine.X - LastLine.X);
-            short diffY = (short)(firstLine.Y - LastLine.Y);
+            double diffX = firstLine.X - x;
+            double diffY = firstLine.Y - y;
 
             // Calculating the manhattan distance
-            float dist = MathF.Abs(diffX) + Math.Abs(diffY);
+            double dist = Math.Abs(diffX) + Math.Abs(diffY);
 
             // Ratio between the difference and the manhattan distance
-            float xRatio = diffX / dist;
-            float yRatio = diffY / dist;
+            double xRatio = diffX / dist;
+            double yRatio = diffY / dist;
 
             // Scaling one of the ratios up to 1, (the other one accordingly) so that the galvos move the fastest they possibly can per step
-            float mult = 1 / MathF.Abs(MathF.Abs(xRatio) > MathF.Abs(yRatio) ? xRatio : yRatio);
+            double mult = 1 / Math.Abs(Math.Abs(xRatio) > Math.Abs(yRatio) ? xRatio : yRatio);
             xRatio *= mult;
             yRatio *= mult;
+
+            Line traversalLine = new Line((short)x, (short)y, false);
 
             int bufIndex = 0;
 
             // Traverses from one point to another until the distance is too short and adds the points on the way
-            while (Math.Abs(LastLine.X - firstLine.X) > Settings.MAX_STEP_SIZE ||
-                   Math.Abs(LastLine.Y - firstLine.Y) > Settings.MAX_STEP_SIZE)
+            while (true)
             {
-                LastLine.X += (short)(Settings.MAX_STEP_SIZE * xRatio);
-                LastLine.Y += (short)(Settings.MAX_STEP_SIZE * yRatio);
+                if (Math.Abs(x - firstLine.X) <= MAX_STEP_SIZE && Math.Abs(y - firstLine.Y) <= MAX_STEP_SIZE)
+                {
+                    traversalLine.X = firstLine.X;
+                    traversalLine.Y = firstLine.Y;
+                    FillBuffer(bufIndex, ref traversalLine);
+                    bufIndex += SIZE_PER_POINT;
+                    break;
+                }
 
-                FillBuffer(bufIndex, ref LastLine);
-                bufIndex = (bufIndex + SIZE_PER_POINT) % BUFFER_SIZE;
+                x += (MAX_STEP_SIZE * xRatio);
+                y += (MAX_STEP_SIZE * yRatio);
+                traversalLine.X = (short)x;
+                traversalLine.Y = (short)y;
+                FillBuffer(bufIndex, ref traversalLine);
+                bufIndex += SIZE_PER_POINT;
+
+                if (bufIndex >= BUFFER_SIZE)
+                {
+                    Port.Write(Buffer, 0, BUFFER_SIZE);
+                    bufIndex = 0;
+                }
             }
+
+            if (bufIndex < BUFFER_SIZE)
+            {
+                for (int i = bufIndex; i < BUFFER_SIZE; i += SIZE_PER_POINT)
+                    FillBuffer(i, ref LastLine);
+            }
+            Port.Write(Buffer, 0, BUFFER_SIZE);
         }
+
+        static int count = 0;
 
         // Converts the coordinates and sends them to the arduino
         static void FillBuffer(int bufIndex, ref Line line)
         {
             // Maps the coordinates from 0 to 4095 to the correct image section
-            short correctedX = (short)((line.X * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
-            short correctedY = (short)((line.Y * Settings.IMG_SECTION) + Settings.IMG_OFFSET);
+            short correctedX = (short)((line.X * IMG_SECTION) + IMG_OFFSET);
+            short correctedY = (short)((line.Y * IMG_SECTION) + IMG_OFFSET);
 
             // Writing the x and y coordinates into the buffer 
             Buffer[bufIndex] = (byte)correctedX;
@@ -149,6 +182,8 @@ namespace ProjectorInterface.GalvoInterface
 
             if (line.On)
                 Buffer[bufIndex + 3] |= 0x80;
+
+            count++;
         }
     }
 }

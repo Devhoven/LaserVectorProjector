@@ -156,7 +156,7 @@ namespace ProjectorInterface
 
         private void AddDrawnFrame()
         {
-            // Converts the shapes from the canvas into a frame and writes appends it to ShapesToPoints.DrawImage
+            // Converts the shapes from the canvas into a frame and writes appends it to ShapesToPoints.DrawnImage
             ShapesToPoints.CalcFrameFromCanvas();
             FramePanel.Children.Add(new RenderedItemBorder(
                 new RenderedFrame(

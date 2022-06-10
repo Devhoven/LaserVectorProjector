@@ -23,7 +23,7 @@ namespace ProjectorInterface.GalvoInterface
 
         public delegate void IndexChangedHandler(int oldVal, int newVal);
         public static event IndexChangedHandler? OnImgIndexChanged;
-        static int CurrentImgIndex
+        public static int CurrentImgIndex
         {
             get => _CurrentImgIndex;
             set
@@ -43,9 +43,12 @@ namespace ProjectorInterface.GalvoInterface
 
         // Starts the thread if it isn't already running and some images were loaded in
         public static void Start()
-        {
+        { 
             if (Running || Images.Count == 0 || !SerialManager.IsConnected)
                 return;
+
+            // Triggers IndexChanged Event so that is gets a RenderedItemBorder
+            CurrentImgIndex = CurrentImgIndex;
 
             Running = true;
             SendImgThread = new Thread(new ThreadStart(SendImgLoop));

@@ -107,7 +107,14 @@ namespace ProjectorInterface
             => DrawCon.Selection.isSelecting = true;
 
         private void ProjectCanvasClick(object sender, RoutedEventArgs e)
-            => ProjectCanvas();
+        {
+            if (AnimationManager.Images.Count > 0)
+            {
+                AnimationManager.Stop();
+                ((RenderedItemBorder)AnimationGallery.Children[AnimationManager.CurrentImgIndex]).Deselect();
+            }
+            ProjectCanvas();
+        }
 
         private void SaveCanvasClick(object sender, RoutedEventArgs e)
             => SaveCanvasDialog();

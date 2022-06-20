@@ -43,7 +43,7 @@ namespace ProjectorInterface
 
         // Stopping the thread if it still runs
         protected override void OnClosed(EventArgs e)
-            => AnimationManager.Stop();
+            => AnimationManager.StopCurrentThread();
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -75,17 +75,17 @@ namespace ProjectorInterface
 
         // Starts the show
         private void StartShowClick(object sender, RoutedEventArgs e)
-            => AnimationManager.Start();
+            => AnimationManager.Start(AnimationManager.Source.AnimationGallery);
 
         // Stops it
         private void StopShowClick(object sender, RoutedEventArgs e)
-            => AnimationManager.Stop();
+            => AnimationManager.Stop(AnimationManager.Source.AnimationGallery);
 
         private void SkipAnimationClick(object sender, RoutedEventArgs e)
-            => AnimationManager.SkipAnimation();
+            => AnimationManager.SkipAnimation(AnimationManager.Source.AnimationGallery);
 
         private void RevertAnimationClick(object sender, RoutedEventArgs e)
-            => AnimationManager.RevertAnimation();
+            => AnimationManager.RevertAnimation(AnimationManager.Source.AnimationGallery);
 
         private void SelectLineClick(object sender, RoutedEventArgs e)
             => DrawCon.UpdateTool(new LineTool());
@@ -104,11 +104,7 @@ namespace ProjectorInterface
 
         private void ProjectCanvasClick(object sender, RoutedEventArgs e)
         {
-            if (AnimationManager.Images.Count > 0)
-            {
-                AnimationManager.Stop();
-                ((RenderedItemBorder)AnimationGallery.Children[AnimationManager.CurrentImgIndex]).Deselect();
-            }
+            AnimationManager.StopCurrentThread();
             ProjectCanvas();
         }
 
@@ -137,14 +133,12 @@ namespace ProjectorInterface
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog() == true)
             {
-                // Clearing the old images from the queue
-                AnimationManager.ClearImages();
-                // Loading the new ones in
+                // Loading the new images in 
                 AnimationManager.LoadImagesFromFolder(dialog.SelectedPath);
 
                 // Clearing all of the old animations and adding the new ones
                 AnimationGallery.Clear();
-                foreach (VectorizedImage img in AnimationManager.Images)
+                foreach (VectorizedImage img in AnimationManager.GetAnimation(AnimationManager.Source.AnimationGallery).Images)
                     AnimationGallery.AddBorder(new RenderedItemBorder(new RenderedImage(img)));
             }
         }
@@ -153,9 +147,8 @@ namespace ProjectorInterface
         {
             if (ShapesToPoints.DrawnImage.FrameCount > 0)
             {
-                AnimationManager.ClearImages();
-                AnimationManager.AddImage(ShapesToPoints.DrawnImage);
-                AnimationManager.Start();
+                AnimationManager.AddImage(AnimationManager.Source.UserImage, ShapesToPoints.DrawnImage);
+                AnimationManager.Start(AnimationManager.Source.UserImage);
             }
         }
 

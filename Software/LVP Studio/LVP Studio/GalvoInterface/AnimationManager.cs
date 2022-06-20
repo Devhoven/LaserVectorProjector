@@ -1,4 +1,5 @@
-﻿using ProjectorInterface.Helper;
+﻿using ProjectorInterface.GalvoInterface;
+using ProjectorInterface.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,89 +13,117 @@ namespace ProjectorInterface.GalvoInterface
 {
     static class AnimationManager
     {
-
-        // List of all images which are going to be displayed one after another
-        public static List<VectorizedImage> Images;
+        public enum Source
+        {
+            UserImage,
+            AnimationGallery
+        }
 
         // Seperate thread for sending the image data to the arduino
         static Thread SendImgThread;
-        static bool Running = false;
         static bool StopCurrentImg = false;
 
-        public delegate void IndexChangedHandler(int oldVal, int newVal);
-        public static event IndexChangedHandler? OnImgIndexChanged;
-        public static int CurrentImgIndex
-        {
-            get => _CurrentImgIndex;
-            set
-            {
-                OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
-                _CurrentImgIndex = value;
-            }
-        }
-        static int _CurrentImgIndex;
+        static Dictionary<Source, Animation> AnimationSources;
+
+        static Animation CurrentAnimation;
 
         static AnimationManager()
         {
             SendImgThread = null!;
 
-            Images = new List<VectorizedImage>();
+            AnimationSources = new Dictionary<Source, Animation>();
+            AnimationSources.Add(Source.UserImage, new Animation());
+            AnimationSources.Add(Source.AnimationGallery, new Animation());
+
+            CurrentAnimation = AnimationSources[Source.AnimationGallery];
         }
 
-        // Starts the thread if it isn't already running and some images were loaded in
-        public static void Start()
-        { 
-            if (Running || Images.Count == 0 || !SerialManager.IsConnected)
-                return;
-
-            // Triggers IndexChanged Event so that is gets a RenderedItemBorder
-            CurrentImgIndex = CurrentImgIndex;
-
-            Running = true;
-            SendImgThread = new Thread(new ThreadStart(SendImgLoop));
-            SendImgThread.Start();
-        }
-
-        // Stops the thread if it's running and joins it to the main thread
-        public static void Stop()
+        public static void StopCurrentThread()
         {
-            if (Running)
+            if (CurrentAnimation.Running)
             {
-                Running = false;
+                CurrentAnimation.Running = false;
                 StopCurrentImg = true;
                 SendImgThread.Join();
             }
         }
 
-        // Skips the current animation
-        public static void SkipAnimation()
+        // Starts the thread if it isn't already running and some images were loaded in
+        public static void Start(Source src)
         {
-            if (CurrentImgIndex < Images.Count - 1)
+            Animation nextAnimation = AnimationSources[src];
+
+            if ((nextAnimation == CurrentAnimation && CurrentAnimation.Running)
+                || !SerialManager.IsConnected)
+                return;
+
+            if (nextAnimation != CurrentAnimation && CurrentAnimation.Running)
             {
-                CurrentImgIndex++;
-                if (Running)
-                    StopCurrentImg = true;
+                CurrentAnimation.Running = false;
+                StopCurrentImg = true;
+                SendImgThread.Join();
             }
+
+            // Triggers IndexChanged Event so that is gets a RenderedItemBorder
+            nextAnimation.CurrentImgIndex = nextAnimation.CurrentImgIndex;
+
+            nextAnimation.Running = true;
+            SendImgThread = new Thread(new ThreadStart(SendImgLoop));
+            SendImgThread.Start();
+
+            CurrentAnimation = nextAnimation;
+        }
+
+        // Stops the thread if it's running and joins it to the main thread
+        public static void Stop(Source src)
+        {
+            Animation nextAnimation = AnimationSources[src];
+
+            if (nextAnimation != CurrentAnimation)
+                return;
+
+            StopCurrentThread();
+        }
+
+        // Skips the current animation
+        public static void SkipAnimation(Source src)
+        {
+            Animation nextAnimation = AnimationSources[src];
+
+            if (nextAnimation != CurrentAnimation)
+                return;
+
+            CurrentAnimation.Skip();
+
+            if (CurrentAnimation.Running)
+                StopCurrentImg = true;
         }
 
         // Reverts to the last animation
-        public static void RevertAnimation()
+        public static void RevertAnimation(Source src)
         {
-            if (Images.Count > 0 && CurrentImgIndex > 0)
-            {
-                CurrentImgIndex--;
-                if (Running)
-                    StopCurrentImg = true;
-            }
+            Animation nextAnimation = AnimationSources[src];
+
+            if (nextAnimation != CurrentAnimation)
+                return;
+
+            CurrentAnimation.Revert();
+
+            if (CurrentAnimation.Running)
+                StopCurrentImg = true;
         }
 
         // Loads all the .ild files from the selected folder into the Images - list
         public static void LoadImagesFromFolder(string path)
         {
-            CurrentImgIndex = 0;
+            Animation gallery = AnimationSources[Source.AnimationGallery];
+
+            gallery.CurrentImgIndex = 0;
+
+            ClearImages();
 
             DirectoryInfo dirInfo = new DirectoryInfo(path);
-            lock (Images)
+            lock (gallery.Images)
             {
                 FileInfo[] files = dirInfo.GetFiles("*.ild")
                     .OrderBy(f => f.Name)
@@ -105,27 +134,29 @@ namespace ProjectorInterface.GalvoInterface
                 for (int i = 0; i < files.Length && i < 100; i++)
                 {
                     currentFile = files[i];
-                    ILDParser.LoadFromPath(currentFile.FullName, currentFile.Name, ref Images);
+                    ILDParser.LoadFromPath(currentFile.FullName, currentFile.Name, ref gallery.Images);
                 }
             }
 
-            Start();
-        }
-
-        public static void AddImage(VectorizedImage img)
-        {
-            lock (Images)
-                Images.Add(img);
+            Start(Source.AnimationGallery);
         }
 
         // Clears all of the loaded images
         public static void ClearImages()
         {
-            CurrentImgIndex = 0;
-            lock (Images)
-                Images.Clear();
+            Animation gallery = AnimationSources[Source.AnimationGallery];
+
+            gallery.CurrentImgIndex = 0;
+            lock (gallery.Images)
+                gallery.Images.Clear();
             StopCurrentImg = true;
         }
+
+        public static void AddImage(Source src, VectorizedImage img)
+            => AnimationSources[src].Images.Add(img);
+
+        public static Animation GetAnimation(Source src)
+            => AnimationSources[src];
 
         static void SendImgLoop()
         {
@@ -133,12 +164,12 @@ namespace ProjectorInterface.GalvoInterface
             Stopwatch stopwatch = new Stopwatch();
             VectorizedImage currentImg;
             VectorizedFrame currentFrame;
-            while (Running)
+            while (CurrentAnimation.Running)
             {
                 // Setting it to false here, so not every frame after a delete call gets skipped
                 StopCurrentImg = false;
 
-                currentImg = Images[CurrentImgIndex];
+                currentImg = CurrentAnimation.GetCurrentImg();
                 // Locking the image, since this method runs in a different thread and delete functionality is going to be implemented
                 lock (currentImg)
                 {
@@ -165,11 +196,59 @@ namespace ProjectorInterface.GalvoInterface
                     }
                 }
                 // If the list of images got cleared, this will ensure that the thread waits for the list to be filled again
-                while (Images.Count == 0) ;
+                while (!CurrentAnimation.HasImages()) ;
                 // Moving on to the next image, or looping to the beginning
                 if (!StopCurrentImg)
-                    CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
+                    CurrentAnimation.IncrementIndex();
             }
         }
+    }
+}
+
+class Animation
+{
+    public delegate void IndexChangedHandler(int oldVal, int newVal);
+    public event IndexChangedHandler? OnImgIndexChanged;
+
+    // List of all images which are going to be displayed one after another
+    public List<VectorizedImage> Images;
+
+    public bool Running = false;
+
+    public int CurrentImgIndex
+    {
+        get => _CurrentImgIndex;
+        set
+        {
+            OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
+            _CurrentImgIndex = value;
+        }
+    }
+    int _CurrentImgIndex;
+
+    public Animation()
+    {
+        Images = new List<VectorizedImage>();
+    }
+
+    public VectorizedImage GetCurrentImg()
+        => Images[CurrentImgIndex];
+
+    public void IncrementIndex()
+        => CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
+
+    public bool HasImages() 
+        => Images.Count > 0;
+
+    public void Skip()
+    {
+        if (CurrentImgIndex < Images.Count - 1)
+            CurrentImgIndex++;
+    }
+
+    public void Revert()
+    {
+        if (Images.Count > 0 && CurrentImgIndex > 0)
+            CurrentImgIndex--;
     }
 }

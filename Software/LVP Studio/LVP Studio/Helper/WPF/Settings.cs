@@ -10,6 +10,10 @@ namespace ProjectorInterface.Helper
     // static class, which holds all of the constant variables needed for the GUI
     static class Settings
     {
+        public static readonly int SCAN_SPEED = 30_000;
+        public static readonly int SCAN_FPS= 45;
+        // Duration of how long one frame needs to be in ms to achieve the given frame rate
+        public static readonly int INV_SCAN_FPS_MS = (int)(1.0 / SCAN_FPS) * 1000;
         // Holds the maximum voltage (in mV) 
         public static readonly short MAX_VOLTAGE = 4095;
         // You can't give the galvos too much change in voltage per command, this limits it to 100mV per command

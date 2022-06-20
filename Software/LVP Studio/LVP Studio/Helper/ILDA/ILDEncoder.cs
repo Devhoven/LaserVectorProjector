@@ -12,7 +12,7 @@ namespace ProjectorInterface.Helper
     static class ILDEncoder
     {
         static readonly byte[] MagicBytes = Encoding.ASCII.GetBytes("ILDA");
-        // I'm just gonna use the 2d indexed color format
+        // Using the 2d indexed color format
         static readonly byte FormatCode = 1;
         // Has to be 8 bytes long
         // Don't know what I should put in there

@@ -1,6 +1,6 @@
-#include "SPI.h"
+#define RENDER_BUFFER
 
-#define RENDER_CIRCLE
+#include "SPI.h"
 
 #define TTL_SWITCH 8
 #define SIZE_PER_POINT 4
@@ -13,17 +13,6 @@ uint16_t ConfigB = 0b1001000000000000;
 
 bool On { true };
 
-#ifdef RENDER_BUFFER
-uint16_t PosX { 0 }, PosY { 0 };
-#endif
-
-#ifdef RENDER_CIRCLE
-double PosX{ 0 }, PosY{ 0 };
-#endif
-
-byte Buffer[BUFFER_SIZE];
-
-
 void setup() 
 {
     SerialUSB.begin(2000000);
@@ -35,6 +24,10 @@ void setup()
 }
 
 #ifdef RENDER_BUFFER
+
+uint16_t PosX { 0 }, PosY { 0 };
+
+byte Buffer[BUFFER_SIZE];
 
 void loop() 
 {
@@ -56,6 +49,9 @@ void readBuffer(uint16_t offset)
     On = (PosY & 0x8000) == 0x8000;
 
     PosY &= 0x7FFF;
+
+    PosX = 2048 - (PosX - 2048);
+    PosY = 2048 - (PosY - 2048);
  
     SPI.transfer16(SS, ConfigA | PosX, SPI_LAST);
     SPI.transfer16(SS, ConfigB | PosY, SPI_LAST);
@@ -66,12 +62,14 @@ void readBuffer(uint16_t offset)
 
 #ifdef RENDER_CIRCLE
 
+double Pos{ 0 };
+
 void loop()
 {
-    PosX += 0.0174533 * 15;
-    if (PosX > M_PI * 2)
-        PosX = 0;
-    UpdateDAC(sin(PosX) * 4095, cos(PosX) * 4095);
+    Pos += 0.0174533 * 15;
+    if (Pos > M_PI * 2)
+        Pos = 0;
+    UpdateDAC(sin(Pos) * 4095, cos(Pos) * 4095);
 }
 
 void UpdateDAC(float x, float y)

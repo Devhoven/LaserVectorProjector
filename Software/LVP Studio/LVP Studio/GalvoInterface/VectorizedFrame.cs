@@ -30,8 +30,8 @@ namespace ProjectorInterface.GalvoInterface
             double x, y;
             short newX, newY;
             double diffX, diffY;
-            double oldDiffX = 0, oldDiffY = 0;
-            double oldOldDiffX = 0, oldOldDiffY = 0;
+            double prevDiffX = 0, prevDiffY = 0;
+            double prevPrevDiffX = 0, prevPrevDiffY = 0;
             double dist;
             double xRatio, yRatio;
             double mult;
@@ -67,20 +67,20 @@ namespace ProjectorInterface.GalvoInterface
                     interpolatedLines.Add(new Line((short)x, (short)y, false));
                 }
 
-                double angle = GetAngle(diffX, diffY, oldOldDiffX, oldOldDiffY);
+                double angle = GetAngle(diffX, diffY, prevPrevDiffX, prevPrevDiffY);
 
-                oldOldDiffX = oldDiffX;
-                oldOldDiffY = oldDiffY;
+                prevPrevDiffX = prevDiffX;
+                prevPrevDiffY = prevDiffY;
 
-                oldDiffX = diffX;
-                oldDiffY = diffY;
+                prevDiffX = diffX;
+                prevDiffY = diffY;
 
                 // 0.785398 = 45 degrees in radians
                 if (angle > 0.785398)
                 {
                     interpolatedLines.Add(new Line((short)x, (short)y, lines[i + 1].On));
-                    oldOldDiffX = diffX;
-                    oldOldDiffY = diffY;
+                    prevPrevDiffX = diffX;
+                    prevPrevDiffY = diffY;
                 }
 
                 // Traverses from one point to another until the distance is too short and adds the points on the way
@@ -95,7 +95,7 @@ namespace ProjectorInterface.GalvoInterface
                     y += MAX_STEP_SIZE * yRatio;
                     interpolatedLines.Add(new Line((short)x, (short)y, lines[i + 1].On));
                 }
-                
+
                 double GetAngle(double x1, double y1, double x2, double y2)
                     => Math.Acos((x1 * x2 + y1 * y2) / (Math.Sqrt(x1 * x1 + y1 * y1) * Math.Sqrt(x2 * x2 + y2 * y2)));
             }
@@ -103,8 +103,7 @@ namespace ProjectorInterface.GalvoInterface
         }
     }
 
-    // This line - struct contains the x and y coordinates (normalized between 0 and MaxValue) and how many microseconds the arduino should wait 
-    // It also holds, if the laser should be turned on or off
+    // This line - struct contains the x and y coordinates (normalized between 0 and MaxValue) and if the laser should be turned on or off
     struct Line
     {
         public short X;
@@ -112,6 +111,13 @@ namespace ProjectorInterface.GalvoInterface
         public bool On;
 
         public Line(int x, int y, bool on)
+        {
+            X = (short)x;
+            Y = (short)y;
+            On = on;
+        }
+
+        public Line(double x, double y, bool on)
         {
             X = (short)x;
             Y = (short)y;
@@ -130,8 +136,8 @@ namespace ProjectorInterface.GalvoInterface
         public static Line NormalizedLine(int x, int y, bool on, int oldMax, int newMax)
         {
             Line result;
-            result.X = (short)(x / (float)oldMax * newMax);
-            result.Y = (short)(y / (float)oldMax * newMax);
+            result.X = (short)((float)x / oldMax * newMax);
+            result.Y = (short)((float)y / oldMax * newMax);
             result.On = on;
             return result;
         }
@@ -141,6 +147,9 @@ namespace ProjectorInterface.GalvoInterface
 
         public static bool operator !=(Line v1, Line v2)
             => !(v1 == v2);
+
+        public static double GetDistance(Line v1, Line v2)
+            => Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2));
      
         public override bool Equals(object? obj)
             => obj is Line v && v == this;

@@ -44,27 +44,27 @@ namespace ProjectorInterface.Helper
 
                 int pointSize = 8;
 
-                //graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
+                graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
                 for (int i = 1; i < frame.Lines.Length; i++)
                 {
                     if (frame.Lines[i].On)
                     {
                         graph.DrawLine(linePen, TransformX(i - 1), TransformY(i - 1), TransformX(i), TransformY(i));
-                        //graph.FillEllipse(Brushes.Green, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+                        graph.FillEllipse(Brushes.Green, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
                     }
-                    //else
-                    //    graph.FillEllipse(Brushes.Blue, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+                    else
+                        graph.FillEllipse(Brushes.Blue, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
 
-                    //if (frame.Lines[i] == frame.Lines[i - 1])
-                    //    count += 3;
-                    //else
-                    //{
-                    //    if (count > 0)
-                    //    {
-                    //        graph.FillEllipse(Brushes.Yellow, TransformX(i - 1) - pointSize / 2, TransformY(i - 1) - pointSize / 2, pointSize, pointSize);
-                    //        count = 0;
-                    //    }
-                    //}
+                    if (frame.Lines[i] == frame.Lines[i - 1])
+                        count += 3;
+                    else
+                    {
+                        if (count > 0)
+                        {
+                            graph.FillEllipse(Brushes.Yellow, TransformX(i - 1) - pointSize / 2, TransformY(i - 1) - pointSize / 2, pointSize + 3, pointSize + 3);
+                            count = 0;
+                        }
+                    }
                 }
 
                 int TransformX(int i)

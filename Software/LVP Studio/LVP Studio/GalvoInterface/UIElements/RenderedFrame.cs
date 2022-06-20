@@ -104,7 +104,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             {
                 AnimationPlayer.FadeOut(DeleteBtn);
                 AnimationPlayer.FadeOut(SettingsBtn);
-                SpeedBtnPanel.FadeOut();
+                SpeedBtnPanel.FadeOut(); 
             };
         }
 
@@ -142,7 +142,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
         static readonly Brush SELECTED_BORDER_BRUSH = Brushes.LightBlue;
         static readonly Brush UNSELECTED_BORDER_BRUSH = Brushes.Black;
 
-        public bool IsCollapsed => Visibility == Visibility.Hidden;
+        public bool IsCollapsed => Visibility == Visibility.Collapsed;
 
         // Referencing it here, so I can alter how many times the image has to be replayed
         VectorizedFrame Frame;
@@ -154,7 +154,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Margin = new Thickness(0, 31, 0, 0);
-            Visibility = Visibility.Hidden;
+            Visibility = Visibility.Collapsed;
             Orientation = Orientation.Vertical;
 
             // Just loops through all of the entries in the speedBtns - list and creates buttons out of them

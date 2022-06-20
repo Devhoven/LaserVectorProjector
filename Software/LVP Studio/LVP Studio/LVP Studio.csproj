@@ -9,8 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\ButtonImages\arrows.png" />
-    <None Remove="Assets\ButtonImages\Default.png" />
     <None Remove="Assets\ButtonImages\Revert.png" />
     <None Remove="Assets\ButtonImages\Skip.png" />
     <None Remove="Assets\CommandImages\Ellipse.png" />
@@ -44,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\ButtonImages\Default.png" />
     <Resource Include="Assets\ButtonImages\Revert.png" />
     <Resource Include="Assets\ButtonImages\Skip.png" />
     <Resource Include="Assets\CommandImages\Erase.png" />

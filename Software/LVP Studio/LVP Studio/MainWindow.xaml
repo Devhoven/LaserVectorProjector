@@ -157,22 +157,12 @@
                     <DockPanel Grid.Row="0">
                         <Label Content="Animations:" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="15" Foreground="Black"/>
 
-                        <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
-                            <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" 
-                                    Click="SelectShowClick" ToolTip="Open Animation Folder" Cursor="Hand" >
-                                <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Folder.png"/>
-                                </Button.Content>
-                            </Button>
-
-                            <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" 
-                                    Click="LoadDefaultAnimation" ToolTip="Load Default Presentation">
-                                <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Default.png"/>
-                                </Button.Content>
-                            </Button>
-                        </StackPanel>
-                        
+                        <Button Style="{StaticResource SmallButton}" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right"
+                                    Click="SelectShowClick" ToolTip="Open Animation Folder">
+                            <Button.Content>
+                                <Image Source="pack://application:,,,/Assets/ButtonImages/Folder.png"/>
+                            </Button.Content>
+                        </Button>
                     </DockPanel>
 
                     <!-- Stackpanel for the animations -->

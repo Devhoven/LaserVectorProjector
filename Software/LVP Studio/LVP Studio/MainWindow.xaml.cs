@@ -59,10 +59,6 @@ namespace ProjectorInterface
                 SelectShowFolderDialog();
             else if (e.Key == Key.C)
                 new PortSelectWindow(this).ShowDialog();
-            else if (e.Key == Key.B)
-            {
-                LoadAnimations();
-            }
 
             Keyboard.Focus(DrawCon);
         }
@@ -122,14 +118,6 @@ namespace ProjectorInterface
         private void LoadImageClick(object sender, RoutedEventArgs e)
             => DrawCon.BackgroundImg.ChooseImg();
 
-        private void LoadDefaultAnimation(object sender, RoutedEventArgs e)
-        {
-            ((Button)sender).Cursor = Cursors.Wait;
-            LoadAnimations();
-            ((Button)sender).Cursor = Cursors.Arrow;
-
-        }
-
         private void SaveCanvasDialog()
         {
             VistaSaveFileDialog dialog = new VistaSaveFileDialog()
@@ -148,7 +136,17 @@ namespace ProjectorInterface
         {
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog() == true)
-                LoadAnimations(dialog.SelectedPath);
+            {
+                // Clearing the old images from the queue
+                AnimationManager.ClearImages();
+                // Loading the new ones in
+                AnimationManager.LoadImagesFromFolder(dialog.SelectedPath);
+
+                // Clearing all of the old animations and adding the new ones
+                AnimationGallery.Clear();
+                foreach (VectorizedImage img in AnimationManager.Images)
+                    AnimationGallery.AddBorder(new RenderedItemBorder(new RenderedImage(img)));
+            }
         }
 
         private void ProjectCanvas()
@@ -169,25 +167,5 @@ namespace ProjectorInterface
                 new RenderedFrame(
                     ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
         }
-
-        // Loads Images from the given or default Path into the Animationgallery
-        private void LoadAnimations(string path = "../../../Assets/Lasershow/Default")
-        {
-            // Changing to Loading Cursor to show default images being loaded
-            Cursor = Cursors.Wait;
-            // Clearing the old images from the queue
-            AnimationManager.ClearImages();
-            // Loading the new ones in
-            AnimationManager.LoadImagesFromFolder(path);
-
-            // Clearing all of the old animations and adding the new ones
-            AnimationGallery.Clear();
-            foreach (VectorizedImage img in AnimationManager.Images)
-                AnimationGallery.AddBorder(new RenderedItemBorder(new RenderedImage(img)));
-
-            // Changing back to Arrow Cursor after loading images
-            Cursor = Cursors.Arrow;
-        }
-
     }
 }

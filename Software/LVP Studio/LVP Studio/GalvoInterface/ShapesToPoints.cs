@@ -1,4 +1,5 @@
 ﻿using LVP_Studio.Helper;
+using ProjectorInterface.Helper;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,32 +17,40 @@ namespace ProjectorInterface.GalvoInterface
 {
     static class ShapesToPoints
     {
-        public static VectorizedImage DrawnImage = new VectorizedImage();
-        static readonly int CanvasResolution;
+        static readonly int CANVAS_RESOLUTION;
+        static readonly Point START_POINT;
 
-        static List<Line> Lines = new List<Line>();
+        public static VectorizedImage DrawnImage = new VectorizedImage();
+        static List<Point> Points = new List<Point>();
 
         static ShapesToPoints()
-            => CanvasResolution = (int)MainWindow.Instance.DrawCon.ActualWidth;
+        {
+            CANVAS_RESOLUTION = (int)MainWindow.Instance.DrawCon.ActualWidth;
+            START_POINT = new Point(CANVAS_RESOLUTION / 2, CANVAS_RESOLUTION / 2, false);
+        }
 
         public static void CalcFrameFromCanvas()
         {
-            if (Lines.Count == 0)
-                DrawnImage.AddFrame(VectorizedFrame.InterpolatedFrame(Lines.ToArray()));
+            // Adding an empty frame
+            if (Points.Count == 0)
+                DrawnImage.AddFrame(new VectorizedFrame(new Point[0]));
 
             ShapeWrapper[] Shapes = GenWrapper();
 
             SortShapes(Shapes);
 
-            AddLine(CanvasResolution / 2, CanvasResolution / 2, false);
+            // The laser has to start in the middle of the frame
+            AddLine(START_POINT.X, START_POINT.Y, false);
 
+            // Adding all of the lines from the shapes 
             for (int i = 0; i < Shapes.Length; i++)
                 Shapes[i].AddPoints(AddLine);
 
-            AddLine(CanvasResolution / 2, CanvasResolution / 2, false);
+            // The laser has to end in the middle of the frame
+            AddLine(START_POINT.X, START_POINT.Y, false);
             
-            DrawnImage.AddFrame(VectorizedFrame.InterpolatedFrame(Lines.ToArray()));
-            Lines.Clear();
+            DrawnImage.AddFrame(VectorizedFrame.InterpolatedFrame(Points.ToArray()));
+            Points.Clear();
         }
 
         // Generates an array of ShapeWrappers based on the type of each canvas child
@@ -76,8 +85,8 @@ namespace ProjectorInterface.GalvoInterface
             int minDistIndex;
 
             // The frame should always start and end in the middle
-            Line startLine = new Line(CanvasResolution / 2, CanvasResolution / 2, false);
-            Line currentLine = startLine;
+            Point startPoint = START_POINT;
+            Point currentPoint;
 
             // This loop circles through each shape and gets the shape closest to the start line
             // Then the shape which was closest to the start is going to be swapped with the element at the current index
@@ -89,15 +98,15 @@ namespace ProjectorInterface.GalvoInterface
 
                 for (int j = i; j < shapes.Length; j++)
                 {
-                    currentLine = shapes[j].StartLine;
-                    if (Line.GetDistance(startLine, currentLine) < minDist)
+                    currentPoint = shapes[j].StartLine;
+                    if (Point.GetDistance(startPoint, currentPoint) < minDist)
                     {
-                        minDist = Line.GetDistance(startLine, currentLine);
+                        minDist = Point.GetDistance(startPoint, currentPoint);
                         minDistIndex = j;
                     }
                 }
 
-                startLine = shapes[minDistIndex].EndLine;
+                startPoint = shapes[minDistIndex].EndLine;
 
                 (shapes[i], shapes[minDistIndex]) = (shapes[minDistIndex], shapes[i]);
             }
@@ -105,6 +114,6 @@ namespace ProjectorInterface.GalvoInterface
 
         // Adds a new LineSegment towards the normalized point (x,y) with the laserstatus stroke
         static void AddLine(double x, double y, bool stroke)
-            => Lines.Add(Line.NormalizedLine((short)x, (short)y, stroke, CanvasResolution, IMG_SECTION_SIZE));
+            => Points.Add(Point.NormalizedPoint((short)x, (short)y, stroke, CANVAS_RESOLUTION, IMG_SECTION_SIZE));
     }
 }

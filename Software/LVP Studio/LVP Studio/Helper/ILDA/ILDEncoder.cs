@@ -35,7 +35,7 @@ namespace ProjectorInterface.Helper
                     currentFrame = img.Frames[i];
                     for (int j = 0; j < currentFrame.ReplayCount; j++)
                     {
-                        WriteHeader(stream, currentFrame.LineCount, i, img.FrameCount);
+                        WriteHeader(stream, currentFrame.PointCount, i, img.FrameCount);
                         WriteFrame(stream, currentFrame);
                     }
                 }
@@ -75,10 +75,10 @@ namespace ProjectorInterface.Helper
         // Writes the data of the given frame into the stream, in the .ild file format
         static void WriteFrame(Stream stream, VectorizedFrame frame)
         {
-            Line currentLine;
-            for (ushort i = 0; i < frame.LineCount; i++)
+            Point currentLine;
+            for (ushort i = 0; i < frame.PointCount; i++)
             {
-                currentLine = frame.Lines[i];
+                currentLine = frame.Points[i];
                 BinaryPrimitives.WriteInt16BigEndian(ConversionBuffer, TransformCoord(currentLine.X));
                 stream.Write(ConversionBuffer);
                 // Y is flipped in the .ild file format, dunno why they did it this way
@@ -86,7 +86,7 @@ namespace ProjectorInterface.Helper
                 stream.Write(ConversionBuffer);
                 byte statusByte = 0;
                 // If we are at the last point, we have to set the blanking bit
-                if (i == frame.LineCount - 1)
+                if (i == frame.PointCount - 1)
                     statusByte = 1 << 5;
                 // If the laser is off, we have to write a 1, if not a 0
                 if (!currentLine.On)

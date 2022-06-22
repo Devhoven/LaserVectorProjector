@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
-using Line = ProjectorInterface.GalvoInterface.Line;
+using Point = ProjectorInterface.GalvoInterface.Point;
 
 namespace LVP_Studio.Helper
 {
@@ -15,31 +15,27 @@ namespace LVP_Studio.Helper
         // ?? null! is for resolving a stupid null warning
         new Ellipse Shape => base.Shape as Ellipse ?? null!;
 
-        const double DELTA_ANGLE = 0.0001;
+        const double DELTA_ANGLE = 0.01;
         const double EllipseAccuracy = 0.001; //99.9%
 
         public EllipseWrapper(Ellipse shape) : base(shape)
         { }
 
-        protected override (Line, Line) CalcEnds()
+        protected override (Point, Point) CalcEnds()
         {
-            Point p = new Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
-            return (new Line(p.X + Shape.Width, p.Y + Shape.Height / 2, true),
-                    new Line(p.X + Shape.Width, p.Y + Shape.Height / 2, true));
+            System.Windows.Point p = new System.Windows.Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
+            return (new Point(p.X + Shape.Width, p.Y + Shape.Height / 2, true),
+                    new Point(p.X + Shape.Width, p.Y + Shape.Height / 2, true));
         }
 
-        // The circumference
-        protected override double CalcLength()
-            => GetLengthOfEllipse(DELTA_ANGLE, Shape);
-
-        public override void AddPoints(Action<double, double, bool> addLine)
+        public override void AddPoints(Action<double, double, bool> addPoint)
         {
             // moving to the top of the ellipse from where the other points are calculated
-            addLine(StartLine.X, StartLine.Y, false);
+            addPoint(StartLine.X, StartLine.Y, false);
 
-            addLine(StartLine.X, StartLine.Y, true);
+            addPoint(StartLine.X, StartLine.Y, true);
 
-            Point topLeft = new Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
+            System.Windows.Point topLeft = new System.Windows.Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
 
             // Length of each ellipse-arc
             double arcLength = 150 / (2 * Math.PI);
@@ -49,7 +45,7 @@ namespace LVP_Studio.Helper
             double r1 = Shape.Width / 2;
             double r2 = Shape.Height / 2;
 
-            int end = (int)Math.Ceiling(Length / arcLength);
+            int end = (int)Math.Ceiling(GetLengthOfEllipse(DELTA_ANGLE, Shape) / arcLength);
 
             // Loop until we get all the points out of the ellipse
             for (int numPoints = 0; numPoints < end; numPoints++)
@@ -59,13 +55,10 @@ namespace LVP_Studio.Helper
                 double x = r1 * Math.Cos(angle) + r1 + topLeft.X;
                 double y = r2 * Math.Sin(angle) + r2 + topLeft.Y;
 
-                addLine(x, y, true);
+                addPoint(x, y, true);
             }
 
-            addLine(StartLine.X, StartLine.Y, true);
-            addLine(StartLine.X, StartLine.Y, false);
-            addLine(StartLine.X, StartLine.Y, false);
-            addLine(StartLine.X, StartLine.Y, false);
+            addPoint(StartLine.X, StartLine.Y, true);
         }
 
         // Calculates the angle for the next arc piece

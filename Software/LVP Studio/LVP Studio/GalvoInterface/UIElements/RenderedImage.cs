@@ -25,17 +25,17 @@ namespace ProjectorInterface.GalvoInterface.UiElements
 
             // Searches for the image with the most lines and displays it 
             // The thumbnail is sometimes empty, so with this method it is guaranteed to show an image
-            int maxLines = 0;
-            int maxLinesIndex = 0;
+            int maxPoints = 0;
+            int maxPointsIndex = 0;
             for (int i = 0; i < image.FrameCount; i++)
             {
-                if (maxLines < image[i].LineCount)
+                if (maxPoints < image[i].PointCount)
                 {
-                    maxLines = image[i].LineCount;
-                    maxLinesIndex = i;
+                    maxPoints = image[i].PointCount;
+                    maxPointsIndex = i;
                 }
             }
-            Source = image[maxLinesIndex].GetRenderedFrame();
+            Source = image[maxPointsIndex].GetRenderedFrame();
             //using (var fileStream = new FileStream("C:/Users/Vincent/Pictures/ILDATest.png", FileMode.Create))
             //{
             //    BitmapEncoder encoder = new PngBitmapEncoder();

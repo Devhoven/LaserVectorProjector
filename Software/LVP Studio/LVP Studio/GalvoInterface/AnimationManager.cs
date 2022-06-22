@@ -30,17 +30,16 @@ namespace ProjectorInterface.GalvoInterface
         static AnimationManager()
         {
             SendImgThread = null!;
+            CurrentAnimation = null!;
 
             AnimationSources = new Dictionary<Source, Animation>();
             AnimationSources.Add(Source.UserImage, new Animation());
             AnimationSources.Add(Source.AnimationGallery, new Animation());
-
-            CurrentAnimation = AnimationSources[Source.AnimationGallery];
         }
 
         public static void StopCurrentThread()
         {
-            if (CurrentAnimation.Running)
+            if (CurrentAnimation != null && CurrentAnimation.Running)
             {
                 CurrentAnimation.Running = false;
                 StopCurrentImg = true;
@@ -53,7 +52,11 @@ namespace ProjectorInterface.GalvoInterface
         {
             Animation nextAnimation = AnimationSources[src];
 
-            if ((nextAnimation == CurrentAnimation && CurrentAnimation.Running)
+            if (CurrentAnimation == null)
+                CurrentAnimation = nextAnimation;
+
+            if ((nextAnimation == CurrentAnimation && CurrentAnimation.Running) 
+                || !CurrentAnimation.HasImages()
                 || !SerialManager.IsConnected)
                 return;
 

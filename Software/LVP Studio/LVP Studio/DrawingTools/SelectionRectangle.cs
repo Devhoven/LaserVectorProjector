@@ -242,7 +242,5 @@ namespace ProjectorInterface.DrawingTools
             }
 
         }
-
-
     }
 }

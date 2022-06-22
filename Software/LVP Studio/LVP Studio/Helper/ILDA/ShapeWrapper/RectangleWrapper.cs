@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
-using Line = ProjectorInterface.GalvoInterface.Line;
+using Point = ProjectorInterface.GalvoInterface.Point;
 
 namespace LVP_Studio.Helper
 {
@@ -18,31 +18,28 @@ namespace LVP_Studio.Helper
         public RectangleWrapper(Rectangle shape) : base(shape)
         { }
 
-        protected override (Line, Line) CalcEnds()
+        protected override (Point, Point) CalcEnds()
         {
-            Point p = new Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
-            return (new Line(p.X, p.Y, true), new Line(p.X, p.Y, true));
+            System.Windows.Point p = new System.Windows.Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
+            return (new Point(p.X, p.Y, true), new Point(p.X, p.Y, true));
         }
 
-        protected override double CalcLength()
-            => Shape.Width * 2 + Shape.Height * 2;
-
-        public override void AddPoints(Action<double, double, bool> addLine)
+        public override void AddPoints(Action<double, double, bool> addPoint)
         {
             // Moving to the top left corner
-            addLine(StartLine.X, StartLine.Y, false);
+            addPoint(StartLine.X, StartLine.Y, false);
 
             // Top right corner
-            addLine(StartLine.X + Shape.Width, StartLine.Y, true);
+            addPoint(StartLine.X + Shape.Width, StartLine.Y, true);
 
             // Lower right corner
-            addLine(StartLine.X + Shape.Width, StartLine.Y + Shape.Height, true);
+            addPoint(StartLine.X + Shape.Width, StartLine.Y + Shape.Height, true);
 
             // Lower left corner
-            addLine(StartLine.X, StartLine.Y + Shape.Height, true);
+            addPoint(StartLine.X, StartLine.Y + Shape.Height, true);
 
             // Top left corner
-            addLine(StartLine.X, StartLine.Y, true);
+            addPoint(StartLine.X, StartLine.Y, true);
         }
     }
 }

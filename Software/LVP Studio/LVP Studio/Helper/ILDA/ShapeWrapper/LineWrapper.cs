@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Line = ProjectorInterface.GalvoInterface.Line;
+using Point = ProjectorInterface.GalvoInterface.Point;
 using WPFLine = System.Windows.Shapes.Line;
 
 namespace LVP_Studio.Helper
@@ -18,17 +18,14 @@ namespace LVP_Studio.Helper
         public LineWrapper(WPFLine shape) : base(shape)
         { }
 
-        protected override (Line, Line) CalcEnds()
-            => (new Line(Shape.X1, Shape.Y1, true), new Line(Shape.X2, Shape.Y2, true));
+        protected override (Point, Point) CalcEnds()
+            => (new Point(Shape.X1, Shape.Y1, true), new Point(Shape.X2, Shape.Y2, true));
 
-        protected override double CalcLength()
-            => Line.GetDistance(StartLine, EndLine);
-
-        public override void AddPoints(Action<double, double, bool> addLine)
+        public override void AddPoints(Action<double, double, bool> addPoint)
         {
-            addLine(StartLine.X, StartLine.Y, false);
+            addPoint(StartLine.X, StartLine.Y, false);
 
-            addLine(EndLine.X, EndLine.Y, true);
+            addPoint(EndLine.X, EndLine.Y, true);
         }
     }
 }

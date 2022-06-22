@@ -82,18 +82,18 @@ namespace ProjectorInterface.Helper
         }
 
         // Iterates over the current data section and returns an normalized image
-        static VectorizedFrame ReadImgData(BinaryReader reader, Func<BinaryReader, Line> readFunc)
+        static VectorizedFrame ReadImgData(BinaryReader reader, Func<BinaryReader, Point> readFunc)
         {
-            List<Line> result = new List<Line>();
+            List<Point> result = new List<Point>();
 
             for (int i = 0; i < CurrentHeader.EntryCount; i++)
                 result.Add(readFunc(reader));
 
-            return VectorizedFrame.InterpolatedFrame(result.ToArray());
+            return new VectorizedFrame(result.ToArray());
         }
 
         // Is able to read a data record of any frame
-        static Line ReadDataRecord(BinaryReader reader)
+        static Point ReadDataRecord(BinaryReader reader)
         {
             // Reading the x and y coord
             short xPos = reader.ReadInt16BE();
@@ -114,7 +114,7 @@ namespace ProjectorInterface.Helper
             else
                 reader.Skip(3);
 
-            return Line.NormalizedLine(xPos, yPos *= -1, (statusCode & 0b01000000) != 64, Settings.IMG_SECTION_SIZE);
+            return Point.NormalizedPoint(xPos, yPos *= -1, (statusCode & 0b01000000) != 64, Settings.IMG_SECTION_SIZE);
         }
 
         // "Reads" the color palette section

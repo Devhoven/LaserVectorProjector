@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ProjectorInterface
 {
@@ -73,14 +74,6 @@ namespace ProjectorInterface
         private void SelectShowClick(object sender, RoutedEventArgs e)
             => SelectShowFolderDialog();
 
-        // Starts the show
-        private void StartShowClick(object sender, RoutedEventArgs e)
-            => AnimationManager.Start(AnimationManager.Source.AnimationGallery);
-
-        // Stops it
-        private void StopShowClick(object sender, RoutedEventArgs e)
-            => AnimationManager.Stop(AnimationManager.Source.AnimationGallery);
-
         private void SkipAnimationClick(object sender, RoutedEventArgs e)
             => AnimationManager.SkipAnimation(AnimationManager.Source.AnimationGallery);
 
@@ -101,12 +94,6 @@ namespace ProjectorInterface
 
         private void SelectionClick(object sender, RoutedEventArgs e)
             => DrawCon.Selection.isSelecting = true;
-
-        private void ProjectCanvasClick(object sender, RoutedEventArgs e)
-        {
-            AnimationManager.StopCurrentThread();
-            ProjectCanvas();
-        }
 
         private void SaveCanvasClick(object sender, RoutedEventArgs e)
             => SaveCanvasDialog();
@@ -140,15 +127,6 @@ namespace ProjectorInterface
                 AnimationGallery.Clear();
                 foreach (VectorizedImage img in AnimationManager.GetAnimation(AnimationManager.Source.AnimationGallery).Images)
                     AnimationGallery.AddBorder(new RenderedItemBorder(new RenderedImage(img)));
-            }
-        }
-
-        private void ProjectCanvas()
-        {
-            if (ShapesToPoints.DrawnImage.FrameCount > 0)
-            {
-                AnimationManager.AddImage(AnimationManager.Source.UserImage, ShapesToPoints.DrawnImage);
-                AnimationManager.Start(AnimationManager.Source.UserImage);
             }
         }
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ProjectorInterface.GalvoInterface
 {
@@ -23,10 +24,14 @@ namespace ProjectorInterface.GalvoInterface
         static Thread SendImgThread;
         static bool StopCurrentImg = false;
 
+        public delegate void SourcheChangedHandler(Source newSource);
+        public static event SourcheChangedHandler? OnSourceChanged;
+
         static Dictionary<Source, Animation> AnimationSources;
 
         static Animation CurrentAnimation;
-
+        static Source CurrentSource;
+        
         static AnimationManager()
         {
             SendImgThread = null!;
@@ -55,16 +60,16 @@ namespace ProjectorInterface.GalvoInterface
             if (CurrentAnimation == null)
                 CurrentAnimation = nextAnimation;
 
-            if ((nextAnimation == CurrentAnimation && CurrentAnimation.Running) 
-                || !CurrentAnimation.HasImages()
+            if ((nextAnimation == CurrentAnimation && CurrentAnimation.Running)
+                || !nextAnimation.HasImages()
                 || !SerialManager.IsConnected)
                 return;
 
-            if (nextAnimation != CurrentAnimation && CurrentAnimation.Running)
+            if (src != CurrentSource && CurrentAnimation.Running)
             {
                 CurrentAnimation.Running = false;
                 StopCurrentImg = true;
-                SendImgThread.Join();
+                //SendImgThread.Join();
             }
 
             // Triggers IndexChanged Event so that is gets a RenderedItemBorder
@@ -75,6 +80,8 @@ namespace ProjectorInterface.GalvoInterface
             SendImgThread.Start();
 
             CurrentAnimation = nextAnimation;
+            OnSourceChanged?.Invoke(src);
+            CurrentSource = src;
         }
 
         // Stops the thread if it's running and joins it to the main thread

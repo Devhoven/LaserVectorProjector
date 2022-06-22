@@ -30,15 +30,20 @@ namespace LVP_Studio.Helper
 
         public override void AddPoints(Action<double, double, bool> addPoint)
         {
+            // Retreiving all the points from the path and saving them in an point array
             PathFigureCollection flattenedPath = Shape.Data.GetFlattenedPathGeometry().Figures;
+            Point[] pathPoints = new Point[flattenedPath.Count];
 
-            System.Windows.Point currentPoint = flattenedPath[0].StartPoint;
-            addPoint(currentPoint.X, currentPoint.Y, false);
-            for (int i = 1; i < flattenedPath.Count; i++)
+            System.Windows.Point currentPoint;
+            for (int i = 0; i < flattenedPath.Count; i++) 
             {
                 currentPoint = flattenedPath[i].StartPoint;
-                addPoint(currentPoint.X, currentPoint.Y, true);
+                pathPoints[i] = new Point(currentPoint.X, currentPoint.Y, true);
             }
+            // The first point has to be off
+            pathPoints[0].On = false;
+
+            RDPLineSimplification.Execute(pathPoints, addPoint);
         }
     }
 }

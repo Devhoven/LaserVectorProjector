@@ -119,7 +119,7 @@ namespace ProjectorInterface.GalvoInterface
 
                     double stepSizeFunc;
 
-                    for (int j = 0; j < availablePoints; j++)
+                    for (int j = 1; j < availablePoints; j++)
                     {
                         stepSizeFunc = f(j * stepSize) * dist;
                         interpolatedPoints.Add(
@@ -130,7 +130,7 @@ namespace ProjectorInterface.GalvoInterface
                 }
             }
 
-            return SwapPoints(interpolatedPoints.ToArray());
+            return AddStatusOffset(interpolatedPoints.ToArray());
         }
 
         // It calculates the distance the laser has to travel to draw the whole picture, as well as the distance where the laser is turned off
@@ -166,7 +166,9 @@ namespace ProjectorInterface.GalvoInterface
             travelDist += travelOffDist;
         }
     
-        static Point[] SwapPoints(Point[] points)
+        // If the laser status changes, a few prevous points are going to be changed to the new status 
+        // This removes the laser "smear"
+        static Point[] AddStatusOffset(Point[] points)
         {
             bool prevStatus;
             for (int i = 1; i < points.Length; i++)
@@ -176,9 +178,8 @@ namespace ProjectorInterface.GalvoInterface
                 if (points[i].On != prevStatus)
                 {
                     for (int j = i; j < i + 3; j++)
-                    {
                         points[j].On = prevStatus;
-                    }
+
                     i += 3;
                 }
             }

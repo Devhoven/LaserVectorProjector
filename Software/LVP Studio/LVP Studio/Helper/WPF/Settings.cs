@@ -24,6 +24,8 @@ namespace ProjectorInterface.Helper
         // Currently at 45 degrees in radians
         public static readonly double ADJUST_ANGLE = 0.785398;
 
+        // The epsilon for the RDP algorithm (the maximal distance a point can be from a line)
+        public static readonly double RDP_EPSILON = 2;
 
         public static float IMG_SECTION 
         {

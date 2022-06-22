@@ -31,11 +31,14 @@ namespace ProjectorInterface.GalvoInterface
 
         public static void CalcFrameFromCanvas()
         {
-            // Adding an empty frame
-            if (Points.Count == 0)
-                DrawnImage.AddFrame(new VectorizedFrame(new Point[0]));
-
             ShapeWrapper[] Shapes = GenWrapper();
+
+            // Adding an empty frame if there aren't any shapes drawn by the user
+            if (Shapes.Length == 0)
+            {
+                DrawnImage.AddFrame(new VectorizedFrame(new Point[0]));
+                return;
+            }
 
             SortShapes(Shapes);
 

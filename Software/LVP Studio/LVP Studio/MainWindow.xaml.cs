@@ -39,7 +39,9 @@ namespace ProjectorInterface
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             // Did this, so the canvas would get the focus of the keyboard
-            Keyboard.Focus(DrawCon); 
+            Keyboard.Focus(DrawCon);
+
+            AnimationManager.AddImage(AnimationManager.Source.UserImage, ShapesToPoints.DrawnImage);
         }
 
         // Stopping the thread if it still runs

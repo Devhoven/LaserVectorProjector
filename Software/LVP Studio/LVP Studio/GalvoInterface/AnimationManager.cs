@@ -65,12 +65,8 @@ namespace ProjectorInterface.GalvoInterface
                 || !SerialManager.IsConnected)
                 return;
 
-            if (src != CurrentSource && CurrentAnimation.Running)
-            {
-                CurrentAnimation.Running = false;
-                StopCurrentImg = true;
-                //SendImgThread.Join();
-            }
+            if (src != CurrentSource)
+                StopCurrentThread();
 
             // Triggers IndexChanged Event so that is gets a RenderedItemBorder
             nextAnimation.CurrentImgIndex = nextAnimation.CurrentImgIndex;

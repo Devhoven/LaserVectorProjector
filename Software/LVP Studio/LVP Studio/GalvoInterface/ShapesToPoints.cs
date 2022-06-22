@@ -48,7 +48,7 @@ namespace ProjectorInterface.GalvoInterface
 
             // The laser has to end in the middle of the frame
             AddLine(START_POINT.X, START_POINT.Y, false);
-            
+
             DrawnImage.AddFrame(VectorizedFrame.InterpolatedFrame(Points.ToArray()));
             Points.Clear();
         }

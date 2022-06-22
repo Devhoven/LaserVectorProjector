@@ -43,13 +43,13 @@
 
                         <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
                             
-                            <helper:CustomButton x:Name="ProjectUserAnimBtn" Source="UserImage" StandardImagePath="/Assets/ButtonImages/Upload.png"
+                            <helper:PlayPauseButton x:Name="ProjectUserAnimBtn" Source="UserImage" StandardImagePath="/Assets/ButtonImages/Upload.png"
                                                  Style="{StaticResource SmallButton}" Margin="0 0 10 0" 
                                                  ToolTip="Project current Image">
-                                <helper:CustomButton.Content>
+                                <helper:PlayPauseButton.Content>
                                     <Image Source="pack://application:,,,/Assets/ButtonImages/Upload.png" Margin="3"/>
-                                </helper:CustomButton.Content>
-                            </helper:CustomButton>
+                                </helper:PlayPauseButton.Content>
+                            </helper:PlayPauseButton>
 
                             <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="SaveCanvasClick" ToolTip="Save your drawing" >
                                 <Button.Content>
@@ -125,12 +125,12 @@
             <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
 
                 <!-- Custom Button class with Eventlistener -->
-                <helper:CustomButton x:Name="ToggleAnimBtn" Source="AnimationGallery"  StandardImagePath="/Assets/ButtonImages/Start.png"
+                <helper:PlayPauseButton x:Name="ToggleAnimBtn" Source="AnimationGallery"  StandardImagePath="/Assets/ButtonImages/Start.png"
                                      Style="{StaticResource BigButton}" ToolTip="Start/Stop Animation">
-                    <helper:CustomButton.Content>
+                    <helper:PlayPauseButton.Content>
                         <Image Source="pack://application:,,,/Assets/ButtonImages/Start.png" Margin="3"/>
-                    </helper:CustomButton.Content>
-                </helper:CustomButton>
+                    </helper:PlayPauseButton.Content>
+                </helper:PlayPauseButton>
 
                 <Button Click="SkipAnimationClick" Style="{StaticResource BigButton}" ToolTip="Skip current animation">
                     <Button.Content>

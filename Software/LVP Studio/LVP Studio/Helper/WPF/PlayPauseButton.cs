@@ -8,13 +8,13 @@ using System.Windows;
 
 namespace ProjectorInterface.Helper
 {
-    class CustomButton : Button
+    class PlayPauseButton : Button
     {
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(Source), typeof(CustomButton), new PropertyMetadata(Source.AnimationGallery));
+            DependencyProperty.Register("Source", typeof(Source), typeof(PlayPauseButton), new PropertyMetadata(Source.AnimationGallery));
 
         public static readonly DependencyProperty StandardPathProperty =
-            DependencyProperty.Register("StandardPath", typeof(string), typeof(CustomButton), new PropertyMetadata(""));
+            DependencyProperty.Register("StandardPath", typeof(string), typeof(PlayPauseButton), new PropertyMetadata(""));
 
         public Source Source
         {
@@ -30,7 +30,7 @@ namespace ProjectorInterface.Helper
 
         public string AlternateImagePath;
 
-        public CustomButton()
+        public PlayPauseButton()
         {
             StandardImagePath = "";
             AlternateImagePath = "/Assets/ButtonImages/Pause.png";

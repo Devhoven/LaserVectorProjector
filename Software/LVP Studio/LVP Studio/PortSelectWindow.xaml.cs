@@ -27,29 +27,23 @@ namespace ProjectorInterface
             Owner = owner;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            // Got this from https://stackoverflow.com/a/2876126/9241163
-            // Retreives all of the port names and their caption and appends them to the PortPanel
-            //using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
-            //{
-            //    var portnames = SerialPort.GetPortNames();
-            //    var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
-
-            //    var portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
-
-            //    for (int i = 0; i < portnames.Length; i++)
-            //        PortPanel.Children.Add(new ComRecord(portnames[i], (string)portnames[i]));
-            //}
+            // Got this from https://stackoverflow.com/a/46683622
             using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
             {
                 var portnames = SerialPort.GetPortNames();
                 var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
 
-                var portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+                var portList = portnames.Select(n => n + " - " + ports
+                                        .FirstOrDefault(s => s.Contains(n)))
+                                        .ToList();
+
+                // Filtering out the duplicates
+                portList = portList.GroupBy(x => x)
+                                   .Select(g => g.First())
+                                   .ToList();
 
                 foreach (string s in portList)
-                {
                     PortPanel.Children.Add(new ComRecord(s.Substring(0, s.IndexOf(' ')), s.Substring(s.IndexOf(' '))));
-                }
             }
         }
 

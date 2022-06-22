@@ -39,7 +39,7 @@
 
                     <!-- Panel for the label and the two buttons -->
                     <DockPanel Grid.Row="0">
-                        <Label Content="Frames:" DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+                        <Label x:Name="FrameLabel" Content="Frames: " DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
 
                         <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
                             
@@ -65,7 +65,7 @@
                     
                     <!-- Stackpanel for all the frames -->
                     <uc:AutoScrollViewer Grid.Row="1">
-                        <StackPanel x:Name="FramePanel"/>
+                        <uielements:FramePanel x:Name="FramePanel" FrameDisplayContent="{Binding ElementName=FrameLabel}"/>
                     </uc:AutoScrollViewer>
                 </Grid>
             </Border>

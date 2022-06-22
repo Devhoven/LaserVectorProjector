@@ -24,8 +24,8 @@ namespace ProjectorInterface.GalvoInterface
         static Thread SendImgThread;
         static bool StopCurrentImg = false;
 
-        public delegate void SourcheChangedHandler(Source newSource);
-        public static event SourcheChangedHandler? OnSourceChanged;
+        public delegate void SourceChangedHandler(Source newSource);
+        public static event SourceChangedHandler? OnSourceChanged;
 
         static Dictionary<Source, Animation> AnimationSources;
 

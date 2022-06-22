@@ -14,7 +14,7 @@ namespace ProjectorInterface.DrawingCommands
     // Saves the shape which was added to the canvas and deletes it if necessary
     public class AddShapeCommand : CanvasCommand
     {
-        Shape Shape;
+        readonly Shape Shape;
 
         public AddShapeCommand(Shape shape) : base(shape.StrRep() + ".png")
             => Shape = shape;

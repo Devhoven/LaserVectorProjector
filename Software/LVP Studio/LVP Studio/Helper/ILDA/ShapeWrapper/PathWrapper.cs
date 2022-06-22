@@ -43,7 +43,7 @@ namespace LVP_Studio.Helper
             // The first point has to be off
             pathPoints[0].On = false;
 
-            RDPLineSimplification.Execute(pathPoints, addPoint);
+            RdpLineSimplification.Execute(pathPoints, addPoint);
         }
     }
 }

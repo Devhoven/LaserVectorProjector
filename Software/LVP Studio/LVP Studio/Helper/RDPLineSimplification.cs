@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace LVP_Studio.Helper
 {
-    static class RDPLineSimplification
+    static class RdpLineSimplification
     {
         static List<Point> RDPResult = new List<Point>();
 
         public static void Execute(Point[] pathPoints, Action<double, double, bool> addPoint)
         {
             RDPResult.Add(pathPoints[0]);
-            RDPLineSimplificationRec(pathPoints, 0, pathPoints.Length - 2);
+            RdpLineSimplificationRec(pathPoints, 0, pathPoints.Length - 2);
             RDPResult.Add(pathPoints[pathPoints.Length - 1]);
 
             foreach (Point p in RDPResult)
@@ -24,21 +24,21 @@ namespace LVP_Studio.Helper
             RDPResult.Clear();
         }
 
-        static void RDPLineSimplificationRec(Point[] pathPoints, int startIndex, int endIndex)
+        static void RdpLineSimplificationRec(Point[] pathPoints, int startIndex, int endIndex)
         {
-            int furthestIndex = RDPFindFurthest(pathPoints, startIndex, endIndex);
+            int furthestIndex = FindFurthest(pathPoints, startIndex, endIndex);
 
             if (furthestIndex > startIndex)
             {
-                RDPLineSimplificationRec(pathPoints, startIndex, furthestIndex);
+                RdpLineSimplificationRec(pathPoints, startIndex, furthestIndex);
 
                 RDPResult.Add(pathPoints[furthestIndex]);
 
-                RDPLineSimplificationRec(pathPoints, furthestIndex, endIndex);
+                RdpLineSimplificationRec(pathPoints, furthestIndex, endIndex);
             }
         }
 
-        static int RDPFindFurthest(Point[] pathPoints, int startIndex, int endIndex)
+        static int FindFurthest(Point[] pathPoints, int startIndex, int endIndex)
         {
             double currentDist;
             double maxDist = 0;
@@ -48,7 +48,7 @@ namespace LVP_Studio.Helper
             Point lineEnd = pathPoints[endIndex];
             for (int i = startIndex + 1; i < endIndex; i++)
             {
-                currentDist = RDPLineDistance(lineStart, lineEnd, pathPoints[i]);
+                currentDist = LineDistance(lineStart, lineEnd, pathPoints[i]);
                 if (currentDist > maxDist)
                 {
                     maxDist = currentDist;
@@ -62,7 +62,7 @@ namespace LVP_Studio.Helper
         }
 
         // Calculates the shortest distance between the line (formed in between lineStart and lineEnd) and p
-        static double RDPLineDistance(Point lineStart, Point lineEnd, Point p)
+        static double LineDistance(Point lineStart, Point lineEnd, Point p)
             => Math.Abs((lineEnd.X - lineStart.X) * (lineStart.Y - p.Y) - (lineStart.X - p.X) * (lineEnd.Y - lineStart.Y)) /
                    Point.GetDistance(lineStart, lineEnd);
     }

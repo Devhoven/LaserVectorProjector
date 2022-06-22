@@ -13,44 +13,52 @@ namespace ProjectorInterface.DrawingTools
     // Allows the user to select Shapes
     public class SelectionRectangle : Shape
     {
-        public event EventHandler SelectionChanged;
-        public Point RectPos, StartPos, LastPos, MovePos;
-        public HashSet<Shape> selectedShapes = new HashSet<Shape>();
-        public double _Top, _Left;
-        public bool _selecting = false;
-        public bool isSelecting
+        public event EventHandler? SelectionChanged;
+        public HashSet<Shape> SelectedShapes = new HashSet<Shape>();
+        public Point StartPos, LastPos;
+
+        Point RectPos, MovePos;
+        double _Top, _Left;
+        bool _Selecting = false;
+
+        public bool IsSelecting
         {
-            get => _selecting;
+            get => _Selecting;
             set
             {
-                _selecting = value;
-                OnSelectionChanged();
+                _Selecting = value;
+                if (IsSelecting && SelectionChanged != null)
+                    SelectionChanged(this, EventArgs.Empty);
             }
         }
 
-        private void OnSelectionChanged()
-        {
-            EventHandler eh = SelectionChanged;
-            if (isSelecting && eh != null)
-                SelectionChanged(this, EventArgs.Empty);
-        }
-
-
         protected override Geometry DefiningGeometry
         {
-            get { return new RectangleGeometry(new Rect() { Width = this.Width, Height = this.Height }); }
+            get => new RectangleGeometry(new Rect() 
+            { 
+                Width = this.Width, 
+                Height = this.Height 
+            });
         }
 
         public double Top
         {
             get => _Top;
-            set => Canvas.SetTop(this, _Top = value);
+            set
+            {
+                _Top = value;
+                Canvas.SetTop(this, _Top);
+            }
         }
 
         public double Left
         {
             get => _Left;
-            set => Canvas.SetLeft(this, _Left = value);
+            set
+            {
+                _Left = value;
+                Canvas.SetLeft(this, _Left);
+            }
         }
 
         public SelectionRectangle() : base()
@@ -64,19 +72,19 @@ namespace ProjectorInterface.DrawingTools
         // Deselects all Shapes
         public void DeselectAll()
         {
-            foreach (Shape shape in selectedShapes)
+            foreach (Shape shape in SelectedShapes)
             {
                 shape.Stroke = Brushes.Red;
             }
             Width = 0;
             Height = 0;
-            selectedShapes.Clear();
+            SelectedShapes.Clear();
         }
 
         // Selects all Shapes in the current Canvas
         public void SelectAll()
         {
-            isSelecting = true;
+            IsSelecting = true;
             Width = ((Canvas)Parent).ActualWidth;
             Height = ((Canvas)Parent).ActualHeight;
             Canvas.SetLeft(this, 0);
@@ -89,14 +97,14 @@ namespace ProjectorInterface.DrawingTools
         // Ctrl + LeftClick Method to select/deselect single Shapes
         public void SelectShape(Shape s)
         {
-            if (selectedShapes.Contains(s) && s is not SelectionRectangle)
+            if (SelectedShapes.Contains(s) && s is not SelectionRectangle)
             {
-                selectedShapes.Remove(s);
+                SelectedShapes.Remove(s);
                 s.Stroke = Brushes.Red;
             }
-            else if (!selectedShapes.Contains(s) && s is not SelectionRectangle)
+            else if (!SelectedShapes.Contains(s) && s is not SelectionRectangle)
             {
-                selectedShapes.Add(s);
+                SelectedShapes.Add(s);
                 s.Stroke = Brushes.Blue;
             }
         }
@@ -114,7 +122,7 @@ namespace ProjectorInterface.DrawingTools
                 {
                     if (dragRect.Contains(line.X1, line.Y1) || dragRect.Contains(line.X2, line.Y2))
                     {
-                        selectedShapes.Add(line);
+                        SelectedShapes.Add(line);
                         line.Stroke = Brushes.Blue;
                     }
                 }
@@ -126,7 +134,7 @@ namespace ProjectorInterface.DrawingTools
                     if (dragRect.Contains(recLeft, recTop) || dragRect.Contains(recLeft + rec.Width, recTop) ||
                         dragRect.Contains(recLeft + rec.Width, recTop + rec.Height) || dragRect.Contains(recLeft, recTop + rec.Height))
                     {
-                        selectedShapes.Add(rec);
+                        SelectedShapes.Add(rec);
                         rec.Stroke = Brushes.Blue;
                     }
                 }
@@ -138,7 +146,7 @@ namespace ProjectorInterface.DrawingTools
                     if (dragRect.Contains(ellLeft + ell.Width / 2, ellTop) || dragRect.Contains(ellLeft + ell.Width, ellTop + ell.Height / 2) ||
                         dragRect.Contains(ellLeft + ell.Width / 2, ellTop + ell.Height) || dragRect.Contains(ellLeft, ellTop + ell.Height / 2))
                     {
-                        selectedShapes.Add(ell);
+                        SelectedShapes.Add(ell);
                         ell.Stroke = Brushes.Blue;
                     }
                 }
@@ -150,15 +158,13 @@ namespace ProjectorInterface.DrawingTools
                         // if one single line segment is selected, select the whole path
                         if (dragRect.Contains(lg.StartPoint.X, lg.StartPoint.Y) || dragRect.Contains(lg.EndPoint.X, lg.EndPoint.Y))
                         {
-                            selectedShapes.Add(path);
+                            SelectedShapes.Add(path);
                             path.Stroke = Brushes.Blue;
                             break;
                         }
                     }
 
                 }
-                else
-                    continue;
             }
         }
 
@@ -180,8 +186,10 @@ namespace ProjectorInterface.DrawingTools
                 Height = bottomRight.Y - topLeft.Y;
             }
 
-            Canvas.SetLeft(this, RectPos.X = topLeft.X);
-            Canvas.SetTop(this, RectPos.Y = topLeft.Y);
+            RectPos.X = topLeft.X;
+            RectPos.Y = topLeft.Y;
+            Canvas.SetLeft(this, RectPos.X);
+            Canvas.SetTop(this, RectPos.Y);
         }
 
         // Saving Mouseposition for movement of selected Shapes
@@ -195,7 +203,7 @@ namespace ProjectorInterface.DrawingTools
         // Move Selectes Shapes
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.RightButton == MouseButtonState.Pressed && isSelecting)
+            if (e.RightButton == MouseButtonState.Pressed && IsSelecting)
             {
                 // Getting current position and amount of movement
                 Point currentPos = e.GetPosition((Canvas)Parent);
@@ -203,11 +211,13 @@ namespace ProjectorInterface.DrawingTools
                 MovePos = currentPos;
                 GeometryCollection lineSegments;
 
-                Canvas.SetLeft(this, RectPos.X -= diff.X);
-                Canvas.SetTop(this, RectPos.Y -= diff.Y);
+                RectPos.X -= diff.X;
+                RectPos.Y -= diff.Y;
+                Canvas.SetLeft(this, RectPos.X);
+                Canvas.SetTop(this, RectPos.Y);
 
                 // Apply Movement for each selected Shape
-                foreach (Shape s in selectedShapes)
+                foreach (Shape s in SelectedShapes)
                 {
                     if (s is Line line)
                     {
@@ -236,8 +246,6 @@ namespace ProjectorInterface.DrawingTools
                             lg.EndPoint = new Point(lg.EndPoint.X - diff.X, lg.EndPoint.Y - diff.Y);
                         }
                     }
-                    else
-                        continue;
                 }
             }
 

@@ -16,11 +16,11 @@ namespace ProjectorInterface.GalvoInterface.UiElements
 {
     partial class RenderedFrame : Grid
     {
-        VectorizedFrame Frame;
+        readonly VectorizedFrame Frame;
 
-        Button DeleteBtn = null!;
-        Button SettingsBtn = null!;
-        SpeedBtnPanel SpeedBtnPanel;
+        readonly SpeedBtnPanel SpeedBtnPanel;
+        readonly Button DeleteBtn;
+        readonly Button SettingsBtn;
 
         public RenderedFrame(VectorizedFrame frame)
         {
@@ -33,23 +33,21 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             RenderOptions.SetBitmapScalingMode(renderedFrame, BitmapScalingMode.Fant);
             Children.Add(renderedFrame);
 
-            CreateDeleteBtn();
-            CreateSettingsBtn();
+            DeleteBtn = CreateDeleteBtn();
+            SettingsBtn = CreateSettingsBtn();
 
             SpeedBtnPanel = new SpeedBtnPanel(Frame);
             
-            CreateButtonAnimations();
-                
             // Adding them to the frame
             Children.Add(DeleteBtn);
             Children.Add(SettingsBtn);
             Children.Add(SpeedBtnPanel);
         }
 
-        void CreateDeleteBtn()
+        Button CreateDeleteBtn()
         {
             // Creating the delete button
-            DeleteBtn = new Button()
+            Button deleteBtn = new Button()
             {
                 Content = new Image()
                 {
@@ -64,13 +62,16 @@ namespace ProjectorInterface.GalvoInterface.UiElements
                 Style = (Style)Application.Current.FindResource("SmallButton")
             };
 
-            DeleteBtn.Click += DeleteBtnClick;
+            deleteBtn.Click += (o, e)
+                => DeleteFrame();
+
+            return deleteBtn;
         }
 
-        void CreateSettingsBtn()
+        Button CreateSettingsBtn()
         {
             // Creating the settings button
-            SettingsBtn = new Button()
+            Button settingsBtn = new Button()
             {
                 Content = new Image()
                 {
@@ -85,31 +86,26 @@ namespace ProjectorInterface.GalvoInterface.UiElements
                 Style = (Style)Application.Current.FindResource("SmallButton")
             };
 
-            SettingsBtn.Click += (o, e) 
+            settingsBtn.Click += (o, e) 
                 => SpeedBtnPanel.FadeIn();
+
+            return settingsBtn;
         }
 
-        // Creating and adding the delete and settings button
-        void CreateButtonAnimations()
+        protected override void OnMouseEnter(MouseEventArgs e)
         {
             // If the mouse enters the frame, the buttons fade in 
-            MouseEnter += (o, e) =>
-            {
-                AnimationPlayer.FadeIn(DeleteBtn);
-                AnimationPlayer.FadeIn(SettingsBtn);
-            };
-
-            // If the mouse leaves the frame, the buttons fade out
-            MouseLeave += (o, e) =>
-            {
-                AnimationPlayer.FadeOut(DeleteBtn);
-                AnimationPlayer.FadeOut(SettingsBtn);
-                SpeedBtnPanel.FadeOut(); 
-            };
+            AnimationPlayer.FadeIn(DeleteBtn);
+            AnimationPlayer.FadeIn(SettingsBtn);
         }
 
-        private void DeleteBtnClick(object sender, RoutedEventArgs e)
-            => DeleteFrame();
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            // If the mouse leaves the frame, the buttons fade out
+            AnimationPlayer.FadeOut(DeleteBtn);
+            AnimationPlayer.FadeOut(SettingsBtn);
+            SpeedBtnPanel.FadeOut();
+        }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {

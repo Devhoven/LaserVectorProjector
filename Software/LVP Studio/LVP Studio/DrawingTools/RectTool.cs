@@ -52,8 +52,10 @@ namespace ProjectorInterface.DrawingTools
                 RectObj.Height = bottomRight.Y - topLeft.Y;
             }
 
-            Canvas.SetLeft(this, RectPos.X = topLeft.X);
-            Canvas.SetTop(this, RectPos.Y = topLeft.Y);
+            RectPos.X = topLeft.X;
+            RectPos.Y = topLeft.Y;
+            Canvas.SetLeft(this, RectPos.X);
+            Canvas.SetTop(this, RectPos.Y);
         }
     }
 }

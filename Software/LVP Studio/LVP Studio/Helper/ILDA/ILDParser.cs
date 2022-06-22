@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProjectorInterface.Helper
 {
-    static class ILDParser
+    static class IldParser
     {
         static readonly byte[] MAGIC_BYTES = Encoding.ASCII.GetBytes("ILDA");
 
@@ -57,7 +57,7 @@ namespace ProjectorInterface.Helper
             // Checking the magic bytes
             for (int i = 0; i < MAGIC_BYTES.Length; i++)
                 if (MAGIC_BYTES[i] != reader.ReadByte())
-                    throw new Exception("Not a valid .ild file");
+                    throw new FormatException("Not a valid .ild file");
 
             // Skipping bytes 5 - 7
             reader.Skip(3);
@@ -114,7 +114,7 @@ namespace ProjectorInterface.Helper
             else
                 reader.Skip(3);
 
-            return Point.NormalizedPoint(xPos, yPos *= -1, (statusCode & 0b01000000) != 64, Settings.IMG_SECTION_SIZE);
+            return Point.NormalizedPoint(xPos, yPos * -1, (statusCode & 0b01000000) != 64, Settings.IMG_SECTION_SIZE);
         }
 
         // "Reads" the color palette section

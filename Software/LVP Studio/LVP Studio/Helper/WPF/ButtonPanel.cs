@@ -39,7 +39,6 @@ namespace ProjectorInterface.Helper
         public void ToolChanged(DrawingCanvas canvas)
         {
             Button tmp = new Button();
-
             
             if (canvas.CurrentTool is LineTool)
                 tmp = (Button)Children[0];
@@ -53,13 +52,14 @@ namespace ProjectorInterface.Helper
             SelectButton(tmp);
         }
 
+        // This should be reworked
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
-            if (e.OriginalSource is Image)
+            if (e.OriginalSource is Image img)
             {
-                Button? tmp = ((Image)e.OriginalSource).Parent as Button;
-
-                SelectButton(tmp);
+                Button? tmp = img.Parent as Button;
+                if (tmp != null)
+                    SelectButton(tmp);
             }
         }
     }

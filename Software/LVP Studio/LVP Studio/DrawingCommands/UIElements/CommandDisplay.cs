@@ -15,15 +15,11 @@ namespace ProjectorInterface.DrawingCommands
     {
         const int MAX_CHILDREN_COUNT = 6;
 
-        CommandHistory History;
-
         public CommandDisplay(CommandHistory history)
         {
-            History = history;
-
-            History.Executed += HistoryExecuted;
-            History.Undid += History_Undid;
-            History.Redid += History_Redid;
+            history.Executed += HistoryExecuted;
+            history.Undid += History_Undid;
+            history.Redid += History_Redid;
 
             IsHitTestVisible = false;
         }

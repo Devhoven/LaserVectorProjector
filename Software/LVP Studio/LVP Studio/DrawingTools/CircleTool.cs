@@ -15,9 +15,7 @@ namespace ProjectorInterface.DrawingTools
         Point CirclePos;
 
         public CircleTool() : base(new Ellipse())
-        {
-            CirclePos = new Point();
-        }
+            => CirclePos = new Point();
 
         public override Shape CopyShape()
         {
@@ -50,8 +48,10 @@ namespace ProjectorInterface.DrawingTools
                 CirlceObj.Height = bottomRight.Y - topLeft.Y;
             }
 
-            Canvas.SetLeft(this, CirclePos.X = topLeft.X);
-            Canvas.SetTop(this, CirclePos.Y = topLeft.Y);
+            CirclePos.X = topLeft.X;
+            CirclePos.Y = topLeft.Y;
+            Canvas.SetLeft(this, CirclePos.X);
+            Canvas.SetTop(this, CirclePos.Y);
         }
     }
 }

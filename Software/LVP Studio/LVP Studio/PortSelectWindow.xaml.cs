@@ -31,10 +31,10 @@ namespace ProjectorInterface
             using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
             {
                 var portnames = SerialPort.GetPortNames();
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+                var ports = searcher.Get().Cast<ManagementBaseObject>().Select(p => p["Caption"].ToString());
 
                 var portList = portnames.Select(n => n + " - " + ports
-                                        .FirstOrDefault(s => s.Contains(n)))
+                                        .FirstOrDefault(s => s != null ? s.Contains(n) : false))
                                         .ToList();
 
                 // Filtering out the duplicates
@@ -56,16 +56,14 @@ namespace ProjectorInterface
 
     class ComRecord : Button
     {
-        string PortName;
-        string Caption;
+        readonly string PortName;
 
         public ComRecord(string portName, string caption)
         {
             PortName = portName;
-            Caption = caption;
 
             BorderBrush = PortName == SerialManager.PortName ? Brushes.LightBlue : Brushes.Black;
-            Content = PortName + Caption;
+            Content = PortName + caption;
             FontSize = 20;
             HorizontalContentAlignment = HorizontalAlignment.Left;
             Margin = new Thickness(0, 5, 0, 5);

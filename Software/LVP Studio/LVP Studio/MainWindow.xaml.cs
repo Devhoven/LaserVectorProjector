@@ -20,12 +20,17 @@ namespace ProjectorInterface
 {
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance
+        {
+            get => _Instance;
+        }
+
         // Contains a reference to the currently running MainWindow
-        public static MainWindow Instance = null!;
+        static MainWindow _Instance = null!;
 
         public MainWindow()
         {
-            Instance = this;
+            _Instance = this;
 
             InitializeComponent();
 			
@@ -95,7 +100,7 @@ namespace ProjectorInterface
             => DrawCon.UpdateTool(new PathTool());
 
         private void SelectionClick(object sender, RoutedEventArgs e)
-            => DrawCon.Selection.isSelecting = true;
+            => DrawCon.Selection.IsSelecting = true;
 
         private void SaveCanvasClick(object sender, RoutedEventArgs e)
             => SaveCanvasDialog();
@@ -103,7 +108,7 @@ namespace ProjectorInterface
         private void LoadImageClick(object sender, RoutedEventArgs e)
             => DrawCon.BackgroundImg.ChooseImg();
 
-        private void SaveCanvasDialog()
+        private static void SaveCanvasDialog()
         {
             VistaSaveFileDialog dialog = new VistaSaveFileDialog()
             {
@@ -114,7 +119,7 @@ namespace ProjectorInterface
                 Filter = "ILDA File | *.ild"
             };
             if (dialog.ShowDialog() == true)
-                ILDEncoder.EncodeImg(dialog.FileName, ShapesToPoints.DrawnImage);
+                IldEncoder.EncodeImg(dialog.FileName, ShapesToPoints.DrawnImage);
         }
 
         private void SelectShowFolderDialog()

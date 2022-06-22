@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProjectorInterface.Helper
 {
-    static class ILDEncoder
+    static class IldEncoder
     {
         static readonly byte[] MagicBytes = Encoding.ASCII.GetBytes("ILDA");
         // Using the 2d indexed color format

@@ -17,17 +17,11 @@ namespace ProjectorInterface.GalvoInterface
 {
     static class ShapesToPoints
     {
-        static readonly int CANVAS_RESOLUTION;
-        static readonly Point START_POINT;
+        static readonly int CANVAS_RESOLUTION = (int)MainWindow.Instance.DrawCon.ActualWidth;
+        static readonly Point START_POINT = new Point(CANVAS_RESOLUTION / 2, CANVAS_RESOLUTION / 2, false);
 
-        public static VectorizedImage DrawnImage = new VectorizedImage();
-        static List<Point> Points = new List<Point>();
-
-        static ShapesToPoints()
-        {
-            CANVAS_RESOLUTION = (int)MainWindow.Instance.DrawCon.ActualWidth;
-            START_POINT = new Point(CANVAS_RESOLUTION / 2, CANVAS_RESOLUTION / 2, false);
-        }
+        public static readonly VectorizedImage DrawnImage = new VectorizedImage();
+        readonly static List<Point> Points = new List<Point>();
 
         public static void CalcFrameFromCanvas()
         {
@@ -36,7 +30,7 @@ namespace ProjectorInterface.GalvoInterface
             // Adding an empty frame if there aren't any shapes drawn by the user
             if (Shapes.Length == 0)
             {
-                DrawnImage.AddFrame(new VectorizedFrame(new Point[0]));
+                DrawnImage.AddFrame(new VectorizedFrame(Array.Empty<Point>()));
                 return;
             }
 

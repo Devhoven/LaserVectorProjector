@@ -21,26 +21,20 @@ namespace ProjectorInterface.GalvoInterface
         }
 
         // Seperate thread for sending the image data to the arduino
-        static Thread SendImgThread;
+        static Thread SendImgThread = null!;
         static bool StopCurrentImg = false;
 
         public delegate void SourceChangedHandler(Source newSource);
         public static event SourceChangedHandler? OnSourceChanged;
 
-        static Dictionary<Source, Animation> AnimationSources;
-
-        static Animation CurrentAnimation;
-        static Source CurrentSource;
-        
-        static AnimationManager()
+        static Dictionary<Source, Animation> AnimationSources = new Dictionary<Source, Animation>()
         {
-            SendImgThread = null!;
-            CurrentAnimation = null!;
+            [Source.UserImage] = new Animation(),
+            [Source.AnimationGallery] = new Animation()
+        };
 
-            AnimationSources = new Dictionary<Source, Animation>();
-            AnimationSources.Add(Source.UserImage, new Animation());
-            AnimationSources.Add(Source.AnimationGallery, new Animation());
-        }
+        static Source CurrentSource;
+        static Animation CurrentAnimation = null!;
 
         public static void StopCurrentThread()
         {
@@ -140,7 +134,7 @@ namespace ProjectorInterface.GalvoInterface
                 for (int i = 0; i < files.Length && i < 100; i++)
                 {
                     currentFile = files[i];
-                    ILDParser.LoadFromPath(currentFile.FullName, currentFile.Name, ref gallery.Images);
+                    IldParser.LoadFromPath(currentFile.FullName, currentFile.Name, ref gallery.Images);
                 }
             }
 
@@ -209,52 +203,53 @@ namespace ProjectorInterface.GalvoInterface
             }
         }
     }
-}
 
-class Animation
-{
-    public delegate void IndexChangedHandler(int oldVal, int newVal);
-    public event IndexChangedHandler? OnImgIndexChanged;
-
-    // List of all images which are going to be displayed one after another
-    public List<VectorizedImage> Images;
-
-    public bool Running = false;
-
-    public int CurrentImgIndex
+    class Animation
     {
-        get => _CurrentImgIndex;
-        set
+        public delegate void IndexChangedHandler(int oldVal, int newVal);
+        public event IndexChangedHandler? OnImgIndexChanged;
+
+        // List of all images which are going to be displayed one after another
+        public List<VectorizedImage> Images;
+
+        public bool Running = false;
+
+        public int CurrentImgIndex
         {
-            OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
-            _CurrentImgIndex = value;
+            get => _CurrentImgIndex;
+            set
+            {
+                OnImgIndexChanged?.Invoke(_CurrentImgIndex, value);
+                _CurrentImgIndex = value;
+            }
+        }
+        int _CurrentImgIndex;
+
+        public Animation()
+        {
+            Images = new List<VectorizedImage>();
+        }
+
+        public VectorizedImage GetCurrentImg()
+            => Images[CurrentImgIndex];
+
+        public void IncrementIndex()
+            => CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
+
+        public bool HasImages()
+            => Images.Count > 0;
+
+        public void Skip()
+        {
+            if (CurrentImgIndex < Images.Count - 1)
+                CurrentImgIndex++;
+        }
+
+        public void Revert()
+        {
+            if (Images.Count > 0 && CurrentImgIndex > 0)
+                CurrentImgIndex--;
         }
     }
-    int _CurrentImgIndex;
 
-    public Animation()
-    {
-        Images = new List<VectorizedImage>();
-    }
-
-    public VectorizedImage GetCurrentImg()
-        => Images[CurrentImgIndex];
-
-    public void IncrementIndex()
-        => CurrentImgIndex = (CurrentImgIndex + 1) % Images.Count;
-
-    public bool HasImages() 
-        => Images.Count > 0;
-
-    public void Skip()
-    {
-        if (CurrentImgIndex < Images.Count - 1)
-            CurrentImgIndex++;
-    }
-
-    public void Revert()
-    {
-        if (Images.Count > 0 && CurrentImgIndex > 0)
-            CurrentImgIndex--;
-    }
 }

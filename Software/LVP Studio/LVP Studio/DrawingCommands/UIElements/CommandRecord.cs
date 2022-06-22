@@ -14,14 +14,8 @@ namespace ProjectorInterface.DrawingCommands
         // Height of each record
         public const int RECORD_HEIGHT = 20;
 
-        static BitmapFrame UndoIcon;
-        static BitmapFrame RedoIcon;
-
-        static CommandRecord()
-        {
-            UndoIcon = AssetManager.GetBmpFrame("CommandImages/UndoIcon.png");
-            RedoIcon = AssetManager.GetBmpFrame("CommandImages/RedoIcon.png");
-        }
+        static BitmapFrame UndoIcon = AssetManager.GetBmpFrame("CommandImages/UndoIcon.png");
+        static BitmapFrame RedoIcon = AssetManager.GetBmpFrame("CommandImages/RedoIcon.png");
 
         public static CommandRecord CreateNew(CanvasCommand command)
         {

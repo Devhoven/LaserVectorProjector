@@ -14,7 +14,7 @@ namespace ProjectorInterface.DrawingCommands
     // Removes the shape from the current canvas and adds it again, if necessary
     public class EraseShapeCommand : CanvasCommand
     {
-        Shape Shape;
+        readonly Shape Shape;
 
         public EraseShapeCommand(Shape shape) : base(shape.StrRep() + "Erase.png") 
             => Shape = shape;

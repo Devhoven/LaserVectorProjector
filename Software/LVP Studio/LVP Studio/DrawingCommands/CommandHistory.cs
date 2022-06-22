@@ -10,11 +10,6 @@ namespace ProjectorInterface.DrawingCommands
     // Wrapper for a do / undo history
     public class CommandHistory
     {
-        // Holds all of the commands
-        public List<CanvasCommand> Commands;
-        // Holds the index of the command which was executed last
-        public int CurrentIndex;
-
         // Used for the history display
         public delegate void CommandEventHandler(CanvasCommand command);
         // Event which fires, when a new command got executed
@@ -25,6 +20,11 @@ namespace ProjectorInterface.DrawingCommands
         public event CommandEventHandler? Undid;
         // When a command was redid, sends the command which was redid with it
         public event CommandEventHandler? Redid;
+
+        // Holds all of the commands
+        List<CanvasCommand> Commands;
+        // Holds the index of the command which was executed last
+        int CurrentIndex;
 
         public CommandHistory()
         {

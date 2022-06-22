@@ -14,7 +14,7 @@ namespace ProjectorInterface
     // A canvas the user is able to draw on
     public class DrawingCanvas : Canvas
     {
-        public event EventHandler CurrentToolChanged;
+        public event EventHandler? CurrentToolChanged;
 
         // Gets set when the user clicks on the canvas
         Point StartMousePos;
@@ -22,26 +22,19 @@ namespace ProjectorInterface
         bool leftCanvas = false;
 
         // Holds all of the actions the user did, like drawing or deleting something
-        public CommandHistory Commands { get; set; }
-        CommandDisplay CommandDisplay;
+        readonly CommandDisplay CommandDisplay;
+        CommandHistory Commands;
 
         // Holds the current tool one is drawing with
-        public DrawingTool _drawTool;
+        public DrawingTool _CurrentTool;
         public DrawingTool CurrentTool
         {
-            get => _drawTool;
+            get => _CurrentTool;
             set
             {
-                _drawTool = value;
+                _CurrentTool = value;
                 OnCurrentToolChanged();
             }
-        }
-
-        private void OnCurrentToolChanged()
-        {
-            EventHandler eh = CurrentToolChanged;
-            if (eh != null)
-                CurrentToolChanged(this, EventArgs.Empty);
         }
 
         // Background image of the canvas
@@ -51,10 +44,9 @@ namespace ProjectorInterface
         // Selection Rectangle to select multiple shapes
         public SelectionRectangle Selection;
 
-
         public DrawingCanvas()
         {
-            CurrentTool = new LineTool();
+            _CurrentTool = new LineTool();
 
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
@@ -74,6 +66,12 @@ namespace ProjectorInterface
             Children.Add(Selection);
         }
 
+        private void OnCurrentToolChanged()
+        {
+            if (CurrentToolChanged != null)
+                CurrentToolChanged(this, EventArgs.Empty);
+        }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             // Left click, either drawing or selecting
@@ -81,7 +79,7 @@ namespace ProjectorInterface
             {
                 leftCanvas = false;
                 // Selecting Shapes
-                if (Selection.isSelecting)
+                if (Selection.IsSelecting)
                 {
                     // Ctrl + Click Adds single Shape to selected Shapes
                     if (e.OriginalSource is Shape shape && Keyboard.IsKeyDown(Key.LeftCtrl))
@@ -125,12 +123,12 @@ namespace ProjectorInterface
             if (!leftCanvas)
             {
                 // Drawing with left Mouse Button
-                if (e.LeftButton == MouseButtonState.Pressed && !Selection.isSelecting)
+                if (e.LeftButton == MouseButtonState.Pressed && !Selection.IsSelecting)
                 {
                     CurrentTool.Render(StartMousePos, e.GetPosition(this));
                 }
                 // Selecting with left Mouse Button
-                else if (e.LeftButton == MouseButtonState.Pressed && Selection.isSelecting)
+                else if (e.LeftButton == MouseButtonState.Pressed && Selection.IsSelecting)
                 {
                     Selection.Render(Selection.StartPos, e.GetPosition(this));
                 }
@@ -143,9 +141,9 @@ namespace ProjectorInterface
         {
             if (!leftCanvas)
             {
-                if (e.ChangedButton == MouseButton.Left && !Selection.isSelecting)
+                if (e.ChangedButton == MouseButton.Left && !Selection.IsSelecting)
                     RemoveToolAndCopy(e.GetPosition(this));
-                else if (e.ChangedButton == MouseButton.Left && Selection.isSelecting)
+                else if (e.ChangedButton == MouseButton.Left && Selection.IsSelecting)
                 {
                     if (Selection.StartPos == e.GetPosition(this))
                     {
@@ -170,16 +168,11 @@ namespace ProjectorInterface
             }
         }
 
-        protected override void OnMouseEnter(MouseEventArgs e)
-        {
-            //leftCanvas = false;
-        }
-
         // Updates the CurrentTool and deselects all potentially selected shapes
         public void UpdateTool(DrawingTool tool)
         {
             CurrentTool = tool;
-            Selection.isSelecting = false;
+            Selection.IsSelecting = false;
             Selection.DeselectAll();
         }
 
@@ -194,7 +187,7 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            // The user can select a drawing mode with the keys 1 - 4
+            // The user can select a drawing mode with the keys 1 - 5
             if (e.Key == Key.D1)
                 UpdateTool(new LineTool());
             else if (e.Key == Key.D2)
@@ -204,8 +197,9 @@ namespace ProjectorInterface
             else if (e.Key == Key.D4)
                 UpdateTool(new PathTool());
             else if (e.Key == Key.D5)
-                Selection.isSelecting = true;
-            else if (e.Key == Key.Delete && Selection.isSelecting && Selection.selectedShapes.Count != 0)
+                Selection.IsSelecting = true;
+
+            else if (e.Key == Key.Delete && Selection.IsSelecting && Selection.SelectedShapes.Count != 0)
                 Commands.Execute(new EraseSelectionCommand(Selection));
             else if (e.Key == Key.Escape)
                 Selection.DeselectAll();

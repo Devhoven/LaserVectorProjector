@@ -18,7 +18,7 @@ namespace ProjectorInterface.DrawingTools
         GeometryGroup Geometry;
 
         // determines the "smoothness" of the path with each segment length
-        double length = 1;
+        const double length = 1;
         Point LastPoint;
 
         public PathTool() : base(new Path())

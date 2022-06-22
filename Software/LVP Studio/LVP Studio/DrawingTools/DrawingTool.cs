@@ -15,7 +15,7 @@ namespace ProjectorInterface.DrawingTools
     // Superclass for all of the drawing tools, like the line etc.
     public class DrawingTool : Border
     {
-        protected Shape Current = null!;
+        protected Shape Current;
 
         // Only for the subclasses
         protected DrawingTool(Shape current)

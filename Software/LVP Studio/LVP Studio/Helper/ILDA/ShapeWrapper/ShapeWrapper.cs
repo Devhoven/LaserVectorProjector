@@ -20,7 +20,7 @@ namespace LVP_Studio.Helper
         // From the "Shape"-class
         protected override Geometry DefiningGeometry => throw new NotImplementedException();
 
-        public ShapeWrapper(Shape shape)
+        protected ShapeWrapper(Shape shape)
         {
             Shape = shape;
             (StartLine, EndLine) = CalcEnds();

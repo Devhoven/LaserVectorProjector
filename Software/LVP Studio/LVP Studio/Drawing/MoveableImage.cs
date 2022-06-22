@@ -24,13 +24,21 @@ namespace ProjectorInterface
         private double Y
         {
             get => _Top;
-            set => Canvas.SetTop(this, _Top = value);
+            set
+            {
+                _Top = value;
+                Canvas.SetTop(this, _Top);
+            }
         }
 
         double X
         {
             get => _Left;
-            set => Canvas.SetLeft(this, _Left = value);
+            set
+            {
+                _Left = value;
+                Canvas.SetLeft(this, _Left);
+            }
         }
 
         public MoveableImage()
@@ -79,7 +87,7 @@ namespace ProjectorInterface
             var st = (ScaleTransform)RenderTransform;
 
             double zoom = e.Delta > 0 ? .1 : -.1;
-            if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
+            if (e.Delta <= 0 && (st.ScaleX < .4 || st.ScaleY < .4))
                 return;
 
             Point relative = e.GetPosition(this);

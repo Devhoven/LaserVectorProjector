@@ -36,12 +36,6 @@ namespace ProjectorInterface.GalvoInterface.UiElements
                 }
             }
             Source = image[maxPointsIndex].GetRenderedFrame();
-            //using (var fileStream = new FileStream("C:/Users/Vincent/Pictures/ILDATest.png", FileMode.Create))
-            //{
-            //    BitmapEncoder encoder = new PngBitmapEncoder();
-            //    encoder.Frames.Add(BitmapFrame.Create((BitmapImage)Source));
-            //    encoder.Save(fileStream);
-            //}
             RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.Fant);
         }
     }

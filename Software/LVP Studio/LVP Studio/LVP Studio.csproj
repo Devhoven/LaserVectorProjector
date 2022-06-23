@@ -23,6 +23,7 @@
     <None Remove="Assets\CommandImages\RedoIcon.png" />
     <None Remove="Assets\CommandImages\Selection.png" />
     <None Remove="Assets\CommandImages\SelectionErase.png" />
+    <None Remove="Assets\CommandImages\SelectionMove.png" />
     <None Remove="Assets\CommandImages\UndoIcon.png" />
     <None Remove="Assets\Delete.png" />
     <None Remove="Assets\Folder.png" />
@@ -92,6 +93,10 @@
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\CommandImages\SelectionMove.png" />
   </ItemGroup>
 
 </Project>

@@ -28,12 +28,16 @@ namespace LVP_Studio.Helper
                     new Point(p.X + Shape.Width, p.Y + Shape.Height / 2, true));
         }
 
+        // TODO
+        public override double GetShortestDistance(Point p)
+            => Point.GetDistance(StartPoint, p);
+
         public override void AddPoints(Action<double, double, bool> addPoint)
         {
             // moving to the top of the ellipse from where the other points are calculated
-            addPoint(StartLine.X, StartLine.Y, false);
+            addPoint(StartPoint.X, StartPoint.Y, false);
 
-            addPoint(StartLine.X, StartLine.Y, true);
+            addPoint(StartPoint.X, StartPoint.Y, true);
 
             System.Windows.Point topLeft = new System.Windows.Point(Canvas.GetLeft(Shape), Canvas.GetTop(Shape));
 
@@ -58,7 +62,7 @@ namespace LVP_Studio.Helper
                 addPoint(x, y, true);
             }
 
-            addPoint(StartLine.X, StartLine.Y, true);
+            addPoint(StartPoint.X, StartPoint.Y, true);
         }
 
         // Calculates the angle for the next arc piece

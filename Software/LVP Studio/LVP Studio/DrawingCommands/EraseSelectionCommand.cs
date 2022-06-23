@@ -16,24 +16,21 @@ namespace ProjectorInterface.DrawingCommands
     // Removes the shape from the current canvas and adds it again, if necessary
     public class EraseSelectionCommand : CanvasCommand
     {
-        readonly Shape Shape;
-        readonly double width, height;
-        readonly HashSet<Shape> elements;
+        readonly SelectionRectangle SelectRect;
+        readonly HashSet<Shape> SelectedElements;
 
-        public EraseSelectionCommand(Shape selection) : base(selection.StrRep() + "Erase.png")
+        public EraseSelectionCommand(SelectionRectangle selectRect) : base(selectRect.StrRep() + "Erase.png")
         {
-            Shape = selection;
-            width = selection.Width;
-            height = selection.Height;
-            elements = ((SelectionRectangle)selection).SelectedShapes;
+            SelectRect = selectRect;
+            SelectedElements = new HashSet<Shape>(SelectRect.SelectedShapes);
         }
 
         public override void Execute()
         {
-            Shape.Width = 0;
-            Shape.Height = 0;
+            SelectRect.Width = 0;
+            SelectRect.Height = 0;
 
-            foreach (Shape shape in elements)
+            foreach (Shape shape in SelectedElements)
             {
                 Parent.Children.Remove(shape);
             }
@@ -41,10 +38,7 @@ namespace ProjectorInterface.DrawingCommands
 
         public override void Undo()
         {
-            Shape.Width = width;
-            Shape.Height = height;
-
-            foreach (Shape shape in elements)
+            foreach (Shape shape in SelectedElements)
             {
                 shape.Stroke = Brushes.Red;
                 Parent.Children.Add(shape);
@@ -55,6 +49,6 @@ namespace ProjectorInterface.DrawingCommands
             => "Erase " + "Selection";
 
         public override BitmapFrame GetBmpFrame()
-            => Icons[Shape.StrRep() + "Erase.png"];
+            => Icons[SelectRect.StrRep() + "Erase.png"];
     }
 }

@@ -47,7 +47,8 @@ namespace ProjectorInterface.Helper
 
                 int pointSize = 8;
 
-                graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
+                if (frame.PointCount != 0)
+                    graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
                 for (int i = 1; i < frame.Points.Length; i++)
                 {
                     if (frame.Points[i].On)

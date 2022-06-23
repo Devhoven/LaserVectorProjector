@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -30,7 +31,7 @@ namespace ProjectorInterface.DrawingTools
 
         public override Shape CopyShape()
         {
-            return new Line()
+            Line result = new Line()
             {
                 StrokeThickness = Settings.SHAPE_THICKNESS,
                 Stroke = Settings.SHAPE_COLOR,
@@ -39,6 +40,9 @@ namespace ProjectorInterface.DrawingTools
                 X2 = LineObj.X2,
                 Y2 = LineObj.Y2
             };
+            Canvas.SetLeft(result, 0);
+            Canvas.SetTop(result, 0);
+            return result;
         }
 
         public override void Render(Point start, Point end)

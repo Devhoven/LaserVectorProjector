@@ -62,9 +62,6 @@ namespace ProjectorInterface.GalvoInterface
             if (src != CurrentSource)
                 StopCurrentThread();
 
-            // Triggers IndexChanged Event so that is gets a RenderedItemBorder
-            nextAnimation.CurrentImgIndex = nextAnimation.CurrentImgIndex;
-
             nextAnimation.Running = true;
             SendImgThread = new Thread(new ThreadStart(SendImgLoop));
             SendImgThread.Start();

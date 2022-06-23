@@ -19,14 +19,17 @@ namespace ProjectorInterface
         // Gets set when the user clicks on the canvas
         Point StartMousePos;
 
-        bool leftCanvas = false;
+        // If the mouse left the canvas
+        bool LeftCanvas = false;
 
         // Holds all of the actions the user did, like drawing or deleting something
-        readonly CommandDisplay CommandDisplay;
-        CommandHistory Commands;
+        readonly CommandHistory Commands;
+
+        // Selection Rectangle to select multiple shapes
+        public SelectionRectangle SelectRect { get; private set; }
 
         // Holds the current tool one is drawing with
-        public DrawingTool _CurrentTool;
+        DrawingTool _CurrentTool;
         public DrawingTool CurrentTool
         {
             get => _CurrentTool;
@@ -39,10 +42,7 @@ namespace ProjectorInterface
 
         // Background image of the canvas
         // Can be controlled, so the user is able to trace the outlines
-        public MoveableImage BackgroundImg;
-
-        // Selection Rectangle to select multiple shapes
-        public SelectionRectangle Selection;
+        MoveableImage BackgroundImg;
 
         public DrawingCanvas()
         {
@@ -58,12 +58,11 @@ namespace ProjectorInterface
             CanvasCommand.Parent = this;
 
             Commands = new CommandHistory();
-            CommandDisplay = new CommandDisplay(Commands);
-            Children.Add(CommandDisplay);
+            Children.Add(new CommandDisplay(Commands));
 
-            Selection = new SelectionRectangle();
-            Selection.Visibility = Visibility.Visible;
-            Children.Add(Selection);
+            SelectRect = new SelectionRectangle(Commands);
+            SelectRect.Visibility = Visibility.Visible;
+            Children.Add(SelectRect);
         }
 
         private void OnCurrentToolChanged()
@@ -77,24 +76,24 @@ namespace ProjectorInterface
             // Left click, either drawing or selecting
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                leftCanvas = false;
+                LeftCanvas = false;
                 // Selecting Shapes
-                if (Selection.IsSelecting)
+                if (SelectRect.IsSelecting)
                 {
                     // Ctrl + Click Adds single Shape to selected Shapes
                     if (e.OriginalSource is Shape shape && Keyboard.IsKeyDown(Key.LeftCtrl))
-                        Selection.SelectShape(shape);
+                        SelectRect.SelectShape(shape);
                     else // Select multiple Shapes with SelectionRectangle
                     {
-                        Selection.StartPos = e.GetPosition(this);
-                        Selection.LastPos = Selection.StartPos;
-                        Selection.DeselectAll();
+                        SelectRect.StartPos = e.GetPosition(this);
+                        SelectRect.LastPos = SelectRect.StartPos;
+                        SelectRect.DeselectAll();
                     }
                 }
                 // Drawing Shapes
                 else
                 {
-                    Selection.DeselectAll();
+                    SelectRect.DeselectAll();
                     StartMousePos = e.GetPosition(this);
                     Children.Add(CurrentTool);
                     CurrentTool.Render(StartMousePos, StartMousePos);
@@ -105,7 +104,7 @@ namespace ProjectorInterface
             {
                 if (origShape is SelectionRectangle)
                 {
-                    Commands.Execute(new EraseSelectionCommand((Shape)e.OriginalSource));
+                    Commands.Execute(new EraseSelectionCommand(SelectRect));
                 }
                 else
                 {
@@ -120,17 +119,17 @@ namespace ProjectorInterface
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (!leftCanvas)
+            if (!LeftCanvas)
             {
                 // Drawing with left Mouse Button
-                if (e.LeftButton == MouseButtonState.Pressed && !Selection.IsSelecting)
+                if (e.LeftButton == MouseButtonState.Pressed && !SelectRect.IsSelecting)
                 {
                     CurrentTool.Render(StartMousePos, e.GetPosition(this));
                 }
                 // Selecting with left Mouse Button
-                else if (e.LeftButton == MouseButtonState.Pressed && Selection.IsSelecting)
+                else if (e.LeftButton == MouseButtonState.Pressed && SelectRect.IsSelecting)
                 {
-                    Selection.Render(Selection.StartPos, e.GetPosition(this));
+                    SelectRect.Render(SelectRect.StartPos, e.GetPosition(this));
                 }
             }
         }
@@ -139,32 +138,34 @@ namespace ProjectorInterface
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (!leftCanvas)
+            if (!LeftCanvas)
             {
-                if (e.ChangedButton == MouseButton.Left && !Selection.IsSelecting)
+                if (e.ChangedButton == MouseButton.Left && !SelectRect.IsSelecting)
                     RemoveToolAndCopy(e.GetPosition(this));
-                else if (e.ChangedButton == MouseButton.Left && Selection.IsSelecting)
+                else if (e.ChangedButton == MouseButton.Left && SelectRect.IsSelecting)
                 {
-                    if (Selection.StartPos == e.GetPosition(this))
+                    if (SelectRect.StartPos == e.GetPosition(this))
                     {
-                        Selection.Width = 0;
-                        Selection.Height = 0;
-                        Selection.DeselectAll();
+                        SelectRect.Width = 0;
+                        SelectRect.Height = 0;
+                        SelectRect.DeselectAll();
                     }
                     if (!Keyboard.IsKeyDown(Key.LeftCtrl))
-                        Selection.ApplySelection();
+                        SelectRect.ApplySelection();
                 }
-                Keyboard.Focus(this);
             }
         }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+            => Keyboard.Focus(this);
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             // If the mouse leaves the canvas, and the left mouse button was still pressed the operation is going to cancel
             // Doesn't work for some reason if you move onto the windows taskbar
-            if (e.LeftButton == MouseButtonState.Pressed && !leftCanvas){
+            if (e.LeftButton == MouseButtonState.Pressed && !LeftCanvas && !SelectRect.IsSelecting){
                 RemoveToolAndCopy(e.GetPosition(this));
-                leftCanvas = true;
+                LeftCanvas = true;
             }
         }
 
@@ -172,8 +173,8 @@ namespace ProjectorInterface
         public void UpdateTool(DrawingTool tool)
         {
             CurrentTool = tool;
-            Selection.IsSelecting = false;
-            Selection.DeselectAll();
+            SelectRect.IsSelecting = false;
+            SelectRect.DeselectAll();
         }
 
         // Removes the visuals of the currently used tool from the canvas and adds the drawn shape onto it
@@ -197,12 +198,12 @@ namespace ProjectorInterface
             else if (e.Key == Key.D4)
                 UpdateTool(new PathTool());
             else if (e.Key == Key.D5)
-                Selection.IsSelecting = true;
+                SelectRect.IsSelecting = true;
 
-            else if (e.Key == Key.Delete && Selection.IsSelecting && Selection.SelectedShapes.Count != 0)
-                Commands.Execute(new EraseSelectionCommand(Selection));
+            else if (e.Key == Key.Delete && SelectRect.IsSelecting && SelectRect.SelectedShapes.Count != 0)
+                Commands.Execute(new EraseSelectionCommand(SelectRect));
             else if (e.Key == Key.Escape)
-                Selection.DeselectAll();
+                SelectRect.DeselectAll();
 
             else if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
@@ -213,7 +214,7 @@ namespace ProjectorInterface
                 else if (Keyboard.IsKeyDown(Key.Y))
                     Commands.Redo();
                 else if (Keyboard.IsKeyDown(Key.A))
-                    Selection.SelectAll();
+                    SelectRect.SelectAll();
             }
 
             // Operations for the background image
@@ -224,5 +225,8 @@ namespace ProjectorInterface
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();
         }
+
+        public void ChooseImg()
+            => BackgroundImg.ChooseImg();
     }
 }

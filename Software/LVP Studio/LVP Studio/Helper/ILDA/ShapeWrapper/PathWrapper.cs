@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Point = ProjectorInterface.GalvoInterface.Point;
@@ -15,8 +16,15 @@ namespace LVP_Studio.Helper
         // ?? null! is for resolving a stupid null warning
         new Path Shape => base.Shape as Path ?? null!;
 
+        // The Canvas.GetLeft and GetTop Offset
+        double XOffset;
+        double YOffset;
+
         public PathWrapper(Path shape) : base(shape)
-        { }
+        {
+            XOffset = Canvas.GetLeft(Shape);
+            YOffset = Canvas.GetTop(Shape);
+        }
 
         protected override (Point, Point) CalcEnds()
         {
@@ -24,8 +32,8 @@ namespace LVP_Studio.Helper
             LineGeometry firstLine = (LineGeometry)lineSegments[0];
             LineGeometry endLine = (LineGeometry)lineSegments[lineSegments.Count - 1];
 
-            return (new Point(firstLine.StartPoint.X, firstLine.StartPoint.Y, true), 
-                    new Point(endLine.StartPoint.X, endLine.StartPoint.Y, true));
+            return (new Point(firstLine.StartPoint.X + XOffset, firstLine.StartPoint.Y + YOffset, true), 
+                    new Point(endLine.StartPoint.X + XOffset, endLine.StartPoint.Y + YOffset, true));
         }
 
         // Returns the shortest distance to the given point
@@ -56,12 +64,12 @@ namespace LVP_Studio.Helper
             // Checking if the start point is still the first point on the path
             // If not, the other end had a shorter distance to the previous point
             // If that is the case, this path has to be built up in reverse
-            if (StartPoint.X == (short)currentPoint.X && StartPoint.Y == (short)currentPoint.Y)
+            if (StartPoint.X == (short)currentPoint.X + XOffset && StartPoint.Y == (short)currentPoint.Y + YOffset)
             {
                 for (int i = 0; i < flattenedPath.Count; i++)
                 {
                     currentPoint = flattenedPath[i].StartPoint;
-                    pathPoints[i] = new Point(currentPoint.X, currentPoint.Y, true);
+                    pathPoints[i] = new Point(currentPoint.X + XOffset, currentPoint.Y + YOffset, true);
                 }
             }
             else
@@ -69,7 +77,7 @@ namespace LVP_Studio.Helper
                 for (int i = flattenedPath.Count - 1, j = 0; i >= 0; i--, j++)
                 {
                     currentPoint = flattenedPath[i].StartPoint;
-                    pathPoints[j] = new Point(currentPoint.X, currentPoint.Y, true);
+                    pathPoints[j] = new Point(currentPoint.X + XOffset, currentPoint.Y + YOffset, true);
                 }
             }
             // The first point has to be off

@@ -60,7 +60,7 @@ namespace ProjectorInterface
             Commands = new CommandHistory();
             Children.Add(new CommandDisplay(Commands));
 
-            Selection = new SelectionRectangle();
+            Selection = new SelectionRectangle(Commands);
             Selection.Visibility = Visibility.Visible;
             Children.Add(Selection);
         }
@@ -104,7 +104,7 @@ namespace ProjectorInterface
             {
                 if (origShape is SelectionRectangle)
                 {
-                    Commands.Execute(new EraseSelectionCommand((Shape)e.OriginalSource));
+                    Commands.Execute(new EraseSelectionCommand(Selection));
                 }
                 else
                 {

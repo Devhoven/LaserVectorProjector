@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Point = ProjectorInterface.GalvoInterface.Point;
@@ -19,7 +20,12 @@ namespace LVP_Studio.Helper
         { }
 
         protected override (Point, Point) CalcEnds()
-            => (new Point(Shape.X1, Shape.Y1, true), new Point(Shape.X2, Shape.Y2, true));
+        {
+            double xOffset = Canvas.GetLeft(Shape);
+            double yOffset = Canvas.GetTop(Shape);
+            return (new Point(Shape.X1 + xOffset, Shape.Y1 + yOffset, true),
+                    new Point(Shape.X2 + xOffset, Shape.Y2 + yOffset, true));
+        }
 
         // Returns the shortest distance to the given point
         // If the start point does not have the shortest distance to the point, the end point is going to be switched with the start point

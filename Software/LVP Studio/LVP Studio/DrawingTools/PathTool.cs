@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -62,6 +63,9 @@ namespace ProjectorInterface.DrawingTools
 
             Geometry = new GeometryGroup();
             PathObj.Data = Geometry;
+
+            Canvas.SetLeft(tmp, 0);
+            Canvas.SetTop(tmp, 0);
 
             return tmp;
         }

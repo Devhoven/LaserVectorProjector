@@ -19,14 +19,17 @@ namespace ProjectorInterface
         // Gets set when the user clicks on the canvas
         Point StartMousePos;
 
-        bool leftCanvas = false;
+        // If the mouse left the canvas
+        bool LeftCanvas = false;
 
         // Holds all of the actions the user did, like drawing or deleting something
-        readonly CommandDisplay CommandDisplay;
-        CommandHistory Commands;
+        readonly CommandHistory Commands;
+
+        // Selection Rectangle to select multiple shapes
+        public SelectionRectangle Selection { get; private set; }
 
         // Holds the current tool one is drawing with
-        public DrawingTool _CurrentTool;
+        DrawingTool _CurrentTool;
         public DrawingTool CurrentTool
         {
             get => _CurrentTool;
@@ -39,10 +42,7 @@ namespace ProjectorInterface
 
         // Background image of the canvas
         // Can be controlled, so the user is able to trace the outlines
-        public MoveableImage BackgroundImg;
-
-        // Selection Rectangle to select multiple shapes
-        public SelectionRectangle Selection;
+        MoveableImage BackgroundImg;
 
         public DrawingCanvas()
         {
@@ -58,8 +58,7 @@ namespace ProjectorInterface
             CanvasCommand.Parent = this;
 
             Commands = new CommandHistory();
-            CommandDisplay = new CommandDisplay(Commands);
-            Children.Add(CommandDisplay);
+            Children.Add(new CommandDisplay(Commands));
 
             Selection = new SelectionRectangle();
             Selection.Visibility = Visibility.Visible;
@@ -77,7 +76,7 @@ namespace ProjectorInterface
             // Left click, either drawing or selecting
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                leftCanvas = false;
+                LeftCanvas = false;
                 // Selecting Shapes
                 if (Selection.IsSelecting)
                 {
@@ -120,7 +119,7 @@ namespace ProjectorInterface
         // As long as the mouse moves and the left mouse button is pressed, the currently selected tool updates its visuals
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (!leftCanvas)
+            if (!LeftCanvas)
             {
                 // Drawing with left Mouse Button
                 if (e.LeftButton == MouseButtonState.Pressed && !Selection.IsSelecting)
@@ -139,7 +138,7 @@ namespace ProjectorInterface
         // and potentially a new shape gets added to the canvas
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (!leftCanvas)
+            if (!LeftCanvas)
             {
                 if (e.ChangedButton == MouseButton.Left && !Selection.IsSelecting)
                     RemoveToolAndCopy(e.GetPosition(this));
@@ -162,9 +161,9 @@ namespace ProjectorInterface
         {
             // If the mouse leaves the canvas, and the left mouse button was still pressed the operation is going to cancel
             // Doesn't work for some reason if you move onto the windows taskbar
-            if (e.LeftButton == MouseButtonState.Pressed && !leftCanvas){
+            if (e.LeftButton == MouseButtonState.Pressed && !LeftCanvas){
                 RemoveToolAndCopy(e.GetPosition(this));
-                leftCanvas = true;
+                LeftCanvas = true;
             }
         }
 
@@ -224,5 +223,8 @@ namespace ProjectorInterface
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();
         }
+
+        public void ChooseImg()
+            => BackgroundImg.ChooseImg();
     }
 }

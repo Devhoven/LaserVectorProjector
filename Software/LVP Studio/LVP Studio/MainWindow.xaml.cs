@@ -106,7 +106,7 @@ namespace ProjectorInterface
             => SaveCanvasDialog();
 
         private void LoadImageClick(object sender, RoutedEventArgs e)
-            => DrawCon.BackgroundImg.ChooseImg();
+            => DrawCon.ChooseImg();
 
         private static void SaveCanvasDialog()
         {

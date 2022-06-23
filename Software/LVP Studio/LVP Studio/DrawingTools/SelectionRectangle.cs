@@ -163,7 +163,6 @@ namespace ProjectorInterface.DrawingTools
                             break;
                         }
                     }
-
                 }
             }
         }

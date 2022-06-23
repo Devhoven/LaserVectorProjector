@@ -21,11 +21,28 @@ namespace LVP_Studio.Helper
         protected override (Point, Point) CalcEnds()
             => (new Point(Shape.X1, Shape.Y1, true), new Point(Shape.X2, Shape.Y2, true));
 
+        // Returns the shortest distance to the given point
+        // If the start point does not have the shortest distance to the point, the end point is going to be switched with the start point
+        // and the line is going to be built up in "reverse"
+        public override double GetShortestDistance(Point p)
+        {
+            double distToStart = Point.GetDistance(StartPoint, p);
+            double distToEnd = Point.GetDistance(EndPoint, p);
+
+            if (distToEnd < distToStart)
+            {
+                (StartPoint, EndPoint) = (EndPoint, StartPoint);
+                return distToEnd;
+            }
+
+            return distToStart;
+        }
+
         public override void AddPoints(Action<double, double, bool> addPoint)
         {
-            addPoint(StartLine.X, StartLine.Y, false);
+            addPoint(StartPoint.X, StartPoint.Y, false);
 
-            addPoint(EndLine.X, EndLine.Y, true);
+            addPoint(EndPoint.X, EndPoint.Y, true);
         }
     }
 }

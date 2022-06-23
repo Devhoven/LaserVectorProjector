@@ -14,8 +14,8 @@ namespace LVP_Studio.Helper
         // The shape
         protected Shape Shape;
 
-        public Point StartLine;
-        public Point EndLine;
+        public Point StartPoint;
+        public Point EndPoint;
 
         // From the "Shape"-class
         protected override Geometry DefiningGeometry => throw new NotImplementedException();
@@ -23,12 +23,16 @@ namespace LVP_Studio.Helper
         protected ShapeWrapper(Shape shape)
         {
             Shape = shape;
-            (StartLine, EndLine) = CalcEnds();
+            (StartPoint, EndPoint) = CalcEnds();
         }
 
         // Calculates the start and end point
         protected abstract (Point, Point) CalcEnds();
 
+        // Returns the shortest distance to the given point
+        public abstract double GetShortestDistance(Point p);
+
+        // Adds the points of the shape to the result list, with the addPoint - method
         public abstract void AddPoints(Action<double, double, bool> addPoint);
     }
 }

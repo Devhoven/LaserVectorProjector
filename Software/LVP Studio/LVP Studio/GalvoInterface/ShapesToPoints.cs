@@ -1,15 +1,10 @@
-﻿using LVP_Studio.Helper;
-using ProjectorInterface.Helper;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using LVP_Studio.Helper;
 using System.Windows.Shapes;
+using System.Collections.Generic;
 using static ProjectorInterface.DrawingCommands.CanvasCommand;
 using static ProjectorInterface.Helper.Settings;
-using Point = System.Windows.Point;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using WPFLine = System.Windows.Shapes.Line;
 
@@ -78,12 +73,12 @@ namespace ProjectorInterface.GalvoInterface
         // Sorts the shapes depending on the distance from each other
         static void SortShapes(ShapeWrapper[] shapes)
         {
+            double currentDist;
             double minDist;
             int minDistIndex;
 
             // The frame should always start and end in the middle
             Point startPoint = START_POINT;
-            Point currentPoint;
 
             // This loop circles through each shape and gets the shape closest to the start line
             // Then the shape which was closest to the start is going to be swapped with the element at the current index
@@ -95,15 +90,15 @@ namespace ProjectorInterface.GalvoInterface
 
                 for (int j = i; j < shapes.Length; j++)
                 {
-                    currentPoint = shapes[j].StartLine;
-                    if (Point.GetDistance(startPoint, currentPoint) < minDist)
+                    currentDist = shapes[j].GetShortestDistance(startPoint);
+                    if (currentDist < minDist)
                     {
-                        minDist = Point.GetDistance(startPoint, currentPoint);
+                        minDist = currentDist;
                         minDistIndex = j;
                     }
                 }
 
-                startPoint = shapes[minDistIndex].EndLine;
+                startPoint = shapes[minDistIndex].EndPoint;
 
                 (shapes[i], shapes[minDistIndex]) = (shapes[minDistIndex], shapes[i]);
             }

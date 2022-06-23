@@ -116,11 +116,18 @@ namespace ProjectorInterface.DrawingTools
             Rect dragRect = new Rect(Left, Top, Width, Height);
 
             // Checking for each Shape in canvas, if it is contained in the selection rectangle
-            foreach (object child in ((Canvas)Parent).Children)
+            foreach (UIElement child in ((Canvas)Parent).Children)
             {
+                if (child is not Shape)
+                    continue;
+
+                double childLeft = Canvas.GetLeft(child);
+                double childTop = Canvas.GetTop(child);
+
                 if (child is Line line)
                 {
-                    if (dragRect.Contains(line.X1, line.Y1) || dragRect.Contains(line.X2, line.Y2))
+                    if (dragRect.Contains(childLeft + line.X1, childTop + line.Y1) || 
+                        dragRect.Contains(childLeft + line.X2, childTop + line.Y2))
                     {
                         SelectedShapes.Add(line);
                         line.Stroke = Brushes.Blue;
@@ -128,11 +135,10 @@ namespace ProjectorInterface.DrawingTools
                 }
                 else if (child is Rectangle rec)
                 {
-                    double recLeft = Canvas.GetLeft(rec);
-                    double recTop = Canvas.GetTop(rec);
-
-                    if (dragRect.Contains(recLeft, recTop) || dragRect.Contains(recLeft + rec.Width, recTop) ||
-                        dragRect.Contains(recLeft + rec.Width, recTop + rec.Height) || dragRect.Contains(recLeft, recTop + rec.Height))
+                    if (dragRect.Contains(childLeft, childTop) || 
+                        dragRect.Contains(childLeft + rec.Width, childTop) ||
+                        dragRect.Contains(childLeft + rec.Width, childTop + rec.Height) || 
+                        dragRect.Contains(childLeft, childTop + rec.Height))
                     {
                         SelectedShapes.Add(rec);
                         rec.Stroke = Brushes.Blue;
@@ -140,11 +146,10 @@ namespace ProjectorInterface.DrawingTools
                 }
                 else if (child is Ellipse ell)
                 {
-                    double ellLeft = Canvas.GetLeft(ell);
-                    double ellTop = Canvas.GetTop(ell);
-
-                    if (dragRect.Contains(ellLeft + ell.Width / 2, ellTop) || dragRect.Contains(ellLeft + ell.Width, ellTop + ell.Height / 2) ||
-                        dragRect.Contains(ellLeft + ell.Width / 2, ellTop + ell.Height) || dragRect.Contains(ellLeft, ellTop + ell.Height / 2))
+                    if (dragRect.Contains(childLeft + ell.Width / 2, childTop) || 
+                        dragRect.Contains(childLeft + ell.Width, childTop + ell.Height / 2) ||
+                        dragRect.Contains(childLeft + ell.Width / 2, childTop + ell.Height) || 
+                        dragRect.Contains(childLeft, childTop + ell.Height / 2))
                     {
                         SelectedShapes.Add(ell);
                         ell.Stroke = Brushes.Blue;
@@ -156,7 +161,8 @@ namespace ProjectorInterface.DrawingTools
                     foreach (LineGeometry lg in lineSegments)
                     {
                         // if one single line segment is selected, select the whole path
-                        if (dragRect.Contains(lg.StartPoint.X, lg.StartPoint.Y) || dragRect.Contains(lg.EndPoint.X, lg.EndPoint.Y))
+                        if (dragRect.Contains(childLeft + lg.StartPoint.X, childTop + lg.StartPoint.Y) || 
+                            dragRect.Contains(childLeft + lg.EndPoint.X, childTop + lg.EndPoint.Y))
                         {
                             SelectedShapes.Add(path);
                             path.Stroke = Brushes.Blue;
@@ -234,12 +240,6 @@ namespace ProjectorInterface.DrawingTools
                 MovePos = e.GetPosition((Canvas)Parent);
                 StartMovePos = MovePos;
             }
-        }
-
-        protected override void OnMouseLeave(MouseEventArgs e)
-        {
-            if (e.RightButton == MouseButtonState.Pressed)
-                FinishMove(e.GetPosition((Canvas)Parent));
         }
 
         // Excecutes the MoveSelectionCommand

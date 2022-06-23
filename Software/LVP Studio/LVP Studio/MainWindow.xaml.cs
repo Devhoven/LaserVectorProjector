@@ -38,7 +38,7 @@ namespace ProjectorInterface
             Loaded += OnLoaded;
 
             DrawCon.CurrentToolChanged += CurrentTool_CurrentToolChanged;
-            DrawCon.Selection.SelectionChanged += IsSelecting_SelectionChanged;
+            DrawCon.SelectRect.SelectionChanged += IsSelecting_SelectionChanged;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -100,7 +100,7 @@ namespace ProjectorInterface
             => DrawCon.UpdateTool(new PathTool());
 
         private void SelectionClick(object sender, RoutedEventArgs e)
-            => DrawCon.Selection.IsSelecting = true;
+            => DrawCon.SelectRect.IsSelecting = true;
 
         private void SaveCanvasClick(object sender, RoutedEventArgs e)
             => SaveCanvasDialog();

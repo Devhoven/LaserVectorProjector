@@ -45,6 +45,8 @@ namespace LVP_Studio.DrawingCommands
             SelectRect.Height = RectHeight;
 
             MoveShapes(MoveDiff);
+
+            SelectRect.SelectedShapes = new HashSet<Shape>(SelectedElements);
         }
 
         public override void Undo()
@@ -55,6 +57,8 @@ namespace LVP_Studio.DrawingCommands
             SelectRect.Height = RectHeight;
 
             MoveShapes(-MoveDiff);
+
+            SelectRect.SelectedShapes = new HashSet<Shape>(SelectedElements);
         }
 
         void MoveShapes(Vector moveDiff)
@@ -64,6 +68,7 @@ namespace LVP_Studio.DrawingCommands
             {
                 Canvas.SetLeft(s, Canvas.GetLeft(s) - moveDiff.X);
                 Canvas.SetTop(s, Canvas.GetTop(s) - moveDiff.Y);
+                s.Stroke = Brushes.Blue;
             }
         }
 

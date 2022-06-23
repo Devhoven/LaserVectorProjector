@@ -22,6 +22,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
         readonly Button DeleteBtn;
         readonly Button SettingsBtn;
 
+
         public RenderedFrame(VectorizedFrame frame)
         {
             // Saving the frame, so I can delete it later from the image
@@ -37,7 +38,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             SettingsBtn = CreateSettingsBtn();
 
             SpeedBtnPanel = new SpeedBtnPanel(Frame);
-            
+
             // Adding them to the frame
             Children.Add(DeleteBtn);
             Children.Add(SettingsBtn);
@@ -45,6 +46,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
         }
 
         Button CreateDeleteBtn()
+
         {
             // Creating the delete button
             Button deleteBtn = new Button()
@@ -86,7 +88,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
                 Style = (Style)Application.Current.FindResource("SmallButton")
             };
 
-            settingsBtn.Click += (o, e) 
+            settingsBtn.Click += (o, e)
                 => SpeedBtnPanel.FadeIn();
 
             return settingsBtn;
@@ -106,22 +108,13 @@ namespace ProjectorInterface.GalvoInterface.UiElements
             AnimationPlayer.FadeOut(SettingsBtn);
             SpeedBtnPanel.FadeOut();
         }
-
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            // Deleting itself from the VectorziedImage it belogned to and from the stackpanel
-            if (e.MiddleButton == MouseButtonState.Pressed)
-            {
-                DeleteFrame();
-                e.Handled = true;
-            }
-        }
-
+        
         void DeleteFrame()
         {
             ShapesToPoints.DrawnImage.RemoveFrame(Frame);
-            ((RenderedItemBorder)Parent).RemoveFromParent();
+            ((RenderedItemBorder)Parent).RemoveFromParent();  
         }
+        
     }
 
     class SpeedBtnPanel : WrapPanel
@@ -163,7 +156,7 @@ namespace ProjectorInterface.GalvoInterface.UiElements
                     BorderBrush = UNSELECTED_BORDER_BRUSH,
                     Style = (Style)Application.Current.Resources["SmallButton"]
                 };
-                
+
                 // If the current button has the right amount of repeats, it is going to be highlighted
                 if (value == frame.ReplayCount)
                     btn.BorderBrush = SELECTED_BORDER_BRUSH;

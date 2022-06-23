@@ -1,11 +1,15 @@
-﻿using System;
+﻿using ProjectorInterface.GalvoInterface.UiElements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Panel = System.Windows.Controls.Panel;
 
 namespace ProjectorInterface.GalvoInterface.UIElements
 {
@@ -19,6 +23,8 @@ namespace ProjectorInterface.GalvoInterface.UIElements
         static readonly Thickness SELECTED_BORDER_THICKNESS = new Thickness(3);
         static readonly Brush SELECTED_BORDER_BRUSH = SystemColors.HighlightBrush;
 
+        public bool IsSelected => BorderBrush == SELECTED_BORDER_BRUSH;
+
         public RenderedItemBorder(UIElement child)
         {
             Child = child;
@@ -28,6 +34,17 @@ namespace ProjectorInterface.GalvoInterface.UIElements
 
         public void RemoveFromParent()
             => ((Panel)Parent).Children.Remove(this);
+
+        public void SelectFrame(RenderedFrame frame)
+        {
+            if (BorderBrush == SELECTED_BORDER_BRUSH)
+                Deselect();
+            else
+                Select();
+        }
+
+        public void AddSelectedFrame(RenderedFrame frame)
+            => Select();
 
         public void Select()
         {

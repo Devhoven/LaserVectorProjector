@@ -125,6 +125,8 @@
             <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
 
                 <!-- Custom Button class with Eventlistener -->
+                <Button Style="{StaticResource BigButton}" Click="OpenKeybindsClick"/>
+
                 <helper:PlayPauseButton x:Name="ToggleAnimBtn" Source="AnimationGallery"  StandardImagePath="/Assets/ButtonImages/Start.png"
                                      Style="{StaticResource BigButton}" ToolTip="Start/Stop Animation">
                     <helper:PlayPauseButton.Content>

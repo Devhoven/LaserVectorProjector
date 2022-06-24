@@ -1,4 +1,5 @@
-﻿using Ookii.Dialogs.Wpf;
+﻿using LVP_Studio;
+using Ookii.Dialogs.Wpf;
 using ProjectorInterface.DrawingCommands;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.GalvoInterface;
@@ -55,6 +56,11 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            /*
+            if (HotkeyWindow.IsPressed("Saving"))
+            {
+                
+            }*/
             if (e.Key == Key.S && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 // CTRL + SHIFT + S = Save your drawing as an .ild file 
@@ -144,6 +150,13 @@ namespace ProjectorInterface
             FramePanel.Children.Add(new RenderedItemBorder(
                 new RenderedFrame(
                     ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
+        }
+
+        private void OpenKeybindsClick(object sender, RoutedEventArgs e)
+        {
+            HotkeyWindow KbWindow = new HotkeyWindow();
+            KbWindow.Owner = this;
+            KbWindow.Show();
         }
     }
 }

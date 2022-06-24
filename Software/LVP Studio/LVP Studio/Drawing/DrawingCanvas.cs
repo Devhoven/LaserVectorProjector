@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ProjectorInterface
 {
@@ -63,6 +64,14 @@ namespace ProjectorInterface
             SelectRect = new SelectionRectangle(Commands);
             SelectRect.Visibility = Visibility.Visible;
             Children.Add(SelectRect);
+
+            // Got this from https://stackoverflow.com/a/9624985
+            // Focuses the drawing canvas as soon as it gets visible
+            IsVisibleChanged += (s, e) =>
+            {
+                if ((bool)e.NewValue)
+                    Dispatcher.BeginInvoke(DispatcherPriority.ContextIdle, () => Focus());
+            };
         }
 
         private void OnCurrentToolChanged()
@@ -155,9 +164,6 @@ namespace ProjectorInterface
                 }
             }
         }
-
-        protected override void OnMouseEnter(MouseEventArgs e)
-            => Keyboard.Focus(this);
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {

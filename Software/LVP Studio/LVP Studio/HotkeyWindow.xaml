@@ -5,74 +5,107 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helper="clr-namespace:ProjectorInterface.HotkeyHelper"
         mc:Ignorable="d"
-        Title="Keybinds" Height="800" Width="500">
+        Title="Keybinds" Width="500"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <!-- Style for all Texboxes in Keybindwindow-->
+        <Style TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Text" Value="-- not set --"/>
+            <Setter Property="MinWidth" Value="230"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+
+        <Style TargetType="helper:HotkeyEditor">
+            <Setter Property="Margin" Value="5 0 5 0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-
+        
+        <!-- User Animation -->
         <Grid x:Name="UserAnimation" Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            
-            <!-- User Animation-->
-            <Label Content="User animation:" FontSize="25" FontWeight="Bold" Grid.Row="0"/>
+            <Label Content="User animation:" FontSize="25" FontWeight="Bold" Grid.Row="0" VerticalAlignment="Bottom"/>
 
-            <Label Content="Project current animation: " VerticalAlignment="Center" Grid.Row="1" 
-                   Grid.Column="0" FontSize="20"/>
-            <helper:HotkeyEditor Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
-                <TextBox x:Name="ProjectFrame" Style="{StaticResource KeybindTextBox}" 
-                         HorizontalAlignment="Left" PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" 
-                         Text="{Binding Hotkey, ElementName=HotkeyEditor}"/>
+            <helper:HotkeyEditor Grid.Row="1" KeyDisplayName="Project frame:" KeyName="ProjectFrame"/>
 
-            </helper:HotkeyEditor>
+            <helper:HotkeyEditor Grid.Row="2" KeyDisplayName="Save animation:" KeyName="SaveAnimation"/>
 
-
-            <Label Content="Save current animation: " VerticalAlignment="Center" Grid.Row="2" 
-                   Grid.Column="0" FontSize="20"/>
-            <helper:HotkeyEditor Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
-                <TextBox x:Name="SaveFrameBox" Style="{StaticResource KeybindTextBox}" 
-                         PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" 
-                         Text="{Binding Hotkey, ElementName=HotkeyEditor}"/>
-
-            </helper:HotkeyEditor>
-
-            <Label Content="Load background image: " VerticalAlignment="Center" Grid.Row="3" 
-                   Grid.Column="0" FontSize="20"/>
-            <helper:HotkeyEditor Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
-                <TextBox x:Name="LoadBackground" Style="{StaticResource KeybindTextBox}" 
-                         PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" 
-                         Text="{Binding Hotkey, ElementName=HotkeyEditor}">
-                </TextBox>
-            </helper:HotkeyEditor>
+            <helper:HotkeyEditor Grid.Row="3" KeyDisplayName="Load background image:" KeyName="LoadBgImg"/>
 
         </Grid>
 
+        <!-- Drawing Canvas -->
         <Grid x:Name="DrawingCanvas" Grid.Row="1">
-            <Label Content="Drawing canvas:" FontWeight="Bold" FontSize="25"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Drawing canvas:" FontWeight="Bold" FontSize="25" VerticalAlignment="Bottom"/>
+
+            <helper:HotkeyEditor Grid.Row="1" KeyDisplayName="Line tool:" KeyName="Line"/>
+
+            <helper:HotkeyEditor Grid.Row="2" KeyDisplayName="Rectangle tool:" KeyName="Rectangle"/>
+
+            <helper:HotkeyEditor Grid.Row="3" KeyDisplayName="Ellipse tool:" KeyName="Ellipse"/>
+            
+            <helper:HotkeyEditor Grid.Row="4" KeyDisplayName="Path tool:" KeyName="Path"/>
+            
+            <helper:HotkeyEditor Grid.Row="5" KeyDisplayName="Selection tool:" KeyName="Selection"/>
         </Grid>
 
         <Grid x:Name="AnimationGallery" Grid.Row="2">
-            <Label Content="Animation gallery:" FontWeight="Bold" FontSize="25"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Animation gallery:" FontWeight="Bold" FontSize="25" VerticalAlignment="Bottom"/>
+
+            <helper:HotkeyEditor Grid.Row="1" KeyDisplayName="Play/Pause:" KeyName="PlayPause"/>
+            
+            <helper:HotkeyEditor Grid.Row="2" KeyDisplayName="Skip animation:" KeyName="SkipAnimation"/>
+            
+            <helper:HotkeyEditor Grid.Row="3" KeyDisplayName="Revert animation:" KeyName="RevertAnimation"/>
+
+            <helper:HotkeyEditor Grid.Row="4" KeyDisplayName="Load animations:" KeyName="LoadAnimations"/>
         </Grid>
 
         <Grid Grid.Row="3">
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -88,7 +121,7 @@
             <Button x:Name="CancelBtn" Grid.Column="1" VerticalAlignment="Bottom" Background="Gray" 
                     Click="CancelClick" Width="90" Height="40" Margin="0 0 10 10" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="White">Cancel Changes</TextBlock>
+                    <TextBlock Foreground="White">Cancel changes</TextBlock>
                 </StackPanel>
             </Button>
 

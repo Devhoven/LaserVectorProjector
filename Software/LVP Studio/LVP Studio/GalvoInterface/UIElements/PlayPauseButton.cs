@@ -49,7 +49,7 @@ namespace ProjectorInterface.Helper
         }
 
         // Clickhandler, starts/stops Animation
-        private void ToggleAnimation(object sender, RoutedEventArgs e)
+        public void ToggleAnimation(object sender, RoutedEventArgs e)
         {
             if (AnimationManager.GetAnimation(Source).Running)
             {

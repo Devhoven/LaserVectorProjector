@@ -195,15 +195,15 @@ namespace ProjectorInterface
         protected override void OnKeyDown(KeyEventArgs e)
         {
             // The user can select a drawing mode with the keys 1 - 5
-            if (e.Key == Key.D1)
+            if (Keybinds.IsPressed("Line"))
                 UpdateTool(new LineTool());
-            else if (e.Key == Key.D2)
+            else if (Keybinds.IsPressed("Rectangle"))
                 UpdateTool(new RectTool());
-            else if (e.Key == Key.D3)
+            else if (Keybinds.IsPressed("Ellipse"))
                 UpdateTool(new CircleTool());
-            else if (e.Key == Key.D4)
+            else if (Keybinds.IsPressed("Path"))
                 UpdateTool(new PathTool());
-            else if (e.Key == Key.D5)
+            else if (Keybinds.IsPressed("Selection"))
                 SelectRect.IsSelecting = true;
 
             else if (e.Key == Key.Delete && SelectRect.IsSelecting && SelectRect.SelectedShapes.Count != 0)
@@ -226,10 +226,12 @@ namespace ProjectorInterface
             // Operations for the background image
             if (e.Key == Key.Insert)
                 BackgroundImg.ToggleOpacity();
-            else if (e.Key == Key.Enter)
+            else if (e.Key == Keybinds.KeybindDictionary["LoadBgImg"].Key)
                 BackgroundImg.ChooseImg();
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();
+            
+            Keyboard.Focus(this);
         }
 
         public void ChooseImg()

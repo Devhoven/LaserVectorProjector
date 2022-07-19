@@ -22,20 +22,21 @@ namespace ProjectorInterface
 
             AddKeyEntry(keybinds, "ProjectFrame", Key.P, ModifierKeys.Control);
             AddKeyEntry(keybinds, "LoadBgImg", Key.B, ModifierKeys.Control);
-            AddKeyEntry(keybinds, "SaveAnimation", Key.S, ModifierKeys.Control);
+            AddKeyEntry(keybinds, "SaveAnimation", Key.S, ModifierKeys.Shift);
             AddKeyEntry(keybinds, "Line", Key.D1, ModifierKeys.None);
             AddKeyEntry(keybinds, "Rectangle", Key.D2, ModifierKeys.None);
             AddKeyEntry(keybinds, "Ellipse", Key.D3, ModifierKeys.None);
             AddKeyEntry(keybinds, "Path", Key.D4, ModifierKeys.None);
+            AddKeyEntry(keybinds, "Selection", Key.D5, ModifierKeys.None);
             AddKeyEntry(keybinds, "PlayPause", Key.Space, ModifierKeys.None);
-            AddKeyEntry(keybinds, "SkipAnimation", Key.Right, ModifierKeys.Shift);
-            AddKeyEntry(keybinds, "RevertAnimation", Key.Left, ModifierKeys.Shift);
+            AddKeyEntry(keybinds, "SkipAnimation", Key.PageDown, ModifierKeys.None);
+            AddKeyEntry(keybinds, "RevertAnimation", Key.PageUp, ModifierKeys.None);
             AddKeyEntry(keybinds, "LoadAnimations", Key.O, ModifierKeys.Control);
 
             return keybinds;
         }
 
-        static void AddKeyEntry(Dictionary<string, Hotkey> keybinds, string name, Key key, ModifierKeys modifier)
+        public static void AddKeyEntry(Dictionary<string, Hotkey> keybinds, string name, Key key, ModifierKeys modifier)
             => keybinds.Add(name, RegistryManager.GetVal(name + "Key", new Hotkey(key, modifier)));
 
         public static Hotkey GetHotkey(string name)

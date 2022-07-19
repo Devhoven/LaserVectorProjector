@@ -56,26 +56,29 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            /*
-            if (HotkeyWindow.IsPressed("Saving"))
-            {
-                
-            }*/
             if (e.Key == Key.S && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
-            {
-                // CTRL + SHIFT + S = Save your drawing as an .ild file 
-                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
-                    SaveCanvasDialog();
-                else
-                    AddDrawnFrame();
-            }
-            else if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+                AddDrawnFrame();
+            else if (Keybinds.IsPressed("SaveAnimation"))
+                SaveCanvasDialog();
+            else if (Keybinds.IsPressed("ProjectFrame"))
+                ProjectUserAnimBtn.ToggleAnimation(this, e);
+            else if (Keybinds.IsPressed("LoadAnimations"))
                 SelectShowFolderDialog();
+            else if (Keybinds.IsPressed("LoadBgImg"))
+                DrawCon.ChooseImg();
+            else if (Keybinds.IsPressed("PlayPause"))
+                ToggleAnimBtn.ToggleAnimation(this, e);
+            else if (Keybinds.IsPressed("SkipAnimation"))
+                SkipAnimationClick(this, e);
+            else if (Keybinds.IsPressed("RevertAnimation"))
+                RevertAnimationClick(this, e);
             else if (e.Key == Key.C)
                 new PortSelectWindow(this).ShowDialog();
-
+            
             Keyboard.Focus(DrawCon);
         }
+        
+        #region Clickhandler
 
         // Handler for changed drawingTool currentTool
         private void CurrentTool_CurrentToolChanged(object? sender, EventArgs e)
@@ -113,6 +116,8 @@ namespace ProjectorInterface
 
         private void LoadImageClick(object sender, RoutedEventArgs e)
             => DrawCon.ChooseImg();
+
+        #endregion
 
         private static void SaveCanvasDialog()
         {

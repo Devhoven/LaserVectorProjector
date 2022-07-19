@@ -9,18 +9,55 @@ using System.Windows.Input;
 
 namespace ProjectorInterface.HotkeyHelper
 {
-    public partial class HotkeyEditor : StackPanel
+    public partial class HotkeyEditor : Grid
     {
-        public static readonly DependencyProperty HotkeyProperty =
-            DependencyProperty.Register("Hotkey", typeof(Hotkey), typeof(HotkeyEditor));
+        Label NameLabel;
+        TextBox HotkeyTextBox;
+
+        Hotkey _Hotkey = null!;
 
         public Hotkey Hotkey
         {
-            get => (Hotkey)GetValue(HotkeyProperty);
-            set => SetValue(HotkeyProperty, value);
+            get => _Hotkey;
+            set => _Hotkey = value;
         }
 
-        public string UpdateUI(object sender, KeyEventArgs e)
+        public string KeyDisplayName
+        {
+            get => (string)NameLabel.Content;
+            set => NameLabel.Content = value;
+        }
+
+        string _KeyName = "";
+        public string KeyName
+        {
+            get => _KeyName;
+            set
+            {
+                _KeyName = value;
+                HotkeyTextBox.Text = Keybinds.GetHotkey(KeyName).ToString();
+            } 
+        }
+
+        public string GetHotkeyTxt()
+            => HotkeyTextBox.Text;
+
+        public HotkeyEditor()
+        {
+            NameLabel = new Label();
+
+            HotkeyTextBox = new TextBox();
+
+            HotkeyTextBox.PreviewKeyDown += UpdateUI;
+
+            Children.Add(NameLabel);
+            Children.Add(HotkeyTextBox);
+
+            SetColumn(NameLabel, 0); 
+            SetColumn(HotkeyTextBox, 1);
+        }
+
+        public void UpdateUI(object sender, KeyEventArgs e)
         {
             e.Handled = true;
 
@@ -36,7 +73,8 @@ namespace ProjectorInterface.HotkeyHelper
             if (modifiers == ModifierKeys.None && (key == Key.Delete || key == Key.Back || key == Key.Escape))
             {
                 Hotkey = null!;
-                return "-- not set --";
+                HotkeyTextBox.Text = "-- not set --";
+                return;
             }
 
             // return if no actual key was pressed
@@ -50,13 +88,14 @@ namespace ProjectorInterface.HotkeyHelper
                 key == Key.RWin ||
                 key == Key.Clear)
             {
-                return "";
+                HotkeyTextBox.Text = "";
+                return;
             }
 
             // Update the value
             Hotkey = new Hotkey(key, modifiers);
 
-            return Hotkey.ToString();
+            HotkeyTextBox.Text = Hotkey.ToString();
         }
     }
 }

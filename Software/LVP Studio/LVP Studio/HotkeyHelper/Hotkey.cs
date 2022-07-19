@@ -20,7 +20,7 @@ namespace ProjectorInterface.HotkeyHelper
         }
 
         public bool IsPressed()
-            => Keyboard.GetKeyStates(Key) == KeyStates.Down && Keyboard.Modifiers == Modifiers;
+            => (Keyboard.GetKeyStates(Key) & KeyStates.Down) > 0 && Keyboard.Modifiers == Modifiers;
 
         // return string with pressed commands + buttons
         public override string ToString()

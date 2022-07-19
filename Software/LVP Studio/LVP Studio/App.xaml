@@ -44,16 +44,6 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="{StaticResource ForegroundColor}"/>
         </Style>
-        
-        <!-- Style for all Texboxes in Keybindwindow-->
-        <Style x:Key="KeybindTextBox" TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Text" Value="-- not set --"/>
-            <Setter Property="MinWidth" Value="230"/>
-        </Style>
 
         <!-- Sets the BitmapScalingMode for every image to the best one -->
         <Style TargetType="Image">

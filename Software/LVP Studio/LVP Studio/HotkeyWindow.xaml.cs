@@ -18,29 +18,44 @@ namespace ProjectorInterface
 {
     public partial class HotkeyWindow : Window
     {
-        
         public HotkeyWindow()
         {
             InitializeComponent();
-            ProjectFrameBox.Text = Keybinds.GetHotkey("ProjectFrame").ToString();
         }
-
 
         private void CancelClick(object sender, RoutedEventArgs e)
             => Close();
         
         private void ConfirmClick(object sender, RoutedEventArgs e)
         {
-            //Keybind.Add(ProjectFrameBox,((HotkeyEditor)ProjectFrameBox.Parent).Hotkey);
-            foreach(TextBox)
+            foreach(UIElement uIElement in MainGrid.Children)
+            {
+                if (uIElement is Grid grid)
+                {
+                    foreach (UIElement uie in grid.Children)
+                    {
+                        if (uie is HotkeyEditor hkeditor)
+                        {
+                            string hotkeyText = hkeditor.GetHotkeyTxt();
+                            if (hotkeyText == Keybinds.GetHotkey(hkeditor.KeyName).ToString())
+                            {
+                                continue;
+                            }
+                            else if(hotkeyText == "-- not set --")
+                            {
+                                MessageBox.Show("Not all keybinds are set!", "Warning");
+                                return;
+                            }
+                            else
+                            {
+                                Keybinds.KeybindDictionary[hkeditor.KeyName] = hkeditor.Hotkey;
+                            }
+                        }
+                    }
+                }
+            }
 
             Close();
-        }
-
-        private void HotkeyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            TextBox TextBox = (TextBox)sender;
-            TextBox.Text = ((HotkeyEditor)TextBox.Parent).UpdateUI(sender, e);
         }
     }
 }

@@ -34,10 +34,10 @@ namespace ProjectorInterface
                 {
                     foreach (UIElement uie in grid.Children)
                     {
-                        if (uie is HotkeyEditor hkeditor)
+                        if (uie is HotkeyEditor hkEditor)
                         {
-                            string hotkeyText = hkeditor.GetHotkeyTxt();
-                            if (hotkeyText == Keybinds.GetHotkey(hkeditor.KeyName).ToString())
+                            string hotkeyText = hkEditor.GetHotkeyTxt();
+                            if (hotkeyText == Keybinds.GetHotkey(hkEditor.KeyName).ToString())
                             {
                                 continue;
                             }
@@ -48,7 +48,7 @@ namespace ProjectorInterface
                             }
                             else
                             {
-                                Keybinds.KeybindDictionary[hkeditor.KeyName] = hkeditor.Hotkey;
+                                Keybinds.UpdateKeyEntry(hkEditor.KeyName, hkEditor.Hotkey);
                             }
                         }
                     }

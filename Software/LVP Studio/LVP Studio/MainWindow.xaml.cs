@@ -1,21 +1,13 @@
-﻿using LVP_Studio;
-using Ookii.Dialogs.Wpf;
-using ProjectorInterface.DrawingCommands;
+﻿using Ookii.Dialogs.Wpf;
 using ProjectorInterface.DrawingTools;
 using ProjectorInterface.GalvoInterface;
 using ProjectorInterface.GalvoInterface.UiElements;
 using ProjectorInterface.GalvoInterface.UIElements;
 using ProjectorInterface.Helper;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Ports;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace ProjectorInterface
 {
@@ -56,7 +48,7 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.Key == Key.S && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            if (Keybinds.IsPressed("AddFrame"))
                 AddDrawnFrame();
             else if (Keybinds.IsPressed("SaveAnimation"))
                 SaveCanvasDialog();
@@ -72,7 +64,7 @@ namespace ProjectorInterface
                 SkipAnimationClick(this, e);
             else if (Keybinds.IsPressed("RevertAnimation"))
                 RevertAnimationClick(this, e);
-            else if (e.Key == Key.C)
+            else if (Keybinds.IsPressed("ShowPortSelectWindow"))
                 new PortSelectWindow(this).ShowDialog();
             
             Keyboard.Focus(DrawCon);

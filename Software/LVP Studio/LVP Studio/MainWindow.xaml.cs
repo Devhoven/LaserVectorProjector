@@ -117,6 +117,13 @@ namespace ProjectorInterface
         private void LoadImageClick(object sender, RoutedEventArgs e)
             => DrawCon.ChooseImg();
 
+        private void OpenKeybindsClick(object sender, RoutedEventArgs e)
+        {
+            HotkeyWindow KbWindow = new HotkeyWindow();
+            KbWindow.Owner = this;
+            KbWindow.Show();
+        }
+
         #endregion
 
         private static void SaveCanvasDialog()
@@ -155,13 +162,6 @@ namespace ProjectorInterface
             FramePanel.Children.Add(new RenderedItemBorder(
                 new RenderedFrame(
                     ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
-        }
-
-        private void OpenKeybindsClick(object sender, RoutedEventArgs e)
-        {
-            HotkeyWindow KbWindow = new HotkeyWindow();
-            KbWindow.Owner = this;
-            KbWindow.Show();
         }
     }
 }

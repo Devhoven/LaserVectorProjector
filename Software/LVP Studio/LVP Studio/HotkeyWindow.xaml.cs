@@ -22,7 +22,7 @@ namespace ProjectorInterface
         public HotkeyWindow()
         {
             InitializeComponent();
-            ProjectFrameBox.Text = Keybinds.GetHotkey("ProjectFrame").ToString();
+            //ProjectFrameBox.Text = Keybinds.GetHotkey("ProjectFrame").ToString();
         }
 
 
@@ -32,7 +32,7 @@ namespace ProjectorInterface
         private void ConfirmClick(object sender, RoutedEventArgs e)
         {
             //Keybind.Add(ProjectFrameBox,((HotkeyEditor)ProjectFrameBox.Parent).Hotkey);
-            foreach(TextBox)
+            //foreach(TextBox)
 
             Close();
         }

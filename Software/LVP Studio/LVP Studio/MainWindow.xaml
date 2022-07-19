@@ -44,20 +44,19 @@
                         <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
                             
                             <helper:PlayPauseButton x:Name="ProjectUserAnimBtn" Source="UserImage" StandardImagePath="/Assets/ButtonImages/Upload.png"
-                                                 Style="{StaticResource SmallButton}" Margin="0 0 10 0" 
-                                                 ToolTip="Project current Image">
+                                                 Style="{StaticResource SmallButton}" ToolTip="Project current Image">
                                 <helper:PlayPauseButton.Content>
                                     <Image Source="pack://application:,,,/Assets/ButtonImages/Upload.png" Margin="3"/>
                                 </helper:PlayPauseButton.Content>
                             </helper:PlayPauseButton>
 
-                            <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="SaveCanvasClick" ToolTip="Save your drawing" >
+                            <Button Style="{StaticResource SmallButton}" Click="SaveCanvasClick" ToolTip="Save your drawing" >
                                 <Button.Content>
                                     <Image Source="pack://application:,,,/Assets/ButtonImages/Save.png" Margin="3"/>
                                 </Button.Content>
                             </Button>
 
-                            <Button Style="{StaticResource SmallButton}" Margin="0 0 10 0" Click="LoadImageClick" ToolTip="Load a background image">
+                            <Button Style="{StaticResource SmallButton}" Click="LoadImageClick" ToolTip="Load a background image">
                                 <Image Source="pack://application:,,,/Assets/ButtonImages/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
                             </Button>
                         </StackPanel>

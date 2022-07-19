@@ -23,7 +23,6 @@ namespace ProjectorInterface.GalvoInterface
         // Sending two points per packet, since this is the most efficient
         const int BUFFER_SIZE = SIZE_PER_POINT * 2;
 
-        static int BufferCount = 0;
         static byte[] Buffer;
 
         // Port object through which the communication is going to be held
@@ -76,8 +75,6 @@ namespace ProjectorInterface.GalvoInterface
                 if (frame.PointCount == 0)
                     return;
 
-                BufferCount = 0;
-
                 Point currentPoint = frame.Points[0];
 
                 // Looping through all of the points contained in the current image
@@ -116,8 +113,6 @@ namespace ProjectorInterface.GalvoInterface
 
             if (point.On)
                 Buffer[bufIndex + 3] |= 0x80;
-
-            BufferCount++;
         }
     }
 }

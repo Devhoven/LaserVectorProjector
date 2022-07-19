@@ -56,11 +56,6 @@ namespace ProjectorInterface
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            /*
-            if (HotkeyWindow.IsPressed("Saving"))
-            {
-                
-            }*/
             if (e.Key == Key.S && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 // CTRL + SHIFT + S = Save your drawing as an .ild file 

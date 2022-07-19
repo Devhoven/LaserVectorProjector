@@ -184,7 +184,7 @@ namespace ProjectorInterface.GalvoInterface
                             stopwatch.Stop();
 
                             // If the frame was sent faster than 1/FPS seconds the thread will sleep the rest of the time
-                            if (stopwatch.ElapsedMilliseconds < Settings.INV_SCAN_FPS_MS)
+                            if (CurrentSource != Source.UserImage && stopwatch.ElapsedMilliseconds < Settings.INV_SCAN_FPS_MS)
                                 Thread.Sleep(Settings.INV_SCAN_FPS_MS - (int)stopwatch.ElapsedMilliseconds);
                         }
                         // If this bool is set, the current animation got deleted or swapped

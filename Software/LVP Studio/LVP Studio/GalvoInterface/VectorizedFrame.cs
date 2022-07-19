@@ -26,6 +26,9 @@ namespace ProjectorInterface.GalvoInterface
 
         static Point[] InterpolatePoints(Point[] points)
         {
+            if (points.Length == 0)
+                return points;
+
             CalcDistances(points, out double travelDist, out double travelOffDist);
 
             // Amount of points, which are available for each frame
@@ -138,7 +141,7 @@ namespace ProjectorInterface.GalvoInterface
         {
             // The total distance traveled
             travelDist = 0;
-            // The distance traveled, where the laser got turned off
+            // The distance traveled, where the laser is turned off
             travelOffDist = 0;
 
             if (points.Length == 0)
@@ -177,7 +180,7 @@ namespace ProjectorInterface.GalvoInterface
 
                 if (points[i].On != prevStatus)
                 {
-                    for (int j = i; j < i + 3; j++)
+                    for (int j = i; j < i + 3 && j < points.Length; j++)
                         points[j].On = prevStatus;
 
                     i += 3;

@@ -56,7 +56,7 @@ namespace LVP_Studio.Helper
                 }
             }
 
-            if (maxDist < Settings.RDP_EPSILON)
+            if (maxDist < ProjectorInterface.Helper.Settings.RDP_EPSILON)
                 return -1;
             return maxDistIndex;
         }

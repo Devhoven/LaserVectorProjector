@@ -54,9 +54,8 @@ namespace ProjectorInterface.GalvoInterface.UIElements
                     int lastSelectedIndex = Children.IndexOf(LastSelected);
                     int currentIndex = Children.IndexOf(rib);
                     if (lastSelectedIndex > currentIndex)
-                    {
                         (currentIndex, lastSelectedIndex) = (lastSelectedIndex, currentIndex);
-                    }
+
                     for (int i = lastSelectedIndex; i <= currentIndex; i++)
                     {
                         ((RenderedItemBorder)Children[i]).Select();
@@ -76,8 +75,6 @@ namespace ProjectorInterface.GalvoInterface.UIElements
                     SelectedFrames.Remove(rib);
                     rib.Deselect();
                 }
-
-
             }
             else if (e.MiddleButton == MouseButtonState.Pressed)
             {
@@ -85,13 +82,18 @@ namespace ProjectorInterface.GalvoInterface.UIElements
                     return;
 
                 if (!rib.IsSelected)
-                    Children.Remove(rib);
+                    SelectedFrames.Add(rib);
 
+                // The frames have to be ordered in ascending order, so the elements can be properly deleted
+                SelectedFrames = SelectedFrames.OrderBy(x => Children.IndexOf(x)).DistinctBy(x => Children.IndexOf(x)).ToList();
+
+                // Deleting the frames in the 
+                for (int i = SelectedFrames.Count - 1; i >= 0; i--)
+                    ShapesToPoints.DrawnImage.Frames.RemoveAt(Children.IndexOf(SelectedFrames[i]));
 
                 foreach (RenderedItemBorder frame in SelectedFrames)
-                {
                     Children.Remove(frame);
-                }
+
                 SelectedFrames.Clear();
             }
         }
@@ -100,15 +102,11 @@ namespace ProjectorInterface.GalvoInterface.UIElements
             if (SelectedFrames.Count > 1)
             {
                 DialogResult result = MessageBox.Show("Do you want to delete all currently selected frames?",
-                                           "Delete selection",
-                                           MessageBoxButtons.YesNo);
-
+                                                      "Delete selection", MessageBoxButtons.YesNo);
                 return result == DialogResult.Yes;
             }
             else
-            {
                 return true;
-            }
         }
     }
 }

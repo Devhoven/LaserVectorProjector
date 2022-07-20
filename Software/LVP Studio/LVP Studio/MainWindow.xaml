@@ -10,168 +10,203 @@
         mc:Ignorable="d"
         x:Name="Window" Icon= "Assets/LaserPointer.ico" Title="LVP Studio" WindowState="Maximized" Background="{StaticResource BackgroundColor}"
         Width="1920" Height="1080">
-    
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
 
-        <!-- Left Container -->
-        <Grid Grid.Column="0" ClipToBounds="True">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Save animation" Click="SaveAnimationClick">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Save.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open animation folder" Click="SelectShowClick">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Folder.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Load background image" Click="LoadImageClick">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/LoadImage.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Edit keybinds" Click="OpenKeybindsClick">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Keybind.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Select port" Click="OpenPortClick">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/Assets/ButtonImages/Port.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
+        
+            <!-- Left Container -->
+            <Grid Grid.Column="0" ClipToBounds="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
 
-            <!-- Frame Container -->
-            <Border Grid.Column="0" CornerRadius="5" Background="{StaticResource ForegroundColor}" BorderBrush="Black" BorderThickness="1">
-                <Grid x:Name="Frames">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                    <!-- Panel for the label and the two buttons -->
-                    <DockPanel Grid.Row="0">
-                        <Label x:Name="FrameLabel" Content="Frames: " DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+                <!-- Frame Container -->
+                <Border Grid.Column="0" CornerRadius="5" Background="{StaticResource ForegroundColor}" BorderBrush="Black" BorderThickness="1">
+                    <Grid x:Name="Frames">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
 
-                        <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <!-- Panel for the label and the two buttons -->
+                        <DockPanel Grid.Row="0">
+                            <Label x:Name="FrameLabel" Content="Frames: " DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="15" Foreground="Black"/>
+
+                            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
                             
-                            <helper:PlayPauseButton x:Name="ProjectUserAnimBtn" Source="UserImage" StandardImagePath="/Assets/ButtonImages/Upload.png"
-                                                 Style="{StaticResource SmallButton}" ToolTip="Project current Image">
-                                <helper:PlayPauseButton.Content>
-                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Upload.png" Margin="3"/>
-                                </helper:PlayPauseButton.Content>
-                            </helper:PlayPauseButton>
+                                <helper:PlayPauseButton x:Name="ProjectUserAnimBtn" Source="UserImage" StandardImagePath="/Assets/ButtonImages/Upload.png"
+                                                     Style="{StaticResource SmallButton}" ToolTip="Project current Image">
+                                    <helper:PlayPauseButton.Content>
+                                        <Image Source="pack://application:,,,/Assets/ButtonImages/Upload.png" Margin="3"/>
+                                    </helper:PlayPauseButton.Content>
+                                </helper:PlayPauseButton>
 
-                            <Button Style="{StaticResource SmallButton}" Click="SaveCanvasClick" ToolTip="Save your drawing" >
+                                <Button Style="{StaticResource SmallButton}" Click="SaveAnimationClick" ToolTip="Save animation" >
+                                    <Button.Content>
+                                        <Image Source="pack://application:,,,/Assets/ButtonImages/Save.png" Margin="3"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button Style="{StaticResource SmallButton}" Click="LoadImageClick" ToolTip="Load a background image">
+                                    <Image Source="pack://application:,,,/Assets/ButtonImages/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+                    
+                        <!-- Stackpanel for all the frames -->
+                        <uc:AutoScrollViewer Grid.Row="1">
+                            <uielements:FramePanel x:Name="FramePanel" FrameDisplayContent="{Binding ElementName=FrameLabel}"/>
+                        </uc:AutoScrollViewer>
+                    </Grid>
+                </Border>
+            
+                <!-- Buttons for drawing tools -->
+                <helper:ButtonPanel x:Name="BtnPanel" Grid.Column="1" >
+                    <Button x:Name="LineBtn" Grid.Column="0"  Style="{StaticResource BigButton}" Click="SelectLineClick" ToolTip="Select Line Tool">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="RectangleBtn" Style="{StaticResource BigButton}" Click="SelectRectangleClick" ToolTip="Select Rectangle Tool">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="EllipseBtn" Style="{StaticResource BigButton}" Click="SelectCircleClick" ToolTip="Select Circle Tool">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="PathBtn" Style="{StaticResource BigButton}" Click="SelectPathClick" ToolTip="Select Path Tool">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="SelectBtn" Style="{StaticResource BigButton}" Click="SelectionClick" ToolTip="Select Tools">
+                        <Image Source="pack://application:,,,/Assets/CommandImages/Selection.png"/>
+                    </Button>
+                </helper:ButtonPanel>
+            </Grid>
+
+            <!-- Drawing Canvas -->
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Grid.Column="1" Padding="1"
+                        Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
+                <local:DrawingCanvas x:Name="DrawCon" Background="{StaticResource ForegroundColor}" ClipToBounds="True" Focusable="True"
+                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                </local:DrawingCanvas>
+            </Border>
+
+            <!-- Right Container -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Pause and start buttons -->
+                <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
+                    <helper:PlayPauseButton x:Name="ToggleAnimBtn" Source="AnimationGallery"  StandardImagePath="/Assets/ButtonImages/Start.png"
+                                         Style="{StaticResource BigButton}" ToolTip="Start/Stop Animation">
+                        <helper:PlayPauseButton.Content>
+                            <Image Source="pack://application:,,,/Assets/ButtonImages/Start.png" Margin="3"/>
+                        </helper:PlayPauseButton.Content>
+                    </helper:PlayPauseButton>
+
+                    <Button Click="SkipAnimationClick" Style="{StaticResource BigButton}" ToolTip="Skip current animation">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/ButtonImages/Skip.png" Margin="3"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Click="RevertAnimationClick" Style="{StaticResource BigButton}" ToolTip="Revert to the animation before">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Assets/ButtonImages/Revert.png" Margin="3"/>
+                        </Button.Content>
+                    </Button>
+                </WrapPanel>
+
+                <!-- Animation container -->
+                <Border Grid.Column="1" CornerRadius="5" Background="{StaticResource ForegroundColor}" BorderBrush="Black" BorderThickness="1">
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Label and button for the container -->
+                        <DockPanel Grid.Row="0">
+                            <Label Content="Animations:" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="15" Foreground="Black"/>
+
+                            <Button Style="{StaticResource SmallButton}" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right"
+                                        Click="SelectShowClick" ToolTip="Open Animation Folder">
                                 <Button.Content>
-                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Save.png" Margin="3"/>
+                                    <Image Source="pack://application:,,,/Assets/ButtonImages/Folder.png"/>
                                 </Button.Content>
                             </Button>
+                        </DockPanel>
 
-                            <Button Style="{StaticResource SmallButton}" Click="LoadImageClick" ToolTip="Load a background image">
-                                <Image Source="pack://application:,,,/Assets/ButtonImages/LoadImage.png" VerticalAlignment="Center" Margin="3"/>
-                            </Button>
-                        </StackPanel>
-                    </DockPanel>
-                    
-                    <!-- Stackpanel for all the frames -->
-                    <uc:AutoScrollViewer Grid.Row="1">
-                        <uielements:FramePanel x:Name="FramePanel" FrameDisplayContent="{Binding ElementName=FrameLabel}"/>
-                    </uc:AutoScrollViewer>
-                </Grid>
-            </Border>
-            
-            <!-- Buttons for drawing tools -->
-            <helper:ButtonPanel x:Name="BtnPanel" Grid.Column="1" >
-                <Button x:Name="LineBtn" Grid.Column="0"  Style="{StaticResource BigButton}" Click="SelectLineClick" ToolTip="Select Line Tool">
-                    <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/CommandImages/Line.png"/>
-                    </Button.Content>
-                </Button>
-
-                <Button x:Name="RectangleBtn" Style="{StaticResource BigButton}" Click="SelectRectangleClick" ToolTip="Select Rectangle Tool">
-                    <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/CommandImages/Rectangle.png"/>
-                    </Button.Content>
-                </Button>
-
-                <Button x:Name="EllipseBtn" Style="{StaticResource BigButton}" Click="SelectCircleClick" ToolTip="Select Circle Tool">
-                    <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/CommandImages/Ellipse.png"/>
-                    </Button.Content>
-                </Button>
-
-                <Button x:Name="PathBtn" Style="{StaticResource BigButton}" Click="SelectPathClick" ToolTip="Select Path Tool">
-                    <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/CommandImages/Path.png"/>
-                    </Button.Content>
-                </Button>
-
-                <Button x:Name="SelectBtn" Style="{StaticResource BigButton}" Click="SelectionClick" ToolTip="Select Tools">
-                    <Image Source="pack://application:,,,/Assets/CommandImages/Selection.png"/>
-                </Button>
-            </helper:ButtonPanel>
-        </Grid>
-
-        <!-- Drawing Canvas -->
-        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Grid.Column="1" Padding="1"
-                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
-            <local:DrawingCanvas x:Name="DrawCon" Background="{StaticResource ForegroundColor}" ClipToBounds="True" Focusable="True"
-                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            </local:DrawingCanvas>
-        </Border>
-
-        <!-- Right Container -->
-        <Grid Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Pause and start buttons -->
-            <WrapPanel Orientation="Vertical" Grid.Column="0" VerticalAlignment="Center">
-
-                <!-- Custom Button class with Eventlistener -->
-                <Button Style="{StaticResource BigButton}" Click="OpenKeybindsClick"/>
-
-                <helper:PlayPauseButton x:Name="ToggleAnimBtn" Source="AnimationGallery"  StandardImagePath="/Assets/ButtonImages/Start.png"
-                                     Style="{StaticResource BigButton}" ToolTip="Start/Stop Animation">
-                    <helper:PlayPauseButton.Content>
-                        <Image Source="pack://application:,,,/Assets/ButtonImages/Start.png" Margin="3"/>
-                    </helper:PlayPauseButton.Content>
-                </helper:PlayPauseButton>
-
-                <Button Click="SkipAnimationClick" Style="{StaticResource BigButton}" ToolTip="Skip current animation">
-                    <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/ButtonImages/Skip.png" Margin="3"/>
-                    </Button.Content>
-                </Button>
-
-                <Button Click="RevertAnimationClick" Style="{StaticResource BigButton}" ToolTip="Revert to the animation before">
-                    <Button.Content>
-                        <Image Source="pack://application:,,,/Assets/ButtonImages/Revert.png" Margin="3"/>
-                    </Button.Content>
-                </Button>
-            </WrapPanel>
-
-            <!-- Animation container -->
-            <Border Grid.Column="1" CornerRadius="5" Background="{StaticResource ForegroundColor}" BorderBrush="Black" BorderThickness="1">
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- Label and button for the container -->
-                    <DockPanel Grid.Row="0">
-                        <Label Content="Animations:" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="15" Foreground="Black"/>
-
-                        <Button Style="{StaticResource SmallButton}" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Right" DockPanel.Dock="Right"
-                                    Click="SelectShowClick" ToolTip="Open Animation Folder">
-                            <Button.Content>
-                                <Image Source="pack://application:,,,/Assets/ButtonImages/Folder.png"/>
-                            </Button.Content>
-                        </Button>
-                    </DockPanel>
-
-                    <!-- Stackpanel for the animations -->
-                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-                        <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
-                    </ScrollViewer>
-                </Grid>
-            </Border>
+                        <!-- Stackpanel for the animations -->
+                        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                            <uielements:AnimationGalleryPanel x:Name="AnimationGallery"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

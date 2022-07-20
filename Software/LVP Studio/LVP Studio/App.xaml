@@ -49,5 +49,9 @@
         <Style TargetType="Image">
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant"/>
         </Style>
+
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="{StaticResource BackgroundColor}"/>
+        </Style>
     </Application.Resources>
 </Application>

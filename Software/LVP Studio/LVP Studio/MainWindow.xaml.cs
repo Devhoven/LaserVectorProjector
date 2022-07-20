@@ -51,7 +51,7 @@ namespace ProjectorInterface
             if (Keybinds.IsPressed("AddFrame"))
                 AddDrawnFrame();
             else if (Keybinds.IsPressed("SaveAnimation"))
-                SaveCanvasDialog();
+                SaveAnimationDialog();
             else if (Keybinds.IsPressed("ProjectFrame"))
                 ProjectUserAnimBtn.ToggleAnimation(this, e);
             else if (Keybinds.IsPressed("LoadAnimations"))
@@ -65,7 +65,7 @@ namespace ProjectorInterface
             else if (Keybinds.IsPressed("RevertAnimation"))
                 RevertAnimationClick(this, e);
             else if (Keybinds.IsPressed("ShowPortSelectWindow"))
-                new PortSelectWindow(this).ShowDialog();
+                OpenEditPortWindow();
 
             Keyboard.Focus(DrawCon);
         }
@@ -103,18 +103,21 @@ namespace ProjectorInterface
         private void SelectionClick(object sender, RoutedEventArgs e)
             => DrawCon.SelectRect.IsSelecting = true;
 
-        private void SaveCanvasClick(object sender, RoutedEventArgs e)
-            => SaveCanvasDialog();
+        private void SaveAnimationClick(object sender, RoutedEventArgs e)
+            => SaveAnimationDialog();
 
         private void LoadImageClick(object sender, RoutedEventArgs e)
             => DrawCon.ChooseImg();
 
         private void OpenKeybindsClick(object sender, RoutedEventArgs e)
-            => new HotkeyWindow(this).ShowDialog();
+            => OpenEditKeybindsWindow();
+
+        private void OpenPortClick(object sender, RoutedEventArgs e)
+            => OpenEditPortWindow();
 
         #endregion
 
-        private static void SaveCanvasDialog()
+        private static void SaveAnimationDialog()
         {
             VistaSaveFileDialog dialog = new VistaSaveFileDialog()
             {
@@ -151,5 +154,10 @@ namespace ProjectorInterface
                 new RenderedFrame(
                     ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
         }
+
+        private void OpenEditKeybindsWindow()
+            => new HotkeyWindow(this).ShowDialog();
+        private void OpenEditPortWindow()
+            => new PortSelectWindow(this).ShowDialog();
     }
 }

@@ -24,6 +24,37 @@ namespace ProjectorInterface.GalvoInterface
         public static VectorizedFrame InterpolatedFrame(Point[] points)
             => new VectorizedFrame(InterpolatePoints(points));
 
+        public static VectorizedFrame SafeFrame(Point[] points)
+        {
+            List<Point> interpolatedPoints = new List<Point>();
+
+            for (int i = 0; i < points.Length - 1; i++)
+            {
+                double distance = Point.GetDistance(points[i], points[i + 1]);
+
+                interpolatedPoints.Add(points[i]);
+
+                if(distance > MAX_STEP_SIZE)
+                {
+                    double res = Math.Floor(distance / MAX_STEP_SIZE);
+
+                    double diffX = (points[i + 1].X - points[i].X)/ distance * MAX_STEP_SIZE;
+                    double diffY = (points[i + 1].Y - points[i].Y) / distance * MAX_STEP_SIZE;
+
+
+                    for (int j = 1; j < res; j++)
+                    {
+                        interpolatedPoints.Add(new Point(points[i].X + diffX * j, points[i].Y + diffY * j, points[i + 1].On));
+                    }
+                }
+            }
+
+            interpolatedPoints.Add(points[^1]);
+
+            return new VectorizedFrame(interpolatedPoints.ToArray());
+        }
+
+
         static Point[] InterpolatePoints(Point[] points)
         {
             if (points.Length == 0)

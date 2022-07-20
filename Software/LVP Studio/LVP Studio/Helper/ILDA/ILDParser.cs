@@ -89,7 +89,7 @@ namespace ProjectorInterface.Helper
             for (int i = 0; i < CurrentHeader.EntryCount; i++)
                 result.Add(readFunc(reader));
 
-            return new VectorizedFrame(result.ToArray());
+            return VectorizedFrame.SafeFrame(result.ToArray());
         }
 
         // Is able to read a data record of any frame

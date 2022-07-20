@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Point = ProjectorInterface.GalvoInterface.Point;
+using Point = LvpStudio.GalvoInterface.Point;
 
 namespace LVP_Studio.Helper
 {

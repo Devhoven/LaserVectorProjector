@@ -1,9 +1,9 @@
-﻿using ProjectorInterface.Helper;
+﻿using LvpStudio.Helper;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // Superclass for the Command Design Pattern
     public abstract class CanvasCommand

@@ -1,5 +1,5 @@
-﻿using ProjectorInterface.GalvoInterface;
-using ProjectorInterface.Helpler;
+﻿using LvpStudio.GalvoInterface;
+using LvpStudio.Helpler;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -16,7 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface
+namespace LvpStudio
 {
     public partial class PortSelectWindow : Window
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace ProjectorInterface.GalvoInterface.UIElements
+namespace LvpStudio.GalvoInterface.UIElements
 {
     class AnimationGalleryPanel : StackPanel
     {

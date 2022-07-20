@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // Wrapper for a do / undo history
     public class CommandHistory

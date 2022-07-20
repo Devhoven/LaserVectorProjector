@@ -1,5 +1,5 @@
-﻿using ProjectorInterface.Helpler;
-using ProjectorInterface.HotkeyHelper;
+﻿using LvpStudio.Helpler;
+using LvpStudio.HotkeyHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface
+namespace LvpStudio
 {
     public partial class HotkeyWindow : Window
     {

@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ProjectorInterface.HotkeyHelper
+namespace LvpStudio.HotkeyHelper
 {
     public partial class HotkeyEditor : Grid
     {

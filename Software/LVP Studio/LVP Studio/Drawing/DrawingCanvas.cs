@@ -1,6 +1,6 @@
-﻿using ProjectorInterface.DrawingCommands;
-using ProjectorInterface.DrawingTools;
-using ProjectorInterface.Helper;
+﻿using LvpStudio.DrawingCommands;
+using LvpStudio.DrawingTools;
+using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace ProjectorInterface
+namespace LvpStudio
 {
     // A canvas the user is able to draw on
     public class DrawingCanvas : Canvas

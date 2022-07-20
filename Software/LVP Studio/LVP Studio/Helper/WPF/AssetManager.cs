@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     static class AssetManager
     {

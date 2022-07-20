@@ -1,6 +1,6 @@
-﻿using ProjectorInterface.DrawingCommands;
-using ProjectorInterface.GalvoInterface.UIElements;
-using ProjectorInterface.Helper;
+﻿using LvpStudio.DrawingCommands;
+using LvpStudio.GalvoInterface.UIElements;
+using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace ProjectorInterface.GalvoInterface.UiElements
+namespace LvpStudio.GalvoInterface.UiElements
 {
     partial class RenderedFrame : Grid
     {

@@ -1,11 +1,11 @@
-﻿using ProjectorInterface.Helper;
+﻿using LvpStudio.Helper;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface.DrawingTools
+namespace LvpStudio.DrawingTools
 {
     // Allows the user to draw a circle
     class CircleTool : DrawingTool

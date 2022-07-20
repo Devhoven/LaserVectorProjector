@@ -3,12 +3,12 @@ using System.Windows;
 using LVP_Studio.Helper;
 using System.Windows.Shapes;
 using System.Collections.Generic;
-using static ProjectorInterface.DrawingCommands.CanvasCommand;
-using static ProjectorInterface.Helper.Settings;
+using static LvpStudio.DrawingCommands.CanvasCommand;
+using static LvpStudio.Helper.Settings;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using WPFLine = System.Windows.Shapes.Line;
 
-namespace ProjectorInterface.GalvoInterface
+namespace LvpStudio.GalvoInterface
 {
     static class ShapesToPoints
     {

@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.GalvoInterface.UiElements;
+﻿using LvpStudio.GalvoInterface.UiElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Windows.Input;
 using Label = System.Windows.Controls.Label;
 using MessageBox = System.Windows.Forms.MessageBox;
 
-namespace ProjectorInterface.GalvoInterface.UIElements
+namespace LvpStudio.GalvoInterface.UIElements
 {
     class FramePanel : StackPanel
     {

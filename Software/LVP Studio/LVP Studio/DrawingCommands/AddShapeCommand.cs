@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.Helper;
+﻿using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // Saves the shape which was added to the canvas and deletes it if necessary
     public class AddShapeCommand : CanvasCommand

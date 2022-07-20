@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.Helpler;
+﻿using LvpStudio.Helpler;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     // static class, which holds all of the constant variables needed for the GUI
     public partial class Settings

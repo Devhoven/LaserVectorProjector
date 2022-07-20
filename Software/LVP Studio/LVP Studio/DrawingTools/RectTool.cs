@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.Helper;
+﻿using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface.DrawingTools
+namespace LvpStudio.DrawingTools
 {
     // Allows the user to draw an axis-aligned rectangle
     class RectTool : DrawingTool

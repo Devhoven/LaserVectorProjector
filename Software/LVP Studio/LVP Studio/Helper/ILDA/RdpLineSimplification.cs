@@ -1,5 +1,5 @@
-﻿using ProjectorInterface.GalvoInterface;
-using ProjectorInterface.Helper;
+﻿using LvpStudio.GalvoInterface;
+using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +56,7 @@ namespace LVP_Studio.Helper
                 }
             }
 
-            if (maxDist < ProjectorInterface.Helper.Settings.RDP_EPSILON)
+            if (maxDist < LvpStudio.Helper.Settings.RDP_EPSILON)
                 return -1;
             return maxDistIndex;
         }

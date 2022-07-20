@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // For autoscrolling
     // "Inspired" by: https://stackoverflow.com/a/19315242

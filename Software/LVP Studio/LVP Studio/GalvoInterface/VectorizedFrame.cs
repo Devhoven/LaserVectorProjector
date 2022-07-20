@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using static ProjectorInterface.Helper.Settings;
+using static LvpStudio.Helper.Settings;
 
-namespace ProjectorInterface.GalvoInterface
+namespace LvpStudio.GalvoInterface
 {
     // Currently just a mockup class which is later going to contain an array of vectors which define the lines
     // It is going to be responsible for the normalization of the data and interpolation between the points, if they are too far apart
@@ -49,7 +49,8 @@ namespace ProjectorInterface.GalvoInterface
                 }
             }
 
-            interpolatedPoints.Add(points[^1]);
+            if (points.Length > 0)
+                interpolatedPoints.Add(points[^1]);
 
             return new VectorizedFrame(interpolatedPoints.ToArray());
         }

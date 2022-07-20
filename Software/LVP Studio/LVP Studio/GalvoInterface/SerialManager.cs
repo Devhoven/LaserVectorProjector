@@ -1,5 +1,5 @@
-﻿using ProjectorInterface.Helper;
-using ProjectorInterface.Helpler;
+﻿using LvpStudio.Helper;
+using LvpStudio.Helpler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,9 +7,9 @@ using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
-using static ProjectorInterface.Helper.Settings;
+using static LvpStudio.Helper.Settings;
 
-namespace ProjectorInterface.GalvoInterface
+namespace LvpStudio.GalvoInterface
 {
     static class SerialManager
     {
@@ -30,9 +30,6 @@ namespace ProjectorInterface.GalvoInterface
 
         public static string PortName => Port == null ? "" : Port.PortName;
         public static bool IsConnected => Port != null && Port.IsOpen;
-
-        // Saves the last point of the last played frame, so I can interpolate between this one and the new start point
-        static Point LastPoint = new Point(0, 0, false);
 
         static SerialManager()
         {
@@ -93,8 +90,6 @@ namespace ProjectorInterface.GalvoInterface
                     // Sending the data
                     Port.Write(Buffer, 0, BUFFER_SIZE);
                 }
-
-                LastPoint = currentPoint;
             }
         }
 

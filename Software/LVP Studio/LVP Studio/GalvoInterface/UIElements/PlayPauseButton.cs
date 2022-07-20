@@ -1,12 +1,12 @@
 ﻿using System;
-using ProjectorInterface.GalvoInterface;
+using LvpStudio.GalvoInterface;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
-using Source = ProjectorInterface.GalvoInterface.AnimationManager.Source;
+using Source = LvpStudio.GalvoInterface.AnimationManager.Source;
 using System.Windows;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     class PlayPauseButton : Button
     {

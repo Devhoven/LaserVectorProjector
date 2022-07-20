@@ -1,5 +1,5 @@
-﻿using ProjectorInterface.DrawingTools;
-using ProjectorInterface.Helper;
+﻿using LvpStudio.DrawingTools;
+using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // Removes the shape from the current canvas and adds it again, if necessary
     public class EraseSelectionCommand : CanvasCommand

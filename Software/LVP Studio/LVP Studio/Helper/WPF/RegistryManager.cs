@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace ProjectorInterface.Helpler
+namespace LvpStudio.Helpler
 {
     // Small wrapper for the Registry class, so I don't have to specify the KeyName all of the time
     static class RegistryManager

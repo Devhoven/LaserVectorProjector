@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.GalvoInterface.UiElements;
+﻿using LvpStudio.GalvoInterface.UiElements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Windows.Media;
 using MessageBox = System.Windows.Forms.MessageBox;
 using Panel = System.Windows.Controls.Panel;
 
-namespace ProjectorInterface.GalvoInterface.UIElements
+namespace LvpStudio.GalvoInterface.UIElements
 {
     // A border which holds an image and has to be added into some kind of panel
     class RenderedItemBorder : Border

@@ -1,6 +1,6 @@
-﻿using ProjectorInterface.DrawingCommands;
-using ProjectorInterface.DrawingTools;
-using ProjectorInterface.Helper;
+﻿using LvpStudio.DrawingCommands;
+using LvpStudio.DrawingTools;
+using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;

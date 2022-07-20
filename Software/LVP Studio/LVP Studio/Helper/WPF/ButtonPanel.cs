@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.DrawingTools;
+﻿using LvpStudio.DrawingTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     // Holds the ToolButtons and visually selects them
     public class ButtonPanel : WrapPanel

@@ -1,15 +1,15 @@
 ﻿using Ookii.Dialogs.Wpf;
-using ProjectorInterface.DrawingTools;
-using ProjectorInterface.GalvoInterface;
-using ProjectorInterface.GalvoInterface.UiElements;
-using ProjectorInterface.GalvoInterface.UIElements;
-using ProjectorInterface.Helper;
+using LvpStudio.DrawingTools;
+using LvpStudio.GalvoInterface;
+using LvpStudio.GalvoInterface.UiElements;
+using LvpStudio.GalvoInterface.UIElements;
+using LvpStudio.Helper;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ProjectorInterface
+namespace LvpStudio
 {
     public partial class MainWindow : Window
     {

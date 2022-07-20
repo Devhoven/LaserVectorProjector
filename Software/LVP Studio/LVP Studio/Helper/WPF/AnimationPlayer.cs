@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     static class AnimationPlayer
     {

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProjectorInterface.Helper;
-using ProjectorInterface.GalvoInterface;
+using LvpStudio.Helper;
+using LvpStudio.GalvoInterface;
 using System.Drawing;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ProjectorInterface.GalvoInterface
+namespace LvpStudio.GalvoInterface
 {
     
     class VectorizedImage

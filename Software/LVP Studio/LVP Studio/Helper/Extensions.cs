@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.GalvoInterface;
+﻿using LvpStudio.GalvoInterface;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     static class Extensions
     {
@@ -24,7 +24,7 @@ namespace ProjectorInterface.Helper
                 return "Ellipse";
             if (shape is System.Windows.Shapes.Path)
                 return "Path";
-            if (shape is ProjectorInterface.DrawingTools.SelectionRectangle)
+            if (shape is LvpStudio.DrawingTools.SelectionRectangle)
                 return "Selection";
             return "Nothing";
         }

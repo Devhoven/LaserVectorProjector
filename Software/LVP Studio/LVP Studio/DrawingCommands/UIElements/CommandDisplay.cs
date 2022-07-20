@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // Displays CommandRecords and limits them to MAX_CHILDREN_COUNT
     class CommandDisplay : StackPanel

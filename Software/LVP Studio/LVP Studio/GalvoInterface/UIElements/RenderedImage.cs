@@ -7,12 +7,12 @@ using System.Windows.Media.Imaging;
 using Color = System.Drawing.Color;
 using Image = System.Windows.Controls.Image;
 using Pen = System.Drawing.Pen;
-using ProjectorInterface.Helper;
+using LvpStudio.Helper;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows;
 
-namespace ProjectorInterface.GalvoInterface.UiElements
+namespace LvpStudio.GalvoInterface.UiElements
 {
     class RenderedImage : Image
     {

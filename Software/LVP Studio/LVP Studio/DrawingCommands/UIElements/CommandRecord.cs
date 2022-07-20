@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.Helper;
+﻿using LvpStudio.Helper;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,7 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace ProjectorInterface.DrawingCommands
+namespace LvpStudio.DrawingCommands
 {
     // Used to display one command in the command history
     class CommandRecord : StackPanel

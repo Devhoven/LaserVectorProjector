@@ -1,6 +1,6 @@
-﻿using ProjectorInterface;
-using ProjectorInterface.Helpler;
-using ProjectorInterface.HotkeyHelper;
+﻿using LvpStudio;
+using LvpStudio.Helpler;
+using LvpStudio.HotkeyHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ProjectorInterface
+namespace LvpStudio
 {
     class Keybinds
     {

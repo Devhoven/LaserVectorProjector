@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Point = ProjectorInterface.GalvoInterface.Point;
+using Point = LvpStudio.GalvoInterface.Point;
 using WPFLine = System.Windows.Shapes.Line;
 
 namespace LVP_Studio.Helper

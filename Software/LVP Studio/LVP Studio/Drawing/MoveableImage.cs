@@ -10,9 +10,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using static ProjectorInterface.Helper.Settings;
+using static LvpStudio.Helper.Settings;
 
-namespace ProjectorInterface
+namespace LvpStudio
 {
     // A image which can be moved and zoomed
     public class MoveableImage : Image

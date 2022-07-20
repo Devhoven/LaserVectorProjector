@@ -1,6 +1,6 @@
 ﻿using LVP_Studio.DrawingCommands;
-using ProjectorInterface.DrawingCommands;
-using ProjectorInterface.Helper;
+using LvpStudio.DrawingCommands;
+using LvpStudio.Helper;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace ProjectorInterface.DrawingTools
+namespace LvpStudio.DrawingTools
 {
     // Allows the user to select Shapes
     public class SelectionRectangle : Shape

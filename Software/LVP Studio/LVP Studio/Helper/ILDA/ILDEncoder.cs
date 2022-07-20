@@ -1,4 +1,4 @@
-﻿using ProjectorInterface.GalvoInterface;
+﻿using LvpStudio.GalvoInterface;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectorInterface.Helper
+namespace LvpStudio.Helper
 {
     static class IldEncoder
     {

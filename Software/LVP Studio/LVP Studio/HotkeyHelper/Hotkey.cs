@@ -41,7 +41,7 @@ namespace ProjectorInterface.HotkeyHelper
             string[] hotkeySplit = hotkeyStr.Trim().Split('+');
             for (int i = 0; i < hotkeySplit.Length; i++)
             {
-                if (!ModifierKeyStr.Contains(hotkeySplit[i].Trim()))
+                if (!ModifierKeyStr.Contains(hotkeySplit[i].Trim().ToUpper()))
                 {
                     return hotkeyStr.Substring(0, hotkeyStr.LastIndexOf(hotkeySplit[i]));
                 }

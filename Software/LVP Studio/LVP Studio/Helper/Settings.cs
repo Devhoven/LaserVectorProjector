@@ -54,5 +54,7 @@ namespace ProjectorInterface.Helper
         public static readonly Brush SHAPE_COLOR = Brushes.Red;
 
         public static readonly int RENDERED_IMG_BMP_SIZE = 500;
+
+        public static bool DEBUG_MODE = false;
     }
 }

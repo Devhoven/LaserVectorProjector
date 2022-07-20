@@ -115,6 +115,9 @@ namespace ProjectorInterface
         private void OpenPortClick(object sender, RoutedEventArgs e)
             => OpenEditPortWindow();
 
+        private void ToggleDebugMode(object sender, RoutedEventArgs e)
+            => Settings.DEBUG_MODE = !Settings.DEBUG_MODE;
+
         #endregion
 
         private static void SaveAnimationDialog()

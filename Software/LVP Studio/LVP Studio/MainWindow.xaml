@@ -46,6 +46,7 @@
                         <Image Source="pack://application:,,,/Assets/ButtonImages/Port.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Debug mode" IsCheckable="True" Click="ToggleDebugMode"/>
             </MenuItem>
         </Menu>
 

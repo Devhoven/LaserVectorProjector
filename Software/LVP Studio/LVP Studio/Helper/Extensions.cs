@@ -29,55 +29,71 @@ namespace ProjectorInterface.Helper
             return "Nothing";
         }
 
-       public static BitmapImage GetRenderedFrame(this VectorizedFrame frame)
+        public static BitmapImage GetRenderedFrame(this VectorizedFrame frame)
         {
             Bitmap bmp = new Bitmap(Settings.RENDERED_IMG_BMP_SIZE, Settings.RENDERED_IMG_BMP_SIZE);
 
             double maxVolF = Settings.IMG_SECTION_SIZE;
 
-            using (Graphics graph = Graphics.FromImage(bmp))
+            if (Settings.DEBUG_MODE)
             {
-                Font stringFont = new Font("Comic Sans", 17.0f, FontStyle.Bold);
-                graph.Clear(Color.White);
-
-                graph.DrawString("Line count: " + frame.PointCount, stringFont, Brushes.Black, 0, 0);
-                Pen linePen = new Pen(Brushes.Red, 5f);
-
-                int count = 0;
-
-                int pointSize = 8;
-
-                if (frame.PointCount != 0)
-                    graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
-                for (int i = 1; i < frame.Points.Length; i++)
+                using (Graphics graph = Graphics.FromImage(bmp))
                 {
-                    if (frame.Points[i].On)
-                    {
-                        graph.DrawLine(linePen, TransformX(i - 1), TransformY(i - 1), TransformX(i), TransformY(i));
-                        graph.FillEllipse(Brushes.Green, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
-                    }
-                    else
-                        graph.FillEllipse(Brushes.Blue, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+                    Font stringFont = new Font("Comic Sans", 17.0f, FontStyle.Bold);
+                    graph.Clear(Color.White);
 
-                    if (frame.Points[i] == frame.Points[i - 1])
-                        count += 1;
-                    else
+                    graph.DrawString("Line count: " + frame.PointCount, stringFont, Brushes.Black, 0, 0);
+                    Pen linePen = new Pen(Brushes.Red, 5f);
+
+                    int count = 0;
+
+                    int pointSize = 8;
+
+                    if (frame.PointCount != 0)
+                        graph.FillEllipse(Brushes.Red, TransformX(0) - pointSize, TransformY(0) - pointSize, pointSize * 2, pointSize * 2);
+                    for (int i = 1; i < frame.Points.Length; i++)
                     {
-                        if (count > 0)
+                        if (frame.Points[i].On)
                         {
-                            graph.FillEllipse(Brushes.Yellow, TransformX(i - 1) - pointSize / 2, TransformY(i - 1) - pointSize / 2, pointSize + 3, pointSize + 3);
-                            graph.DrawString((count + 1).ToString(), stringFont, Brushes.Black, TransformX(i - 1), TransformY(i - 1));
-                            count = 0;
+                            graph.DrawLine(linePen, TransformX(i - 1), TransformY(i - 1), TransformX(i), TransformY(i));
+                            graph.FillEllipse(Brushes.Green, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+                        }
+                        else
+                            graph.FillEllipse(Brushes.Blue, TransformX(i) - pointSize / 2, TransformY(i) - pointSize / 2, pointSize, pointSize);
+
+                        if (frame.Points[i] == frame.Points[i - 1])
+                            count += 1;
+                        else
+                        {
+                            if (count > 0)
+                            {
+                                graph.FillEllipse(Brushes.Yellow, TransformX(i - 1) - pointSize / 2, TransformY(i - 1) - pointSize / 2, pointSize + 3, pointSize + 3);
+                                graph.DrawString((count + 1).ToString(), stringFont, Brushes.Black, TransformX(i - 1), TransformY(i - 1));
+                                count = 0;
+                            }
                         }
                     }
                 }
-
-                int TransformX(int i)
-                    => (int)(frame.Points[i].X / maxVolF * bmp.Width);
-
-                int TransformY(int i)
-                    => (int)(frame.Points[i].Y / maxVolF * bmp.Height);
             }
+            else
+            {
+                using (Graphics graph = Graphics.FromImage(bmp))
+                {
+                    graph.Clear(Color.White);
+                    Pen linePen = new Pen(Brushes.Red, 5f);
+                    for (int i = 1; i < frame.Points.Length; i++)
+                    {
+                        if (frame.Points[i].On)
+                            graph.DrawLine(linePen, TransformX(i - 1), TransformY(i - 1), TransformX(i), TransformY(i));
+                    }
+                }
+            }
+
+            int TransformX(int i)
+                => (int)(frame.Points[i].X / maxVolF * bmp.Width);
+
+            int TransformY(int i)
+                => (int)(frame.Points[i].Y / maxVolF * bmp.Height);
 
             MemoryStream ms = new MemoryStream();
             bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);

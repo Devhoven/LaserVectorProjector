@@ -45,7 +45,7 @@ namespace ProjectorInterface.DrawingTools
             return result;
         }
 
-        public override void Render(Point start, Point end)
+        protected override void _Render(Point start, Point end)
         {
             LineObj.X1 = start.X;
             LineObj.Y1 = start.Y;

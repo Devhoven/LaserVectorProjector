@@ -72,7 +72,7 @@ namespace ProjectorInterface.HotkeyHelper
             // pressing delete, backspace or escape without modifiers clears the current value
             if (modifiers == ModifierKeys.None && (key == Key.Delete || key == Key.Back || key == Key.Escape))
             {
-                Hotkey = null!;
+                Hotkey = new Hotkey(Key.None, ModifierKeys.None);
                 HotkeyTextBox.Text = "-- not set --";
                 return;
             }

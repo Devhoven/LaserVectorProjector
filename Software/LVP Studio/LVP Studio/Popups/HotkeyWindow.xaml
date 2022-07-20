@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:helper="clr-namespace:ProjectorInterface.HotkeyHelper"
         mc:Ignorable="d"
-        Title="Keybinds" Width="500"
+        Title="Keybinds" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="Label">
@@ -23,18 +23,26 @@
             <Setter Property="Text" Value="-- not set --"/>
             <Setter Property="MinWidth" Value="230"/>
             <Setter Property="Height" Value="30"/>
+            <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
         <Style TargetType="helper:HotkeyEditor">
-            <Setter Property="Margin" Value="5 0 5 0"/>
+            <Setter Property="Margin" Value="5 0 10 0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-    </Window.Resources>
-    
-    <Grid x:Name="MainGrid">
-        <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
 
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0 10 10 10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="MainGrid" MinWidth="500">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -108,24 +116,13 @@
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ConfirmBtn" Grid.Column="0" Background="Gray" VerticalAlignment="Bottom"
-                    Click="ConfirmClick" Width="90" Height="40" Margin="0 0 10 10" HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="White">Save changes</TextBlock>
-                </StackPanel>
-            </Button>
+            <Button x:Name="ConfirmBtn" Grid.Column="0" Click="ConfirmClick" Content="OK"/>
 
-            <Button x:Name="CancelBtn" Grid.Column="1" VerticalAlignment="Bottom" Background="Gray" 
-                    Click="CancelClick" Width="90" Height="40" Margin="0 0 10 10" HorizontalAlignment="Left">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="White">Cancel changes</TextBlock>
-                </StackPanel>
-            </Button>
-
+            <Button x:Name="CancelBtn" Grid.Column="1" Click="CancelClick" Content="Cancel"/>
+            
         </Grid>
-
     </Grid>
 </Window>

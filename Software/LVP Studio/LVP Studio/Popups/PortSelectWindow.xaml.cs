@@ -43,7 +43,7 @@ namespace ProjectorInterface
                                    .ToList();
 
                 foreach (string s in portList)
-                    PortPanel.Children.Add(new ComRecord(s.Substring(0, s.IndexOf(' ')), s.Substring(s.IndexOf(' '))));
+                    PortPanel.Children.Add(new ComRecord(this, s.Substring(0, s.IndexOf(' ')), s.Substring(s.IndexOf(' '))));
             }
         }
 
@@ -57,9 +57,12 @@ namespace ProjectorInterface
     class ComRecord : Button
     {
         readonly string PortName;
-
-        public ComRecord(string portName, string caption)
+        readonly Window ParentWindow;
+        
+        public ComRecord(Window parentWindow, string portName, string caption)
         {
+            ParentWindow = parentWindow;
+
             PortName = portName;
 
             BorderBrush = PortName == SerialManager.PortName ? Brushes.LightBlue : Brushes.Black;
@@ -78,6 +81,9 @@ namespace ProjectorInterface
 
             SerialManager.Initialize(PortName);
             RegistryManager.SetValue("PortName", PortName);
+            
+            if (e.ClickCount >= 2)
+                ParentWindow.Close();
         }
     }
 }

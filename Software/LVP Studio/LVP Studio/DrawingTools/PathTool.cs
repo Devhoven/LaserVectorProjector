@@ -31,7 +31,7 @@ namespace ProjectorInterface.DrawingTools
             Current.Height = double.MaxValue;
         }
 
-        public override void Render(Point start, Point end)
+        protected override void _Render(Point start, Point end)
         {
             if (Math.Abs(end.X - LastPoint.X) > length || Math.Abs(end.Y - LastPoint.Y) > length)
             {

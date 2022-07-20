@@ -31,7 +31,7 @@ namespace ProjectorInterface.DrawingTools
             return tmp;
         }
 
-        public override void Render(Point start, Point end)
+        protected override void _Render(Point start, Point end)
         {
             Point topLeft = new Point(Math.Min(start.X, end.X), Math.Min(start.Y, end.Y));
             Point bottomRight = new Point(Math.Max(start.X, end.X), Math.Max(start.Y, end.Y));

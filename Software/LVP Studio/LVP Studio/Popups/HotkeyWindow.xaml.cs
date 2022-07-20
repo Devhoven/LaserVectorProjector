@@ -18,14 +18,22 @@ namespace ProjectorInterface
 {
     public partial class HotkeyWindow : Window
     {
-        public HotkeyWindow()
+        public HotkeyWindow(Window owner)
         {
             InitializeComponent();
+
+            Owner = owner;
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)
             => Close();
-        
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+                Close();
+        }
+
         private void ConfirmClick(object sender, RoutedEventArgs e)
         {
             foreach(UIElement uIElement in MainGrid.Children)

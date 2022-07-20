@@ -16,6 +16,8 @@ namespace ProjectorInterface.DrawingTools
     public class DrawingTool : Border
     {
         protected Shape Current;
+        private Point Start;
+        private Point End;
 
         // Only for the subclasses
         protected DrawingTool(Shape current)
@@ -32,11 +34,24 @@ namespace ProjectorInterface.DrawingTools
         // Hast to be called on every MouseMove - event, with the position of the mouse when the user clicked on the canvas 
         // and the current mouse pos
         // It updates the current tool
-        public virtual void Render(Point start, Point end)
+        public void Render(Point start, Point end)
+        {
+            Start = start;
+            End = end;
+            _Render(Start, End);
+        }
+        
+        protected virtual void _Render(Point start, Point end)
         { }
 
         // Copy returns a copy of the shape which the tool is supposed to draw
         public virtual Shape CopyShape()
             => Current;
+
+        public bool HasChanged()
+            => Start != End;
+
+        public void Reset()
+            => Start = End;
     }
 }

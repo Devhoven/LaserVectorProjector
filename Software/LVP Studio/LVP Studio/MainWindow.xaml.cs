@@ -66,10 +66,10 @@ namespace ProjectorInterface
                 RevertAnimationClick(this, e);
             else if (Keybinds.IsPressed("ShowPortSelectWindow"))
                 new PortSelectWindow(this).ShowDialog();
-            
+
             Keyboard.Focus(DrawCon);
         }
-        
+
         #region Clickhandler
 
         // Handler for changed drawingTool currentTool
@@ -110,11 +110,7 @@ namespace ProjectorInterface
             => DrawCon.ChooseImg();
 
         private void OpenKeybindsClick(object sender, RoutedEventArgs e)
-        {
-            HotkeyWindow KbWindow = new HotkeyWindow();
-            KbWindow.Owner = this;
-            KbWindow.Show();
-        }
+            => new HotkeyWindow(this).ShowDialog();
 
         #endregion
 

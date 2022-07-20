@@ -150,7 +150,7 @@ namespace ProjectorInterface
             if (!LeftCanvas)
             {
                 if (e.ChangedButton == MouseButton.Left && !SelectRect.IsSelecting)
-                    RemoveToolAndCopy(e.GetPosition(this));
+                    RemoveToolAndCopy();
                 else if (e.ChangedButton == MouseButton.Left && SelectRect.IsSelecting)
                 {
                     if (SelectRect.StartPos == e.GetPosition(this))
@@ -170,7 +170,7 @@ namespace ProjectorInterface
             // If the mouse leaves the canvas, and the left mouse button was still pressed the operation is going to cancel
             // Doesn't work for some reason if you move onto the windows taskbar
             if (e.LeftButton == MouseButtonState.Pressed && !LeftCanvas && !SelectRect.IsSelecting){
-                RemoveToolAndCopy(e.GetPosition(this));
+                RemoveToolAndCopy();
                 LeftCanvas = true;
             }
         }
@@ -184,12 +184,15 @@ namespace ProjectorInterface
         }
 
         // Removes the visuals of the currently used tool from the canvas and adds the drawn shape onto it
-        void RemoveToolAndCopy(Point current)
+        void RemoveToolAndCopy()
         {
             Children.Remove(CurrentTool);
             // Does not add a new shape, if the user did not move the mouse
-            if (StartMousePos != current)
+            if (CurrentTool.HasChanged())
+            {
                 Commands.Execute(new AddShapeCommand(CurrentTool.CopyShape()));
+                CurrentTool.Reset();
+            }
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

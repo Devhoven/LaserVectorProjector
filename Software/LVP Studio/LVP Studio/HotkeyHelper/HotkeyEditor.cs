@@ -11,6 +11,8 @@ namespace LvpStudio.HotkeyHelper
 {
     public partial class HotkeyEditor : Grid
     {
+        static HashSet<HotkeyEditor> HotkeyEditors = new HashSet<HotkeyEditor>();
+
         Label NameLabel;
         TextBox HotkeyTextBox;
 
@@ -35,7 +37,8 @@ namespace LvpStudio.HotkeyHelper
             set
             {
                 _KeyName = value;
-                HotkeyTextBox.Text = Keybinds.GetHotkey(KeyName).ToString();
+                Hotkey = Keybinds.GetHotkey(KeyName);
+                HotkeyTextBox.Text = Hotkey.ToString();
             } 
         }
 
@@ -55,6 +58,8 @@ namespace LvpStudio.HotkeyHelper
 
             SetColumn(NameLabel, 0); 
             SetColumn(HotkeyTextBox, 1);
+
+            HotkeyEditors.Add(this);
         }
 
         public void UpdateUI(object sender, KeyEventArgs e)
@@ -72,8 +77,7 @@ namespace LvpStudio.HotkeyHelper
             // pressing delete, backspace or escape without modifiers clears the current value
             if (modifiers == ModifierKeys.None && (key == Key.Delete || key == Key.Back || key == Key.Escape))
             {
-                Hotkey = new Hotkey(Key.None, ModifierKeys.None);
-                HotkeyTextBox.Text = "-- not set --";
+                UnsetHotkey();
                 return;
             }
 
@@ -93,9 +97,33 @@ namespace LvpStudio.HotkeyHelper
             }
 
             // Update the value
-            Hotkey = new Hotkey(key, modifiers);
+            Hotkey tmpHotkey = new Hotkey(key, modifiers);
 
+            if (HotkeyOccupied(tmpHotkey))
+            {
+                HotkeyEditor otherHotkeyEditor = GetHotkeyEditor(tmpHotkey);
+                MessageBoxResult result = MessageBox.Show($"\"{otherHotkeyEditor.KeyDisplayName}\" already occupies that key combination. Do you want to override it?", 
+                    "Key combination taken", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                    otherHotkeyEditor.UnsetHotkey();
+                else if (result == MessageBoxResult.No)
+                    tmpHotkey = Hotkey;
+            }
+            Hotkey = tmpHotkey;
             HotkeyTextBox.Text = Hotkey.ToString();
         }
+
+        void UnsetHotkey()
+        {
+            Hotkey = new Hotkey(Key.None, ModifierKeys.None);
+            HotkeyTextBox.Text = "-- not set --";
+        }
+
+        bool HotkeyOccupied(Hotkey hotkey)
+            => HotkeyEditors.Any(h => h.Hotkey.Equals(hotkey) && h != this);
+
+        HotkeyEditor GetHotkeyEditor(Hotkey hotkey)
+            => HotkeyEditors.First(h => h.Hotkey.Equals(hotkey) && h != this);
     }
 }

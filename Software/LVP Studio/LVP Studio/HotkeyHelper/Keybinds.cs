@@ -14,7 +14,7 @@ namespace LvpStudio
 {
     class Keybinds
     {
-        public static Dictionary<string, Hotkey> KeybindDictionary = LoadDictionary();
+        static Dictionary<string, Hotkey> KeybindDictionary = LoadDictionary();
 
         static Dictionary<string, Hotkey> LoadDictionary()
         {

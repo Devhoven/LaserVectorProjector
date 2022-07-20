@@ -46,12 +46,12 @@ namespace LvpStudio
                         {
                             string hotkeyText = hkEditor.GetHotkeyTxt();
                             if (hotkeyText == Keybinds.GetHotkey(hkEditor.KeyName).ToString())
-                            {
+                            {   
                                 continue;
                             }
                             else if(hotkeyText == "-- not set --")
                             {
-                                MessageBox.Show("Not all keybinds are set!", "Warning");
+                                MessageBox.Show("Not all keybinds are set!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                                 return;
                             }
                             else

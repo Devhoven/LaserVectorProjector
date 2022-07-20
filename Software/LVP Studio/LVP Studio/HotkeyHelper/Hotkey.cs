@@ -55,6 +55,9 @@ namespace LvpStudio.HotkeyHelper
         // return string with pressed commands + buttons
         public override string ToString()
         {
+            if (Key == Key.None && Modifiers == ModifierKeys.None)
+                return "-- not set --";
+
             StringBuilder str = new StringBuilder();
 
             if (Modifiers.HasFlag(ModifierKeys.Control))
@@ -67,6 +70,13 @@ namespace LvpStudio.HotkeyHelper
             str.Append(Key);
 
             return str.ToString();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj != null)
+                return ((Hotkey)obj).Key == Key && ((Hotkey)obj).Modifiers == Modifiers;
+            return false;
         }
     }
 }

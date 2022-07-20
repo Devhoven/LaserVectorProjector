@@ -229,7 +229,7 @@ namespace LvpStudio
             // Operations for the background image
             if (e.Key == Key.Insert)
                 BackgroundImg.ToggleOpacity();
-            else if (e.Key == Keybinds.KeybindDictionary["LoadBgImg"].Key)
+            else if (Keybinds.IsPressed("LoadBgImg"))
                 BackgroundImg.ChooseImg();
             else if (e.Key == Key.Space)
                 BackgroundImg.Reset();

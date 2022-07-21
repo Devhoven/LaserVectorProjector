@@ -5,8 +5,18 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <!-- GUI Colors -->
-        <SolidColorBrush x:Key="ForegroundColor">WhiteSmoke</SolidColorBrush>
-        <SolidColorBrush x:Key="BackgroundColor">White</SolidColorBrush>
+        <SolidColorBrush x:Key="ForegroundColor">LightGray</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundColor">Gray</SolidColorBrush>
+        <SolidColorBrush x:Key="BorderColor">Black</SolidColorBrush>
+
+        <SolidColorBrush x:Key="UnselectedBtnBorderColor">Black</SolidColorBrush>
+        <Thickness x:Key="UnselectedBtnThickness">1</Thickness>
+
+        <SolidColorBrush x:Key="SelectedBtnBorderColor">#FF0078D7</SolidColorBrush>
+        <Thickness x:Key="SelectedBtnThickness">3</Thickness>
+        
+        <CornerRadius x:Key="DefaultCornerRadius">5</CornerRadius>
+        <Thickness x:Key="DefaultBorderThickness">1</Thickness>
 
         <!-- Storyboard animations -->
         <!-- Fade in Animation -->
@@ -34,6 +44,13 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="{Binding ForegroundColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource UnselectedBtnBorderColor}"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="{StaticResource DefaultCornerRadius}"/>
+                    <Setter Property="BorderThickness" Value="{StaticResource UnselectedBtnThickness}"/>
+                </Style>
+            </Style.Resources>
         </Style>
 
         <!-- Style for bigger (default) buttons -->
@@ -43,15 +60,29 @@
             <Setter Property="Margin" Value="10 5 10 5"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="{StaticResource ForegroundColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource UnselectedBtnBorderColor}"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="{StaticResource DefaultCornerRadius}"/>
+                    <Setter Property="BorderThickness" Value="{StaticResource UnselectedBtnThickness}"/>
+                </Style>
+            </Style.Resources>
         </Style>
-
+        
         <!-- Sets the BitmapScalingMode for every image to the best one -->
         <Style TargetType="Image">
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant"/>
         </Style>
 
+        <Style x:Key="ContainerBorder" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{StaticResource DefaultCornerRadius}"/>
+            <Setter Property="BorderThickness" Value="{StaticResource DefaultBorderThickness}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+        </Style>
+
         <Style TargetType="Menu">
-            <Setter Property="Background" Value="{StaticResource BackgroundColor}"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Background" Value="{StaticResource ForegroundColor}"/>
         </Style>
     </Application.Resources>
 </Application>

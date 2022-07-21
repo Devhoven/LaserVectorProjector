@@ -69,7 +69,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Frame Container -->
-                <Border Grid.Column="0" CornerRadius="5" Background="{StaticResource ForegroundColor}" BorderBrush="Black" BorderThickness="1">
+                <Border Grid.Column="0" Background="{StaticResource ForegroundColor}" Style="{StaticResource ContainerBorder}">
                     <Grid x:Name="Frames">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
@@ -141,11 +141,16 @@
             </Grid>
 
             <!-- Drawing Canvas -->
-            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Grid.Column="1" Padding="1"
-                        Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
-                <local:DrawingCanvas x:Name="DrawCon" Background="{StaticResource ForegroundColor}" ClipToBounds="True" Focusable="True"
-                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                </local:DrawingCanvas>
+            <Border Grid.Column="1" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Style="{StaticResource ContainerBorder}">
+                <!--This grid is used to clip the edges of the DrawingCanvas https://stackoverflow.com/a/27394846-->
+                <Grid>
+                    <Grid.OpacityMask>
+                        <VisualBrush Visual="{Binding ElementName=ClipMask}" Stretch="None"/>
+                    </Grid.OpacityMask>
+                    <Border x:Name="ClipMask" Background="White" Style="{StaticResource ContainerBorder}"/>
+                    <local:DrawingCanvas x:Name="DrawCon" Background="{StaticResource ForegroundColor}" ClipToBounds="True" Focusable="True"
+                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Grid>
             </Border>
 
             <!-- Right Container -->
@@ -182,7 +187,7 @@
                 </WrapPanel>
 
                 <!-- Animation container -->
-                <Border Grid.Column="1" CornerRadius="5" Background="{StaticResource ForegroundColor}" BorderBrush="Black" BorderThickness="1">
+                <Border Grid.Column="1" Background="{StaticResource ForegroundColor}" Style="{StaticResource ContainerBorder}">
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>

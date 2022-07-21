@@ -52,10 +52,6 @@ namespace LvpStudio
             BackgroundImg = new MoveableImage();
             Children.Add(BackgroundImg);
 
-            Background = Brushes.White;
-            ClipToBounds = true;
-            Focusable = true;
-
             CanvasCommand.Parent = this;
 
             Commands = new CommandHistory();

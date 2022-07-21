@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace LvpStudio.Helper
@@ -14,8 +15,11 @@ namespace LvpStudio.Helper
     // Holds the ToolButtons and visually selects them
     public class ButtonPanel : WrapPanel
     {
-        Thickness selected = new Thickness(3);
-        Thickness normal = new Thickness(1);
+        static readonly Thickness UNSELECTED_THICKNESS = (Thickness)Application.Current.FindResource("UnselectedBtnThickness");
+        static readonly SolidColorBrush UNSELECTED_BORDER_COLOR = (SolidColorBrush)Application.Current.FindResource("UnselectedBtnBorderColor");
+
+        static readonly Thickness SELECTED_THICKNESS = (Thickness)Application.Current.FindResource("SelectedBtnThickness");
+        static readonly SolidColorBrush SELECTED_BORDER_COLOR = (SolidColorBrush)Application.Current.FindResource("SelectedBtnBorderColor");
 
         public ButtonPanel() : base()
         {
@@ -30,9 +34,13 @@ namespace LvpStudio.Helper
         public void SelectButton(Button b)
         {
             foreach (Button button in Children)
-                button.BorderThickness = normal;
+            {
+                button.BorderThickness = UNSELECTED_THICKNESS;
+                button.BorderBrush = UNSELECTED_BORDER_COLOR;
+            }
 
-            b.BorderThickness = selected;
+            b.BorderThickness = SELECTED_THICKNESS;
+            b.BorderBrush = SELECTED_BORDER_COLOR;
             Keyboard.ClearFocus();
         }
 

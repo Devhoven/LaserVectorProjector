@@ -11,7 +11,7 @@ namespace LvpStudio.HotkeyHelper
 {
     public partial class HotkeyEditor : Grid
     {
-        static HashSet<HotkeyEditor> HotkeyEditors = new HashSet<HotkeyEditor>();
+        public static HashSet<HotkeyEditor> HotkeyEditors = new HashSet<HotkeyEditor>();
 
         Label NameLabel;
         TextBox HotkeyTextBox;

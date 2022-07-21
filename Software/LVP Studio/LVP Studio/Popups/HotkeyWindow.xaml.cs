@@ -36,30 +36,17 @@ namespace LvpStudio
 
         private void ConfirmClick(object sender, RoutedEventArgs e)
         {
-            foreach(UIElement uIElement in MainGrid.Children)
+            foreach (HotkeyEditor hkEditor in HotkeyEditor.HotkeyEditors)
             {
-                if (uIElement is Grid grid)
+                string hotkeyText = hkEditor.GetHotkeyTxt();
+                if (hotkeyText == "-- not set --")
                 {
-                    foreach (UIElement uie in grid.Children)
-                    {
-                        if (uie is HotkeyEditor hkEditor)
-                        {
-                            string hotkeyText = hkEditor.GetHotkeyTxt();
-                            if (hotkeyText == Keybinds.GetHotkey(hkEditor.KeyName).ToString())
-                            {   
-                                continue;
-                            }
-                            else if(hotkeyText == "-- not set --")
-                            {
-                                MessageBox.Show("Not all keybinds are set!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                                return;
-                            }
-                            else
-                            {
-                                Keybinds.UpdateKeyEntry(hkEditor.KeyName, hkEditor.Hotkey);
-                            }
-                        }
-                    }
+                    MessageBox.Show("Not all keybinds are set!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                }
+                else if (hotkeyText != Keybinds.GetHotkey(hkEditor.KeyName).ToString())
+                {
+                    Keybinds.UpdateKeyEntry(hkEditor.KeyName, hkEditor.Hotkey);
                 }
             }
             Close();

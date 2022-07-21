@@ -155,7 +155,7 @@ namespace LvpStudio
             ShapesToPoints.CalcFrameFromCanvas();
             FramePanel.Children.Add(new RenderedItemBorder(
                 new RenderedFrame(
-                    ShapesToPoints.DrawnImage.Frames[ShapesToPoints.DrawnImage.FrameCount - 1])));
+                    new VectorizedFrame(ShapesToPoints.Points.ToArray()))));
         }
 
         private void OpenEditKeybindsWindow()

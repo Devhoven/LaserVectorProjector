@@ -16,10 +16,12 @@ namespace LvpStudio.GalvoInterface
         static readonly Point START_POINT = new Point(CANVAS_RESOLUTION / 2, CANVAS_RESOLUTION / 2, false);
 
         public static readonly VectorizedImage DrawnImage = new VectorizedImage();
-        readonly static List<Point> Points = new List<Point>();
+        public static readonly List<Point> Points = new List<Point>();
 
         public static void CalcFrameFromCanvas()
         {
+            Points.Clear();
+            
             ShapeWrapper[] Shapes = GenWrapper();
 
             // Adding an empty frame if there aren't any shapes drawn by the user
@@ -42,7 +44,6 @@ namespace LvpStudio.GalvoInterface
             AddLine(START_POINT.X, START_POINT.Y, false);
 
             DrawnImage.AddFrame(VectorizedFrame.InterpolatedFrame(Points.ToArray()));
-            Points.Clear();
         }
 
         // Generates an array of ShapeWrappers based on the type of each canvas child

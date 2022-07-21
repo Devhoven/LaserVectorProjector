@@ -46,7 +46,6 @@ namespace LvpStudio.GalvoInterface.UiElements
         }
 
         Button CreateDeleteBtn()
-
         {
             // Creating the delete button
             Button deleteBtn = new Button()
@@ -114,7 +113,6 @@ namespace LvpStudio.GalvoInterface.UiElements
             ShapesToPoints.DrawnImage.RemoveFrame(Frame);
             ((RenderedItemBorder)Parent).RemoveFromParent();  
         }
-        
     }
 
     class SpeedBtnPanel : WrapPanel

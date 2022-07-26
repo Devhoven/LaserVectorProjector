@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using static LvpStudio.Helper.Settings;
 
 namespace LvpStudio.GalvoInterface
@@ -41,11 +39,8 @@ namespace LvpStudio.GalvoInterface
                     double diffX = (points[i + 1].X - points[i].X)/ distance * MAX_STEP_SIZE;
                     double diffY = (points[i + 1].Y - points[i].Y) / distance * MAX_STEP_SIZE;
 
-
                     for (int j = 1; j < res; j++)
-                    {
                         interpolatedPoints.Add(new Point(points[i].X + diffX * j, points[i].Y + diffY * j, points[i + 1].On));
-                    }
                 }
             }
 
@@ -142,25 +137,32 @@ namespace LvpStudio.GalvoInterface
                 // availablePoints determines how many points are available for the line between the two points
                 void InterpolatePoints(Func<double, double> f, int availablePoints)
                 {
-                    // If there are less or equal than 1 points available for this line, nothing is going to be interpolated
-                    if (availablePoints <= 1)
+                    // If there are no points available for this line, nothing is going to be interpolated
+                    if (availablePoints <= 0)
                     {
                         interpolatedPoints.Add(points[i]);
                         interpolatedPoints.Add(points[i + 1]);
                         return;
                     }
+                    
+                    // If there are less points available than the STATUS_OFFSET_POINTS + 1, then a few more points are added to the current line 
+                    // This results in more visible small lines
+                    if (availablePoints <= STATUS_OFFSET_POINTS + 1)
+                        availablePoints = STATUS_OFFSET_POINTS * 3;
 
                     double stepSize = 1.0 / (availablePoints - 1);
 
                     double stepSizeFunc;
-
+                    
                     for (int j = 1; j < availablePoints; j++)
                     {
+                        // Calculating the step size from the f-function 
                         stepSizeFunc = f(j * stepSize) * dist;
+                        // Calculating the new coordinates
                         interpolatedPoints.Add(
-                            new Point((short)(x + stepSizeFunc * xRatio), 
-                                      (short)(y + stepSizeFunc * yRatio), 
-                                      lineOn));
+                            new Point((short)(x + stepSizeFunc * xRatio),
+                                        (short)(y + stepSizeFunc * yRatio),
+                                        lineOn));
                     }
                 }
             }
@@ -181,7 +183,7 @@ namespace LvpStudio.GalvoInterface
 
             Point prevPoint;
             Point currentPoint;
-
+            
             double pointDist;
 
             for (int i = 1; i < points.Length; i++)
@@ -201,7 +203,7 @@ namespace LvpStudio.GalvoInterface
             travelDist += travelOffDist;
         }
     
-        // If the laser status changes, a few prevous points are going to be changed to the new status 
+        // If the laser status changes, a few previous points are going to be changed to the new status 
         // This removes the laser "smear"
         static Point[] AddStatusOffset(Point[] points)
         {
@@ -211,11 +213,11 @@ namespace LvpStudio.GalvoInterface
                 prevStatus = points[i - 1].On;
 
                 if (points[i].On != prevStatus)
-                {
-                    for (int j = i; j < i + 3 && j < points.Length; j++)
+                {      
+                    for (int j = i; j < i + STATUS_OFFSET_POINTS && j < points.Length; j++)
                         points[j].On = prevStatus;
 
-                    i += 3;
+                    i += STATUS_OFFSET_POINTS;
                 }
             }
             return points;

@@ -138,7 +138,7 @@ namespace LvpStudio
         {
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog() == true)
-            {
+            {   
                 // Loading the new images in 
                 AnimationManager.LoadImagesFromFolder(dialog.SelectedPath);
 
@@ -153,9 +153,17 @@ namespace LvpStudio
         {
             // Converts the shapes from the canvas into a frame and writes appends it to ShapesToPoints.DrawnImage
             ShapesToPoints.CalcFrameFromCanvas();
-            FramePanel.Children.Add(new RenderedItemBorder(
-                new RenderedFrame(
-                    new VectorizedFrame(ShapesToPoints.Points.ToArray()))));
+            if (!Settings.DEBUG_MODE)
+            {
+                FramePanel.Children.Add(new RenderedItemBorder(
+                    new RenderedFrame(
+                        new VectorizedFrame(ShapesToPoints.Points.ToArray()))));
+            }
+            else
+            {
+                FramePanel.Children.Add(new RenderedItemBorder(
+                    new RenderedFrame(ShapesToPoints.DrawnImage.Frames[^1])));
+            }
         }
 
         private void OpenEditKeybindsWindow()

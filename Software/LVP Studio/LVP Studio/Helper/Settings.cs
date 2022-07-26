@@ -18,6 +18,8 @@ namespace LvpStudio.Helper
 
         public static readonly int SCAN_FPS = 30;
 
+        public static readonly int STATUS_OFFSET_POINTS = 3;
+
         // Duration of how long one frame needs to be in ms to achieve the given frame rate
         public static int INV_SCAN_FPS_MS { private set; get; } = (int)(1000.0 / SCAN_FPS);
         // Holds the maximum voltage (in mV) 

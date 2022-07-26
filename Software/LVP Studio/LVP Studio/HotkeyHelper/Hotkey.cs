@@ -42,9 +42,7 @@ namespace LvpStudio.HotkeyHelper
             for (int i = 0; i < hotkeySplit.Length; i++)
             {
                 if (!ModifierKeyStr.Contains(hotkeySplit[i].Trim().ToUpper()))
-                {
-                    return hotkeyStr.Substring(0, hotkeyStr.LastIndexOf(hotkeySplit[i]));
-                }
+                    return hotkeyStr[0..hotkeyStr.LastIndexOf(hotkeySplit[i])];
             }
             return hotkeyStr;
         }
@@ -78,5 +76,9 @@ namespace LvpStudio.HotkeyHelper
                 return ((Hotkey)obj).Key == Key && ((Hotkey)obj).Modifiers == Modifiers;
             return false;
         }
+
+        // For the compiler warning
+        public override int GetHashCode()
+            => base.GetHashCode();
     }
 }

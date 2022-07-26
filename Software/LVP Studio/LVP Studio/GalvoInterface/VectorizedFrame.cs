@@ -50,7 +50,6 @@ namespace LvpStudio.GalvoInterface
             return new VectorizedFrame(interpolatedPoints.ToArray());
         }
 
-
         static Point[] InterpolatePoints(Point[] points)
         {
             if (points.Length == 0)
@@ -144,11 +143,11 @@ namespace LvpStudio.GalvoInterface
                         interpolatedPoints.Add(points[i + 1]);
                         return;
                     }
-                    
+
                     // If there are less points available than the STATUS_OFFSET_POINTS + 1, then a few more points are added to the current line 
                     // This results in more visible small lines
                     if (availablePoints <= STATUS_OFFSET_POINTS + 1)
-                        availablePoints = STATUS_OFFSET_POINTS * 3;
+                        availablePoints = STATUS_OFFSET_POINTS * 2;
 
                     double stepSize = 1.0 / (availablePoints - 1);
 
@@ -183,7 +182,7 @@ namespace LvpStudio.GalvoInterface
 
             Point prevPoint;
             Point currentPoint;
-            
+
             double pointDist;
 
             for (int i = 1; i < points.Length; i++)
@@ -222,63 +221,5 @@ namespace LvpStudio.GalvoInterface
             }
             return points;
         }
-    }
-
-    // This point - struct contains the x and y coordinates (normalized between 0 and MaxValue) and if the laser should be turned on or off
-    struct Point
-    {
-        public short X;
-        public short Y;
-        public bool On;
-
-        public Point(int x, int y, bool on)
-        {
-            X = (short)x;
-            Y = (short)y;
-            On = on;
-        }
-
-        public Point(double x, double y, bool on)
-        {
-            X = (short)x;
-            Y = (short)y;
-            On = on;
-        }
-
-        public static Point NormalizedPoint(int x, int y, bool on, int normalizeTo)
-        {
-            Point result;
-            result.X = (short)((x + short.MaxValue) / (float)(short.MaxValue * 2) * normalizeTo);
-            result.Y = (short)((y + short.MaxValue) / (float)(short.MaxValue * 2) * normalizeTo);
-            result.On = on;
-            return result;
-        }
-
-        public static Point NormalizedPoint(int x, int y, bool on, int oldMax, int newMax)
-        {
-            Point result;
-            result.X = (short)((float)x / oldMax * newMax);
-            result.Y = (short)((float)y / oldMax * newMax);
-            result.On = on;
-            return result;
-        }
-
-        public static bool operator==(Point v1, Point v2)
-            => v1.X == v2.X && v1.Y == v2.Y;
-
-        public static bool operator !=(Point v1, Point v2)
-            => !(v1 == v2);
-
-        public static double GetDistance(Point v1, Point v2)
-            => Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2));
-     
-        public override bool Equals(object? obj)
-            => obj is Point v && v == this;
-
-        public override int GetHashCode()
-            => base.GetHashCode();
-
-        public override string ToString()
-            => "(" + X + ", " + Y + ") " + On;
     }
 }

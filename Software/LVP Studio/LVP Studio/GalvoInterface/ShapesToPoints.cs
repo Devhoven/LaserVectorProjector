@@ -105,7 +105,7 @@ namespace LvpStudio.GalvoInterface
             }
         }
 
-        // Adds a new LineSegment towards the normalized point (x,y) with the laserstatus stroke
+        // Adds a new line segment which gets normalized to the area from 0 to IMG_SECTION_SIZE
         static void AddLine(double x, double y, bool on)
             => Points.Add(Point.NormalizedPoint((short)x, (short)y, on, CANVAS_RESOLUTION, IMG_SECTION_SIZE));
     }

@@ -103,5 +103,6 @@ namespace LvpStudio.Helper
             bmpImage.EndInit();
             return bmpImage;
         }
+    
     }
 }

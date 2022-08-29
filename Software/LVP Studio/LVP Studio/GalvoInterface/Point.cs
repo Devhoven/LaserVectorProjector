@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace LvpStudio.GalvoInterface
 {
@@ -14,14 +15,14 @@ namespace LvpStudio.GalvoInterface
         public short Y;
         public bool On;
 
-        public Point(int x, int y, bool on)
+        public Point(int x, int y, bool on = true)
         {
             X = (short)x;
             Y = (short)y;
             On = on;
         }
 
-        public Point(double x, double y, bool on)
+        public Point(double x, double y, bool on = true)
         {
             X = (short)x;
             Y = (short)y;
@@ -51,6 +52,9 @@ namespace LvpStudio.GalvoInterface
 
         public static bool operator !=(Point v1, Point v2)
             => !(v1 == v2);
+
+        public static Vector operator -(Point v1, Point v2)
+            => new Vector(v1.X - v2.X, v1.Y - v2.Y);
 
         public static double GetDistance(Point v1, Point v2)
             => Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2));
